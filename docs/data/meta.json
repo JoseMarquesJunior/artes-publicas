@@ -1,7 +1,7 @@
 {
-  "atualizadoEm": "2026-10-16T18:25:31.713Z",
-  "total": 30,
-  "totalNovos": 0,
+  "atualizadoEm": "2026-10-16T20:59:11.145Z",
+  "total": 280,
+  "totalNovos": 250,
   "totalAtualizados": 0,
   "removidos": {
     "antigos": 0,
@@ -9,36 +9,36 @@
     "reprovadosIA": 0
   },
   "base": {
-    "aprovados": 0,
-    "reprovados": 0,
-    "duvidas": 0,
-    "pendentes": 30
+    "aprovados": 67,
+    "reprovados": 182,
+    "duvidas": 31,
+    "pendentes": 0
   },
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": false,
-    "classificados": 0,
-    "aprovados": 0,
-    "reprovados": 0,
-    "duvidas": 0,
-    "pendentes": 30,
-    "lotes": 0,
+    "ativo": true,
+    "classificados": 280,
+    "aprovados": 67,
+    "reprovados": 182,
+    "duvidas": 31,
+    "pendentes": 0,
+    "lotes": 10,
     "lotesFalhos": 0,
-    "requisicoes": 0,
-    "tokensEntrada": 0,
-    "tokensSaida": 0,
-    "custoUsd": 0,
-    "candidatosRegexNestaExecucao": 0
+    "requisicoes": 10,
+    "tokensEntrada": 57876,
+    "tokensSaida": 1450,
+    "custoUsd": 0.0065,
+    "candidatosRegexNestaExecucao": 280
   },
   "periodo": {
-    "de": "2026-10-14",
+    "de": "2026-10-16",
     "ate": "2026-10-16",
-    "dias": 2
+    "dias": 0
   },
   "retencaoDias": 365,
-  "requisicoes": 0,
-  "bloqueios429": 0,
-  "duracaoSegundos": 0,
+  "requisicoes": 114,
+  "bloqueios429": 1,
+  "duracaoSegundos": 336,
   "modalidades": [
     {
       "codigo": 3,
@@ -51,33 +51,33 @@
     {
       "codigo": 8,
       "nome": "Dispensa de licitação",
-      "lidos": 0,
-      "selecionados": 0,
-      "paginas": 0,
+      "lidos": 2945,
+      "selecionados": 99,
+      "paginas": 59,
       "falhas": 0
     },
     {
       "codigo": 9,
       "nome": "Inexigibilidade",
-      "lidos": 0,
-      "selecionados": 0,
-      "paginas": 0,
+      "lidos": 966,
+      "selecionados": 139,
+      "paginas": 20,
       "falhas": 0
     },
     {
       "codigo": 12,
       "nome": "Credenciamento",
-      "lidos": 0,
-      "selecionados": 0,
-      "paginas": 0,
+      "lidos": 74,
+      "selecionados": 7,
+      "paginas": 2,
       "falhas": 0
     },
     {
       "codigo": 6,
       "nome": "Pregão eletrônico",
-      "lidos": 0,
-      "selecionados": 0,
-      "paginas": 0,
+      "lidos": 1510,
+      "selecionados": 35,
+      "paginas": 31,
       "falhas": 0
     }
   ],
