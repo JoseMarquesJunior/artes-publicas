@@ -1,0 +1,62 @@
+{
+  "atualizadoEm": "2026-10-16T18:11:15.010Z",
+  "total": 30,
+  "totalNovos": 29,
+  "totalAtualizados": 1,
+  "removidos": {
+    "antigos": 0,
+    "foraDoFiltro": 1
+  },
+  "periodo": {
+    "de": "2026-10-16",
+    "ate": "2026-10-16",
+    "dias": 0
+  },
+  "retencaoDias": 365,
+  "requisicoes": 88,
+  "bloqueios429": 1,
+  "duracaoSegundos": 270,
+  "modalidades": [
+    {
+      "codigo": 3,
+      "nome": "Concurso",
+      "lidos": 0,
+      "selecionados": 0,
+      "paginas": 0,
+      "falhas": 0
+    },
+    {
+      "codigo": 8,
+      "nome": "Dispensa de licitação",
+      "lidos": 2233,
+      "selecionados": 15,
+      "paginas": 45,
+      "falhas": 0
+    },
+    {
+      "codigo": 9,
+      "nome": "Inexigibilidade",
+      "lidos": 750,
+      "selecionados": 6,
+      "paginas": 15,
+      "falhas": 0
+    },
+    {
+      "codigo": 12,
+      "nome": "Credenciamento",
+      "lidos": 49,
+      "selecionados": 0,
+      "paginas": 1,
+      "falhas": 0
+    },
+    {
+      "codigo": 6,
+      "nome": "Pregão eletrônico",
+      "lidos": 1208,
+      "selecionados": 9,
+      "paginas": 25,
+      "falhas": 0
+    }
+  ],
+  "erros": []
+}

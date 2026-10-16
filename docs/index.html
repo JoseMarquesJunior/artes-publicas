@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Artes Públicas · contratações em artes visuais no PNCP</title>
+  <meta name="description" content="Buscador de contratações públicas na área de artes visuais, a partir dos dados abertos do Portal Nacional de Contratações Públicas (PNCP).">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23a63d1c'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23fff6f1'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="conteudo">
+      <h1>Artes Públicas</h1>
+      <p class="subtitulo">Contratações públicas em artes visuais publicadas no PNCP: exposições, curadoria, murais, oficinas, acervos e afins.</p>
+      <p class="atualizado" id="atualizado">Carregando dados…</p>
+    </div>
+  </header>
+
+  <main class="conteudo">
+    <form class="filtros" id="filtros" role="search" autocomplete="off">
+      <label class="campo campo-busca">
+        <span>Buscar</span>
+        <input type="search" id="busca" placeholder="Objeto, órgão ou município" aria-label="Buscar por objeto, órgão ou município">
+      </label>
+      <label class="campo">
+        <span>UF</span>
+        <select id="uf"><option value="">Todas</option></select>
+      </label>
+      <label class="campo">
+        <span>Modalidade</span>
+        <select id="modalidade"><option value="">Todas</option></select>
+      </label>
+      <label class="campo">
+        <span>Ordenar por</span>
+        <select id="ordem">
+          <option value="recentes">Mais recentes</option>
+          <option value="prazo">Prazo de encerramento</option>
+        </select>
+      </label>
+      <label class="campo campo-toggle">
+        <input type="checkbox" id="abertas" role="switch">
+        <span>Só com propostas abertas</span>
+      </label>
+      <button type="button" id="limpar" class="link-botao">Limpar filtros</button>
+    </form>
+
+    <div class="barra-resultados">
+      <p class="contagem" id="contagem" aria-live="polite"></p>
+    </div>
+    <p class="status" id="status" hidden></p>
+
+    <section id="lista" class="lista" aria-label="Resultados da busca"></section>
+    <button type="button" id="mais" class="botao botao-largo" hidden>Mostrar mais</button>
+  </main>
+
+  <footer class="rodape">
+    <div class="conteudo">
+      <p class="aviso">O PNCP cobre contratações de serviços. Editais de fomento e prêmios (Lei Paulo Gustavo, PNAB etc.) são publicados em outros canais.</p>
+      <p>Fonte: <a href="https://pncp.gov.br" rel="noopener noreferrer" target="_blank">Portal Nacional de Contratações Públicas</a>. Os dados são atualizados uma vez por dia e filtrados por palavras-chave; confira sempre o edital original.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

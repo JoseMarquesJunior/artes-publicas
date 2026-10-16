@@ -1,0 +1,50 @@
+name: Atualizar dados do PNCP
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # todo dia às 06:00 UTC (03:00 em Brasília)
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: "Quantos dias para trás buscar (padrão 2). A API aceita ~30 req/min: 2 dias ≈ 8 min, 30 dias ≈ 2 h."
+        required: false
+        default: "2"
+      ate:
+        description: "Data final (AAAA-MM-DD). Vazio = hoje. Use para dividir a carga inicial em partes de 30 dias."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atualizar-dados
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Preparar Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Coletar contratações no PNCP
+        run: node scripts/fetch.mjs --dias ${{ inputs.dias || 2 }} ${{ inputs.ate != '' && format('--ate {0}', inputs.ate) || '' }}
+
+      - name: Commitar dados se houve mudança
+        run: |
+          if git diff --quiet -- docs/data; then
+            echo "Nenhuma mudança em docs/data; nada a commitar."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/*.json
+          git commit -m "dados: atualização automática $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
