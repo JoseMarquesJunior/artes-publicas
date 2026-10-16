@@ -39,6 +39,9 @@
 
 * { box-sizing: border-box; }
 
+/* O atributo hidden precisa vencer qualquer display definido por classe. */
+[hidden] { display: none !important; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {
@@ -105,7 +108,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 .filtros {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(12, minmax(0, 1fr)); /* minmax(0, …) deixa as colunas encolherem no celular */
   gap: 12px 14px;
   align-items: end;
   margin: 22px 0 14px;
@@ -120,6 +123,7 @@ a:hover { text-decoration-thickness: 2px; }
   display: flex;
   flex-direction: column;
   gap: 5px;
+  min-width: 0;
   grid-column: span 4;
   font-size: 0.82rem;
   color: var(--muted);
@@ -147,6 +151,8 @@ a:hover { text-decoration-thickness: 2px; }
   padding: 10px 12px;
   min-height: 44px;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .campo input[type="search"]:focus-visible,
