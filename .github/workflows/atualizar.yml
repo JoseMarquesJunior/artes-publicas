@@ -35,7 +35,8 @@ jobs:
           node-version: 20
 
       - name: Coletar contratações no PNCP
-        run: node scripts/fetch.mjs --dias ${{ inputs.dias || 2 }} ${{ inputs.ate != '' && format('--ate {0}', inputs.ate) || '' }}
+        # No cron os inputs são nulos: cai em 2 dias e sem --ate.
+        run: node scripts/fetch.mjs --dias ${{ inputs.dias || 2 }} ${{ inputs.ate && format('--ate {0}', inputs.ate) || '' }}
 
       - name: Commitar dados se houve mudança
         run: |
