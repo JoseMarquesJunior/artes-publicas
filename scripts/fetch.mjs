@@ -48,11 +48,29 @@ const ESPERA_429_MS = 30_000;    // pausa após um 429 (dobra a cada tentativa: 
 const ESPERA_ERRO_MS = 2000;     // pausa após 5xx ou erro de rede (dobra a cada tentativa)
 const ACERTOS_PARA_RELAXAR = 40; // requisições OK seguidas antes de reduzir o intervalo em 10%
 
-const USO = `Uso: node scripts/fetch.mjs [--dias N] [--ate AAAA-MM-DD] [--intervalo MS] [--paralelo N]
+// Classificação por IA (segunda peneira, depois das palavras-chave). Ver a seção "classificação por IA".
+const IA_MODELO = 'claude-haiku-5-5';
+const IA_URL = 'https://api.anthropic.com/v1/messages';
+const IA_VERSAO = '2023-06-01';           // cabeçalho anthropic-version
+const IA_LOTE = 30;                       // itens por requisição
+const IA_TRUNCAR_OBJETO = 600;            // caracteres do objeto enviados ao modelo
+const IA_TOKENS_POR_ITEM = 8;             // resposta: ~6 tokens por item ("1":"S",) + folga
+const IA_MARGEM_TOKENS = 40;
+const IA_MAX_TENTATIVAS = 3;              // em 429/5xx/rede
+const IA_INTERVALO_MS = 200;              // pausa entre lotes
+const IA_PRECO_ENTRADA_USD_POR_MTOK = 0.10; // claude-haiku-5-5, prompts até 100K tokens
+const IA_PRECO_SAIDA_USD_POR_MTOK = 0.50;
+const IA_DESCARTAR_N_DIAS = 30;           // itens reprovados pela IA saem da base depois de N dias
+
+const USO = `Uso: node scripts/fetch.mjs [--dias N] [--ate AAAA-MM-DD] [--intervalo MS] [--paralelo N] [--so-ia]
   --dias N         quantos dias para trás buscar a partir de --ate (padrão 2)
   --ate AAAA-MM-DD data final do período (padrão: hoje). Útil para dividir a carga inicial em partes
   --intervalo MS   espera mínima entre requisições (padrão ${INTERVALO_MS}; a API bloqueia com menos que isso)
   --paralelo N     tarefas simultâneas (padrão ${PARALELO_PADRAO}; o limite da API é por IP, então não acelera)
+  --so-ia          não consulta o PNCP; só classifica com IA os itens pendentes da base existente
+
+Classificação por IA: exige a variável de ambiente ANTHROPIC_API_KEY. Sem ela, os itens novos
+ficam marcados como "pendente" e são classificados na próxima execução que tiver a chave.
 
 A API sustenta ~30 requisições/min: 2 dias levam ~8 min, 30 dias ~2 h.
 Para 90 dias, rode em partes: --dias 30 · --dias 30 --ate <hoje-30> · --dias 30 --ate <hoje-60>.`;
@@ -94,7 +112,7 @@ function lerDataISO(texto) {
 }
 
 function lerArgumentos(argv) {
-  const args = { dias: 2, ate: null, intervalo: INTERVALO_MS, paralelo: PARALELO_PADRAO };
+  const args = { dias: 2, ate: null, intervalo: INTERVALO_MS, paralelo: PARALELO_PADRAO, soIa: false };
   const minimos = { dias: 0, intervalo: 0, paralelo: 1 };
   for (let i = 0; i < argv.length; i++) {
     let [chave, valor] = argv[i].split('=', 2);
@@ -102,8 +120,12 @@ function lerArgumentos(argv) {
       console.log(USO);
       process.exit(0);
     }
+    if (chave === '--so-ia') {
+      args.soIa = true;
+      continue;
+    }
     const nome = chave.startsWith('--') ? chave.slice(2) : '';
-    if (!(nome in args)) throw new Error(`Argumento desconhecido: ${argv[i]}\n${USO}`);
+    if (!(nome in minimos) && nome !== 'ate') throw new Error(`Argumento desconhecido: ${argv[i]}\n${USO}`);
     if (valor === undefined) valor = argv[++i];
     if (nome === 'ate') {
       args.ate = lerDataISO(String(valor ?? ''));
@@ -228,13 +250,33 @@ function normalizar(texto) {
 
 const escaparRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-/** Compila cada palavra num regex que exige início de palavra ('curador' não casa com 'procurador'). */
+/**
+ * Transforma uma palavra-chave em regex:
+ * - precisa começar no início de uma palavra do texto ('curador' não casa com 'procurador');
+ * - pode continuar por até 3 letras ('curador' casa 'curadores' e 'curadoria'; 'arte' casa 'artes'
+ *   mas não 'artesanato' nem 'arterial');
+ * - aceita os plurais irregulares mais comuns: -ção/-ções, -al/-ais, -ão/-ões;
+ * - hífen e espaço são intercambiáveis ('arte-educação' casa 'arte educação').
+ */
+function regexDePalavra(palavra) {
+  const partes = normalizar(palavra)
+    .split(' ')
+    .map((p) => {
+      let e = escaparRegex(p).replace(/-/g, '[\\s-]?');
+      if (p.endsWith('cao')) e = `${e.slice(0, -3)}c(?:ao|oes)`;
+      else if (p.endsWith('al')) e = `${e.slice(0, -2)}(?:al|ais)`;
+      else if (p.endsWith('ao')) e = `${e.slice(0, -2)}(?:ao|oes|aos)`;
+      return `${e}\\p{L}{0,3}`; // cada palavra da expressão pode ter até 3 letras a mais ('artistas visuais')
+    });
+  return new RegExp(`(?:^|[^\\p{L}\\p{N}])${partes.join('\\s+')}(?![\\p{L}\\p{N}])`, 'u');
+}
+
 function compilarPalavras(lista, nome) {
   if (!Array.isArray(lista)) throw new Error(`keywords.json: a lista "${nome}" precisa ser um array`);
   return lista
     .map((p) => String(p))
     .filter((p) => normalizar(p).length > 0)
-    .map((original) => ({ original, regex: new RegExp(`(?:^|[^\\p{L}\\p{N}])${escaparRegex(normalizar(original))}`, 'u') }));
+    .map((original) => ({ original, regex: regexDePalavra(original) }));
 }
 
 async function carregarPalavras() {
@@ -312,13 +354,17 @@ async function carregarExistentes() {
  */
 function mesclar(existentes, coletados, palavras, hoje) {
   const limite = somarDias(hoje, -RETENCAO_DIAS).toISOString();
+  const limiteReprovados = somarDias(hoje, -IA_DESCARTAR_N_DIAS).toISOString();
   const mapa = new Map();
   let removidosAntigos = 0;
   let removidosFiltro = 0;
+  let removidosReprovados = 0;
 
   for (const r of existentes) {
     if (!r?.numeroControlePNCP) continue;
     if ((r.dataPublicacaoPncp ?? '') < limite) { removidosAntigos++; continue; }
+    // Reprovados pela IA ficam um tempo (para não serem reclassificados a cada coleta) e depois saem.
+    if (r.ia === 'N' && (r.dataPublicacaoPncp ?? '') < limiteReprovados) { removidosReprovados++; continue; }
     const tags = classificar(r.objetoCompra, palavras);
     if (!tags) { removidosFiltro++; continue; }
     mapa.set(r.numeroControlePNCP, { ...r, tags });
@@ -332,14 +378,16 @@ function mesclar(existentes, coletados, palavras, hoje) {
     if (!atual) { novos++; mapa.set(r.numeroControlePNCP, r); continue; }
     const existenteMaisNovo = atual.dataAtualizacaoGlobal && r.dataAtualizacaoGlobal && r.dataAtualizacaoGlobal < atual.dataAtualizacaoGlobal;
     if (existenteMaisNovo) continue;
-    if (JSON.stringify(atual) !== JSON.stringify(r)) atualizados++;
-    mapa.set(r.numeroControlePNCP, r);
+    // O veredito da IA é preservado: um item já avaliado nunca volta para a fila do modelo.
+    const novo = atual.ia ? { ...r, ia: atual.ia } : r;
+    if (JSON.stringify(atual) !== JSON.stringify(novo)) atualizados++;
+    mapa.set(r.numeroControlePNCP, novo);
   }
 
   const lista = [...mapa.values()].sort(
     (a, b) => (b.dataPublicacaoPncp ?? '').localeCompare(a.dataPublicacaoPncp ?? '') || a.numeroControlePNCP.localeCompare(b.numeroControlePNCP),
   );
-  return { lista, novos, atualizados, removidosAntigos, removidosFiltro };
+  return { lista, novos, atualizados, removidosAntigos, removidosFiltro, removidosReprovados };
 }
 
 /** Um registro por linha: diffs legíveis no git e arquivo compacto. */
@@ -393,6 +441,145 @@ async function executarEmParalelo(itens, limite, fn) {
   await Promise.all(trabalhadores);
 }
 
+// ---------------------------------------------------------------- classificação por IA
+
+/**
+ * Segunda peneira: o modelo recebe só os itens que passaram pelas palavras-chave e ainda não têm
+ * o campo "ia" (S = sim, N = não, D = dúvida), em lotes, e responde um JSON mínimo. Sem a variável
+ * ANTHROPIC_API_KEY nada é chamado e os itens ficam "pendente". A chave só vive em memória.
+ *
+ * API: POST https://api.anthropic.com/v1/messages (Messages API). Cabeçalhos x-api-key,
+ * anthropic-version e content-type. Resposta: content[] (blocos; lê-se só os de type "text"),
+ * stop_reason e usage.input_tokens / usage.output_tokens.
+ * O claude-haiku-5-5 rejeita (400) temperature diferente do padrão; para uma resposta estável e
+ * barata usa-se thinking desligado e effort "low".
+ */
+const IA_PROMPT_SISTEMA = `Você recebe uma lista numerada de objetos de contratações públicas brasileiras (modalidade, órgão e descrição do objeto). Para cada item, decida se é uma oportunidade real de trabalho para uma profissional formada em artes visuais: criação artística, curadoria, exposições, oficinas de arte, ilustração, design gráfico, murais, cenografia, restauro e conservação de obras ou acervos artísticos, arte-educação, mediação cultural, produção cultural.
+
+Responda S (sim), N (não) ou D (dúvida, quando o objeto é vago demais para decidir).
+
+Muitos itens chegaram por uma palavra-chave usada em outro sentido; esses recebem N. Exemplos de N: "exposição a agentes químicos", "acervo bibliográfico", "design de software", "restauração de pavimento", "serigrafia industrial para uniformes", "manutenção do ar-condicionado do museu".
+
+Responda apenas com um JSON em uma única linha mapeando o número de cada item à letra, por exemplo {"1":"S","2":"N","3":"D"}. Inclua todos os números. Sem explicações, sem texto fora do JSON.`;
+
+function montarLote(itens) {
+  return itens
+    .map((r, i) => {
+      const objeto = String(r.objetoCompra ?? '').replace(/\s+/g, ' ').trim().slice(0, IA_TRUNCAR_OBJETO);
+      return `${i + 1}. [${r.modalidadeNome ?? 'modalidade não informada'}] ${r.orgao ?? 'órgão não informado'}: ${objeto}`;
+    })
+    .join('\n');
+}
+
+function extrairJson(texto) {
+  const ini = texto.indexOf('{');
+  const fim = texto.lastIndexOf('}');
+  if (ini < 0 || fim <= ini) return null;
+  try {
+    const valor = JSON.parse(texto.slice(ini, fim + 1));
+    return valor && typeof valor === 'object' && !Array.isArray(valor) ? valor : null;
+  } catch {
+    return null;
+  }
+}
+
+async function chamarModelo(chave, lote, ia) {
+  const corpo = {
+    model: IA_MODELO,
+    max_tokens: lote.length * IA_TOKENS_POR_ITEM + IA_MARGEM_TOKENS,
+    system: IA_PROMPT_SISTEMA,
+    thinking: { type: 'disabled' },
+    output_config: { effort: 'low' },
+    messages: [{ role: 'user', content: montarLote(lote) }],
+  };
+  for (let tentativa = 1; ; tentativa++) {
+    ia.requisicoes++;
+    try {
+      const res = await fetch(IA_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-api-key': chave, 'anthropic-version': IA_VERSAO },
+        body: JSON.stringify(corpo),
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+      });
+      if (!res.ok) throw new ErroHttp(res.status, IA_URL, await res.text().catch(() => ''), res.headers.get('retry-after'));
+      return await res.json();
+    } catch (erro) {
+      const retentavel = erro instanceof ErroHttp ? erro.retentavel : true;
+      if (!retentavel || tentativa >= IA_MAX_TENTATIVAS) throw erro;
+      const espera = (erro instanceof ErroHttp && erro.retryAfterMs) || 2000 * 2 ** (tentativa - 1); // 2 s, 4 s
+      log(`  IA: ${descreverErro(erro)} — tentativa ${tentativa}/${IA_MAX_TENTATIVAS}, nova tentativa em ${Math.round(espera / 1000)} s`);
+      await dormir(espera);
+    }
+  }
+}
+
+/** Marca em cada item da lista o campo "ia". Devolve as estatísticas para o meta.json. */
+async function classificarPorIA(lista) {
+  const chave = process.env.ANTHROPIC_API_KEY;
+  const ia = {
+    modelo: IA_MODELO,
+    ativo: Boolean(chave),
+    classificados: 0, aprovados: 0, reprovados: 0, duvidas: 0, pendentes: 0,
+    lotes: 0, lotesFalhos: 0, requisicoes: 0,
+    tokensEntrada: 0, tokensSaida: 0, custoUsd: 0,
+  };
+  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia));
+
+  if (!chave) {
+    for (const r of fila) r.ia = 'pendente';
+    ia.pendentes = fila.length;
+    if (fila.length) log(`IA: ANTHROPIC_API_KEY não definida; ${fila.length} itens ficam como "pendente".`);
+    return ia;
+  }
+  if (fila.length === 0) {
+    log('IA: nenhum item novo para classificar.');
+    return ia;
+  }
+
+  log(`IA: ${fila.length} itens a classificar com ${IA_MODELO}, em lotes de ${IA_LOTE}.`);
+  for (let i = 0; i < fila.length; i += IA_LOTE) {
+    const lote = fila.slice(i, i + IA_LOTE);
+    ia.lotes++;
+    let respostas = null;
+    try {
+      const resposta = await chamarModelo(chave, lote, ia);
+      ia.tokensEntrada += resposta.usage?.input_tokens ?? 0;
+      ia.tokensSaida += resposta.usage?.output_tokens ?? 0;
+      if (resposta.stop_reason === 'refusal') {
+        log('  IA: lote recusado pelo modelo (stop_reason refusal); itens ficam pendentes');
+      } else {
+        const texto = (resposta.content ?? []).filter((b) => b.type === 'text').map((b) => b.text).join('');
+        respostas = extrairJson(texto);
+        if (!respostas) log(`  IA: resposta sem JSON válido (stop_reason ${resposta.stop_reason}); itens do lote ficam pendentes`);
+        else if (resposta.stop_reason === 'max_tokens') log('  IA: resposta cortada por max_tokens; itens faltantes ficam pendentes');
+      }
+    } catch (erro) {
+      ia.lotesFalhos++;
+      log(`  IA: lote ${ia.lotes} falhou de vez (${descreverErro(erro)}); itens ficam pendentes`);
+    }
+
+    lote.forEach((r, idx) => {
+      const v = respostas ? String(respostas[String(idx + 1)] ?? '').trim().toUpperCase() : '';
+      if (v === 'S' || v === 'N' || v === 'D') {
+        r.ia = v;
+        ia.classificados++;
+        if (v === 'S') ia.aprovados++;
+        else if (v === 'N') ia.reprovados++;
+        else ia.duvidas++;
+      } else {
+        r.ia = 'pendente';
+        ia.pendentes++;
+      }
+    });
+
+    if (ia.lotes % 10 === 0) log(`  IA: ${Math.min(i + IA_LOTE, fila.length)}/${fila.length} itens processados`);
+    if (i + IA_LOTE < fila.length) await dormir(IA_INTERVALO_MS);
+  }
+
+  ia.custoUsd = Number(((ia.tokensEntrada * IA_PRECO_ENTRADA_USD_POR_MTOK + ia.tokensSaida * IA_PRECO_SAIDA_USD_POR_MTOK) / 1e6).toFixed(4));
+  return ia;
+}
+
 // ---------------------------------------------------------------- principal
 
 async function main() {
@@ -411,7 +598,8 @@ async function main() {
   log(`Estimativa: a API sustenta ~${Math.round(60_000 / Math.max(args.intervalo, 1))} requisições/min; cada dia tem em torno de 120 páginas somando as modalidades.`);
 
   const tarefas = [];
-  for (const modalidade of MODALIDADES) for (const janela of janelas(inicio, fim)) tarefas.push({ modalidade, janela });
+  if (args.soIa) log('Modo --so-ia: o PNCP não será consultado.');
+  else for (const modalidade of MODALIDADES) for (const janela of janelas(inicio, fim)) tarefas.push({ modalidade, janela });
 
   const contexto = { requisicoes: 0 };
   const erros = [];
@@ -436,20 +624,26 @@ async function main() {
     }
   });
 
-  if (erros.length === tarefas.length) {
+  if (!args.soIa && erros.length === tarefas.length) {
     console.error('Todas as consultas falharam; nada foi gravado para não registrar uma atualização falsa.');
     process.exit(1);
   }
 
   const resultado = mesclar(existentes, coletados, palavras, hoje);
+  const ia = await classificarPorIA(resultado.lista);
   const duracaoSegundos = Math.round((Date.now() - inicioExecucao) / 1000);
+
+  const porVeredito = { S: 0, N: 0, D: 0, pendente: 0 };
+  for (const r of resultado.lista) porVeredito[r.ia in porVeredito ? r.ia : 'pendente']++;
 
   const meta = {
     atualizadoEm: new Date().toISOString(),
     total: resultado.lista.length,
     totalNovos: resultado.novos,
     totalAtualizados: resultado.atualizados,
-    removidos: { antigos: resultado.removidosAntigos, foraDoFiltro: resultado.removidosFiltro },
+    removidos: { antigos: resultado.removidosAntigos, foraDoFiltro: resultado.removidosFiltro, reprovadosIA: resultado.removidosReprovados },
+    base: { aprovados: porVeredito.S, reprovados: porVeredito.N, duvidas: porVeredito.D, pendentes: porVeredito.pendente },
+    ia: { ...ia, candidatosRegexNestaExecucao: coletados.size },
     periodo: { de: fmtISO(inicio), ate: fmtISO(fim), dias: args.dias },
     retencaoDias: RETENCAO_DIAS,
     requisicoes: contexto.requisicoes,
@@ -471,8 +665,15 @@ async function main() {
     console.log(`  ${m.nome.padEnd(24)} ${String(m.lidos).padStart(7)} lidos  ${String(m.selecionados).padStart(5)} selecionados${m.falhas ? `  (${m.falhas} janela(s) com falha)` : ''}`);
   }
   console.log(linha);
-  console.log(`  Novos: ${resultado.novos} · Atualizados: ${resultado.atualizados} · Removidos: ${resultado.removidosAntigos} antigos, ${resultado.removidosFiltro} fora do filtro`);
-  console.log(`  Base final: ${meta.total} registros → ${path.relative(RAIZ, ARQ_DADOS)}`);
+  console.log(`  Novos: ${resultado.novos} · Atualizados: ${resultado.atualizados} · Removidos: ${resultado.removidosAntigos} antigos, ${resultado.removidosFiltro} fora do filtro, ${resultado.removidosReprovados} reprovados antigos`);
+  console.log(`  Palavras-chave aprovaram ${coletados.size} itens nesta execução`);
+  if (ia.ativo) {
+    console.log(`  IA (${ia.modelo}): ${ia.classificados} classificados → ${ia.aprovados} S · ${ia.reprovados} N · ${ia.duvidas} D · ${ia.pendentes} pendentes${ia.lotesFalhos ? ` · ${ia.lotesFalhos} lote(s) com falha` : ''}`);
+    console.log(`  IA: ${ia.requisicoes} requisições · ${ia.tokensEntrada} tokens de entrada · ${ia.tokensSaida} de saída · custo estimado US$ ${ia.custoUsd.toFixed(4)}`);
+  } else {
+    console.log(`  IA: desligada (ANTHROPIC_API_KEY ausente) · ${ia.pendentes} itens pendentes`);
+  }
+  console.log(`  Base final: ${meta.total} registros (${porVeredito.S} S · ${porVeredito.N} N · ${porVeredito.D} D · ${porVeredito.pendente} pendentes) → ${path.relative(RAIZ, ARQ_DADOS)}`);
   if (erros.length) {
     console.log(`  Falhas (${erros.length}):`);
     for (const e of erros) console.log(`    - ${e.modalidade} ${e.de}..${e.ate}: ${e.erro}`);

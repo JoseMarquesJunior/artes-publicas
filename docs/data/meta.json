@@ -1,21 +1,44 @@
 {
-  "atualizadoEm": "2026-10-16T18:11:15.010Z",
+  "atualizadoEm": "2026-10-16T18:25:31.713Z",
   "total": 30,
-  "totalNovos": 29,
-  "totalAtualizados": 1,
+  "totalNovos": 0,
+  "totalAtualizados": 0,
   "removidos": {
     "antigos": 0,
-    "foraDoFiltro": 1
+    "foraDoFiltro": 0,
+    "reprovadosIA": 0
+  },
+  "base": {
+    "aprovados": 0,
+    "reprovados": 0,
+    "duvidas": 0,
+    "pendentes": 30
+  },
+  "ia": {
+    "modelo": "claude-haiku-5-5",
+    "ativo": false,
+    "classificados": 0,
+    "aprovados": 0,
+    "reprovados": 0,
+    "duvidas": 0,
+    "pendentes": 30,
+    "lotes": 0,
+    "lotesFalhos": 0,
+    "requisicoes": 0,
+    "tokensEntrada": 0,
+    "tokensSaida": 0,
+    "custoUsd": 0,
+    "candidatosRegexNestaExecucao": 0
   },
   "periodo": {
-    "de": "2026-10-16",
+    "de": "2026-10-14",
     "ate": "2026-10-16",
-    "dias": 0
+    "dias": 2
   },
   "retencaoDias": 365,
-  "requisicoes": 88,
-  "bloqueios429": 1,
-  "duracaoSegundos": 270,
+  "requisicoes": 0,
+  "bloqueios429": 0,
+  "duracaoSegundos": 0,
   "modalidades": [
     {
       "codigo": 3,
@@ -28,33 +51,33 @@
     {
       "codigo": 8,
       "nome": "Dispensa de licitação",
-      "lidos": 2233,
-      "selecionados": 15,
-      "paginas": 45,
+      "lidos": 0,
+      "selecionados": 0,
+      "paginas": 0,
       "falhas": 0
     },
     {
       "codigo": 9,
       "nome": "Inexigibilidade",
-      "lidos": 750,
-      "selecionados": 6,
-      "paginas": 15,
+      "lidos": 0,
+      "selecionados": 0,
+      "paginas": 0,
       "falhas": 0
     },
     {
       "codigo": 12,
       "nome": "Credenciamento",
-      "lidos": 49,
+      "lidos": 0,
       "selecionados": 0,
-      "paginas": 1,
+      "paginas": 0,
       "falhas": 0
     },
     {
       "codigo": 6,
       "nome": "Pregão eletrônico",
-      "lidos": 1208,
-      "selecionados": 9,
-      "paginas": 25,
+      "lidos": 0,
+      "selecionados": 0,
+      "paginas": 0,
       "falhas": 0
     }
   ],

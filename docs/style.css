@@ -197,6 +197,27 @@ a:hover { text-decoration-thickness: 2px; }
   padding: 8px 0;
 }
 
+/* Toggle discreto da classificação por IA: checkbox comum, texto menor e apagado. */
+.campo-discreto {
+  grid-column: span 12;
+  font-size: 0.82rem;
+  color: var(--muted);
+  padding-top: 0;
+  margin-top: -4px;
+}
+.campo-discreto input[type="checkbox"] {
+  appearance: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background: none;
+  accent-color: var(--accent);
+}
+.campo-discreto input[type="checkbox"]::after { content: none; }
+
+.pill-pendente { background: transparent; border: 1px dashed var(--border); }
+.pill-duvida { background: var(--accent-soft); color: var(--accent-soft-text); }
+
 /* ------------------------------------------------------------ botões */
 
 .botao {
@@ -402,7 +423,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 @media (max-width: 640px) {
   .campo { grid-column: span 6; }
-  .campo-busca, .campo-toggle { grid-column: span 12; }
+  .campo-busca, .campo-toggle, .campo-discreto { grid-column: span 12; }
   #limpar { grid-column: span 12; justify-self: start; }
   .card { padding: 14px; }
   .controle { margin-left: 0; width: 100%; }

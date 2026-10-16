@@ -9,7 +9,7 @@
   const DIA_MS = 86_400_000;
 
   const el = {};
-  for (const id of ['busca', 'uf', 'modalidade', 'ordem', 'abertas', 'limpar', 'contagem', 'status', 'lista', 'mais', 'atualizado', 'filtros']) {
+  for (const id of ['busca', 'uf', 'modalidade', 'ordem', 'abertas', 'duvida', 'limpar', 'contagem', 'status', 'lista', 'mais', 'atualizado', 'filtros']) {
     el[id] = document.getElementById(id);
   }
 
@@ -17,7 +17,13 @@
   const fmtData = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   const fmtDataHora = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-  const estado = { dados: [], filtrados: [], visiveis: 0, filtros: lerFiltrosDaUrl() };
+  // dados: tudo que veio do JSON; base: o que pode aparecer (a IA reprovou os "N", que nunca são exibidos).
+  const estado = { dados: [], base: [], filtrados: [], visiveis: 0, filtros: lerFiltrosDaUrl() };
+
+  /** Veredito da classificação por IA: S (aprovado), N (reprovado), D (dúvida) ou pendente (não verificado). */
+  function veredito(r) {
+    return r.ia === 'S' || r.ia === 'N' || r.ia === 'D' ? r.ia : 'pendente';
+  }
 
   // ------------------------------------------------------------ utilidades
 
@@ -53,6 +59,7 @@
       uf: p.get('uf') ?? '',
       mod: p.get('mod') ?? '',
       abertas: p.get('abertas') === '1',
+      duvida: p.get('duvida') === '1',
       ord: p.get('ord') === 'prazo' ? 'prazo' : 'recentes',
     };
   }
@@ -64,6 +71,7 @@
     if (f.uf) p.set('uf', f.uf);
     if (f.mod) p.set('mod', f.mod);
     if (f.abertas) p.set('abertas', '1');
+    if (f.duvida) p.set('duvida', '1');
     if (f.ord !== 'recentes') p.set('ord', f.ord);
     const qs = p.toString();
     history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
@@ -77,6 +85,7 @@
     el.uf.value = f.uf;
     el.modalidade.value = f.mod;
     el.abertas.checked = f.abertas;
+    el.duvida.checked = f.duvida;
     el.ordem.value = f.ord;
   }
 
@@ -113,8 +122,9 @@
       return;
     }
     const partes = [`Atualizado em ${fmtData.format(d)} às ${d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`];
-    if (typeof meta.total === 'number') partes.push(`${plural(meta.total, 'contratação', 'contratações')} nos últimos 12 meses`);
-    if (typeof meta.totalNovos === 'number' && meta.totalNovos > 0) partes.push(`${plural(meta.totalNovos, 'nova', 'novas')} na última coleta`);
+    const aprovadas = estado.dados.filter((r) => veredito(r) === 'S').length;
+    partes.push(`${plural(aprovadas, 'contratação confirmada', 'contratações confirmadas')} nos últimos 12 meses`);
+    if (typeof meta.totalNovos === 'number' && meta.totalNovos > 0) partes.push(`${plural(meta.totalNovos, 'nova candidata', 'novas candidatas')} na última coleta`);
     el.atualizado.textContent = partes.join(' · ');
     if (Array.isArray(meta.erros) && meta.erros.length) {
       el.atualizado.append(' ');
@@ -126,11 +136,12 @@
   // ------------------------------------------------------------ filtro e ordenação
 
   function filtrar() {
-    const { q, uf, mod, abertas, ord } = estado.filtros;
+    const { q, uf, mod, abertas, duvida, ord } = estado.filtros;
     const termos = normalizar(q).split(/\s+/).filter(Boolean);
     const agora = Date.now();
 
-    const lista = estado.dados.filter((r) => {
+    const lista = estado.base.filter((r) => {
+      if (!duvida && veredito(r) === 'D') return false;
       if (uf && r.uf !== uf) return false;
       if (mod && r.modalidadeNome !== mod) return false;
       if (abertas && !(r._enc !== null && r._enc > agora)) return false;
@@ -160,7 +171,7 @@
 
   function atualizarContagem() {
     const n = estado.filtrados.length;
-    const total = estado.dados.length;
+    const total = estado.base.filter((r) => estado.filtros.duvida || veredito(r) !== 'D').length;
     el.contagem.textContent = n === total
       ? plural(n, 'contratação', 'contratações')
       : `${plural(n, 'contratação encontrada', 'contratações encontradas')} de ${total.toLocaleString('pt-BR')}`;
@@ -209,6 +220,16 @@
       topo.append(h('span', 'pill pill-urgente', diasRestantes <= 1 ? 'Encerra em menos de 1 dia' : `Encerra em ${diasRestantes} dias`));
     } else if (aberto) {
       topo.append(h('span', 'pill pill-aberta', 'Propostas abertas'));
+    }
+    const v = veredito(r);
+    if (v === 'pendente') {
+      const selo = h('span', 'pill pill-pendente', 'Não verificado');
+      selo.title = 'Ainda não passou pela classificação automática; pode ser um falso positivo das palavras-chave.';
+      topo.append(selo);
+    } else if (v === 'D') {
+      const selo = h('span', 'pill pill-duvida', 'Em dúvida');
+      selo.title = 'A classificação automática não conseguiu decidir se é uma oportunidade em artes visuais.';
+      topo.append(selo);
     }
     card.append(topo);
 
@@ -293,6 +314,7 @@
       uf: el.uf.value,
       mod: el.modalidade.value,
       abertas: el.abertas.checked,
+      duvida: el.duvida.checked,
       ord: el.ordem.value === 'prazo' ? 'prazo' : 'recentes',
     };
     gravarFiltrosNaUrl();
@@ -310,12 +332,13 @@
   function ligarEventos() {
     el.filtros.addEventListener('submit', (e) => e.preventDefault());
     el.busca.addEventListener('input', debounce(aoMudarFiltro, 150));
-    for (const c of [el.uf, el.modalidade, el.ordem, el.abertas]) c.addEventListener('change', aoMudarFiltro);
+    for (const c of [el.uf, el.modalidade, el.ordem, el.abertas, el.duvida]) c.addEventListener('change', aoMudarFiltro);
     el.limpar.addEventListener('click', () => {
       el.busca.value = '';
       el.uf.value = '';
       el.modalidade.value = '';
       el.abertas.checked = false;
+      el.duvida.checked = false;
       el.ordem.value = 'recentes';
       aoMudarFiltro();
       el.busca.focus();
@@ -347,10 +370,11 @@
       if (!Array.isArray(dados)) throw new Error('contratacoes.json não é uma lista');
 
       estado.dados = dados.map(preparar);
+      estado.base = estado.dados.filter((r) => veredito(r) !== 'N'); // reprovados pela IA nunca aparecem
       mostrarAtualizado(meta);
 
-      const ufs = [...new Set(estado.dados.map((r) => r.uf).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-      const modalidades = [...new Set(estado.dados.map((r) => r.modalidadeNome).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      const ufs = [...new Set(estado.base.map((r) => r.uf).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      const modalidades = [...new Set(estado.base.map((r) => r.modalidadeNome).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
       preencherSelect(el.uf, ufs);
       preencherSelect(el.modalidade, modalidades);
 
