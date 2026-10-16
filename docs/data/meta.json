@@ -1,7 +1,7 @@
 {
-  "atualizadoEm": "2026-10-16T20:54:24.382Z",
-  "total": 6415,
-  "totalNovos": 6385,
+  "atualizadoEm": "2026-10-16T21:10:38.364Z",
+  "total": 6432,
+  "totalNovos": 17,
   "totalAtualizados": 0,
   "removidos": {
     "antigos": 0,
@@ -9,75 +9,75 @@
     "reprovadosIA": 0
   },
   "base": {
-    "aprovados": 0,
-    "reprovados": 0,
-    "duvidas": 0,
-    "pendentes": 6415
+    "aprovados": 1730,
+    "reprovados": 4108,
+    "duvidas": 594,
+    "pendentes": 0
   },
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": false,
-    "classificados": 0,
-    "aprovados": 0,
-    "reprovados": 0,
-    "duvidas": 0,
-    "pendentes": 6415,
-    "lotes": 0,
+    "ativo": true,
+    "classificados": 6169,
+    "aprovados": 1666,
+    "reprovados": 3939,
+    "duvidas": 564,
+    "pendentes": 0,
+    "lotes": 206,
     "lotesFalhos": 0,
-    "requisicoes": 0,
-    "tokensEntrada": 0,
-    "tokensSaida": 0,
-    "custoUsd": 0,
-    "candidatosRegexNestaExecucao": 6415
+    "requisicoes": 206,
+    "tokensEntrada": 1170409,
+    "tokensSaida": 31875,
+    "custoUsd": 0.133,
+    "candidatosRegexNestaExecucao": 280
   },
   "periodo": {
-    "de": "2026-09-16",
+    "de": "2026-10-16",
     "ate": "2026-10-16",
-    "dias": 30
+    "dias": 0
   },
   "retencaoDias": 365,
-  "requisicoes": 2486,
-  "bloqueios429": 6,
-  "duracaoSegundos": 8859,
+  "requisicoes": 114,
+  "bloqueios429": 1,
+  "duracaoSegundos": 609,
   "modalidades": [
     {
       "codigo": 3,
       "nome": "Concurso",
-      "lidos": 6,
-      "selecionados": 4,
-      "paginas": 1,
+      "lidos": 0,
+      "selecionados": 0,
+      "paginas": 0,
       "falhas": 0
     },
     {
       "codigo": 8,
       "nome": "Dispensa de licitação",
-      "lidos": 63592,
-      "selecionados": 1794,
-      "paginas": 1273,
+      "lidos": 2948,
+      "selecionados": 99,
+      "paginas": 59,
       "falhas": 0
     },
     {
       "codigo": 9,
       "nome": "Inexigibilidade",
-      "lidos": 23041,
-      "selecionados": 3569,
-      "paginas": 462,
+      "lidos": 967,
+      "selecionados": 139,
+      "paginas": 20,
       "falhas": 0
     },
     {
       "codigo": 12,
       "nome": "Credenciamento",
-      "lidos": 2104,
-      "selecionados": 185,
-      "paginas": 43,
+      "lidos": 74,
+      "selecionados": 7,
+      "paginas": 2,
       "falhas": 0
     },
     {
       "codigo": 6,
       "nome": "Pregão eletrônico",
-      "lidos": 34880,
-      "selecionados": 863,
-      "paginas": 699,
+      "lidos": 1514,
+      "selecionados": 35,
+      "paginas": 31,
       "falhas": 0
     }
   ],
