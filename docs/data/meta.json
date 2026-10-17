@@ -1,49 +1,49 @@
 {
-  "atualizadoEm": "2026-10-17T13:23:55.752Z",
-  "total": 6213,
-  "totalNovos": 0,
+  "atualizadoEm": "2026-10-17T13:24:29.215Z",
+  "total": 6214,
+  "totalNovos": 1,
   "totalAtualizados": 0,
   "removidos": {
-    "antigos": 1,
+    "antigos": 0,
     "foraDoFiltro": 0,
     "reprovadosAntigos": 0,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
   "base": {
-    "aprovados": 1730,
-    "reprovados": 3877,
-    "duvidas": 599,
-    "pendentes": 7
+    "aprovados": 1731,
+    "reprovados": 3878,
+    "duvidas": 605,
+    "pendentes": 0
   },
   "porTipo": {
     "contratacao": {
-      "total": 6206,
+      "total": 6207,
       "S": 1730,
       "N": 3877,
-      "D": 599,
+      "D": 600,
       "pendente": 0
     },
     "chamamento": {
       "total": 3,
-      "S": 0,
+      "S": 1,
       "N": 0,
-      "D": 0,
-      "pendente": 3
+      "D": 2,
+      "pendente": 0
     },
     "premio": {
       "total": 1,
       "S": 0,
       "N": 0,
-      "D": 0,
-      "pendente": 1
+      "D": 1,
+      "pendente": 0
     },
     "fomento": {
       "total": 3,
       "S": 0,
-      "N": 0,
-      "D": 0,
-      "pendente": 3
+      "N": 1,
+      "D": 2,
+      "pendente": 0
     }
   },
   "fontes": [
@@ -53,7 +53,61 @@
       "tipo": "pncp",
       "ativo": true,
       "observacao": null,
-      "naBase": 6206,
+      "lidos": 42,
+      "candidatos": 5,
+      "requisicoes": 5,
+      "erro": null,
+      "bloqueios429": 0,
+      "periodo": {
+        "de": "2026-10-17",
+        "ate": "2026-10-17",
+        "dias": 0
+      },
+      "modalidades": [
+        {
+          "codigo": 3,
+          "nome": "Concurso",
+          "lidos": 0,
+          "candidatos": 0,
+          "paginas": 0,
+          "falhas": 0
+        },
+        {
+          "codigo": 8,
+          "nome": "Dispensa de licitação",
+          "lidos": 22,
+          "candidatos": 1,
+          "paginas": 1,
+          "falhas": 0
+        },
+        {
+          "codigo": 9,
+          "nome": "Inexigibilidade",
+          "lidos": 11,
+          "candidatos": 4,
+          "paginas": 1,
+          "falhas": 0
+        },
+        {
+          "codigo": 12,
+          "nome": "Credenciamento",
+          "lidos": 0,
+          "candidatos": 0,
+          "paginas": 0,
+          "falhas": 0
+        },
+        {
+          "codigo": 6,
+          "nome": "Pregão eletrônico",
+          "lidos": 9,
+          "candidatos": 0,
+          "paginas": 1,
+          "falhas": 0
+        }
+      ],
+      "erros": [],
+      "novos": 1,
+      "naBase": 6207,
       "aprovadosNaBase": 1730
     },
     {
@@ -62,15 +116,13 @@
       "tipo": "mapas",
       "ativo": true,
       "observacao": null,
-      "lidos": 4,
-      "candidatos": 2,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
+      "lidos": 0,
+      "candidatos": 0,
+      "requisicoes": 0,
+      "erro": "HTTP 403 (Acesso Bloqueado #gocache-error-page { color: #404040 !important; font-family: \"Open Sans\", Helvetic…)",
       "novos": 0,
       "naBase": 1,
-      "aprovadosNaBase": 0
+      "aprovadosNaBase": 1
     },
     {
       "fonte": "mapas:lagoa-santa",
@@ -80,10 +132,8 @@
       "observacao": null,
       "lidos": 0,
       "candidatos": 0,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
+      "requisicoes": 0,
+      "erro": "HTTP 403 (Just a moment... *{box-sizing:border-box;margin:0;padding:0}html{line-height:1.15;-webkit-text-size-…)",
       "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
@@ -148,27 +198,61 @@
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": false,
-    "classificados": 0,
-    "aprovados": 0,
-    "reprovados": 0,
-    "duvidas": 0,
-    "pendentes": 7,
-    "lotes": 0,
+    "ativo": true,
+    "classificados": 8,
+    "aprovados": 1,
+    "reprovados": 1,
+    "duvidas": 6,
+    "pendentes": 0,
+    "lotes": 1,
     "lotesFalhos": 0,
-    "requisicoes": 0,
-    "tokensEntrada": 0,
-    "tokensSaida": 0,
-    "custoUsd": 0,
-    "porTipo": {},
-    "candidatosNestaExecucao": 5
+    "requisicoes": 1,
+    "tokensEntrada": 2167,
+    "tokensSaida": 95,
+    "custoUsd": 0.0003,
+    "porTipo": {
+      "chamamento": {
+        "S": 1,
+        "N": 0,
+        "D": 2
+      },
+      "premio": {
+        "S": 0,
+        "N": 0,
+        "D": 1
+      },
+      "fomento": {
+        "S": 0,
+        "N": 1,
+        "D": 2
+      },
+      "contratacao": {
+        "S": 0,
+        "N": 0,
+        "D": 1
+      }
+    },
+    "candidatosNestaExecucao": 8
   },
   "dedup": {
     "fundidosNestaExecucao": 0,
     "duplicadosConhecidos": 0
   },
-  "periodoPncp": null,
+  "periodoPncp": {
+    "de": "2026-10-17",
+    "ate": "2026-10-17",
+    "dias": 0
+  },
   "retencaoDias": 365,
-  "duracaoSegundos": 5,
-  "erros": []
+  "duracaoSegundos": 17,
+  "erros": [
+    {
+      "fonte": "mapas:bh",
+      "mensagem": "HTTP 403 (Acesso Bloqueado #gocache-error-page { color: #404040 !important; font-family: \"Open Sans\", Helvetic…)"
+    },
+    {
+      "fonte": "mapas:lagoa-santa",
+      "mensagem": "HTTP 403 (Just a moment... *{box-sizing:border-box;margin:0;padding:0}html{line-height:1.15;-webkit-text-size-…)"
+    }
+  ]
 }
