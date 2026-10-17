@@ -49,6 +49,7 @@ export function textoParaFiltro(registro) {
 }
 
 export function filtrar(registro, palavras) {
+  if (PADRAO_FASE.test(normalizar(registro.titulo))) return null; // fase de edital que entrou antes desta regra
   return filtrarPorPalavras(textoParaFiltro(registro), palavras, extrasDeAreas(registro.detalhes?.areas));
 }
 
