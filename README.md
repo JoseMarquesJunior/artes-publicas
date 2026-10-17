@@ -28,9 +28,12 @@ scripts/fontes/mapas.mjs ─┤→ scripts/fetch.mjs → classificar.mjs → doc
 | Fonte (`fontes.json`) | O que é | Estado |
 | --- | --- | --- |
 | `pncp` | API pública do PNCP, `GET /v1/contratacoes/publicacao`, modalidades Concurso, Dispensa, Inexigibilidade, Credenciamento e Pregão eletrônico | ativa |
-| `mapas:bh` | Mapa Cultural BH (Fundação Municipal de Cultura) | ativa |
-| `mapas:lagoa-santa`, `mapas:nova-lima`, `mapas:santa-luzia`, `mapas:ribeirao-das-neves` | Instâncias municipais do Mapas Culturais na Grande BH | ativas |
-| `mapas:nacional` | Mapa da Cultura (MinC) | **desligada**: a API está atrás de um desafio JavaScript do Cloudflare e responde 403 a qualquer cliente que não seja navegador (verificado em 2026-10-17) |
+| `mapas:nova-lima`, `mapas:santa-luzia`, `mapas:ribeirao-das-neves` | Instâncias municipais do Mapas Culturais na Grande BH | ativas, coletadas pelo Action |
+| `mapas:bh` | Mapa Cultural BH (Fundação Municipal de Cultura) | ativa, mas **bloqueada no CI**: o WAF (GoCache) devolve 403 a IPs de datacenter, inclusive do GitHub Actions, com qualquer cabeçalho. Só é coletada quando `fetch.mjs` roda numa máquina comum (`bloqueadoNoCI: true` em `fontes.json`) |
+| `mapas:lagoa-santa` | Mapa Cultural Lagoa Santa | ativa, **bloqueada no CI** (desafio JavaScript do Cloudflare para datacenters); mesma regra acima |
+| `mapas:nacional` | Mapa da Cultura (MinC) | **desligada**: desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador, inclusive de casa (verificado em 2026-10-17) |
+
+Fontes com `bloqueadoNoCI` são puladas quando a variável `GITHUB_ACTIONS` existe e coletadas normalmente num computador pessoal: rode `node scripts/fetch.mjs --fontes mapas:bh,mapas:lagoa-santa` e commite `docs/data`; os itens entram como "pendente" e o próximo Action os classifica. Os editais da Prefeitura de BH também saem no Diário Oficial do Município, que a Fase B (Querido Diário) passa a cobrir.
 
 Não existe instância estadual de Minas Gerais: a Secult-MG usa a plataforma Descentra Cultura, que não expõe essa API. Contagem, Betim, Sabará, Ibirité, Vespasiano, Brumadinho, Ouro Preto, Mariana, Itabirito e Congonhas não têm instância do Mapas Culturais (verificado em 2026-10-17).
 

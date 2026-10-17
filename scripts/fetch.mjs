@@ -212,8 +212,13 @@ async function main() {
   const { lista: existentes, migrados } = await carregarExistentes();
   const duplicadosConhecidos = await lerJson(ARQ_DUPLICADOS, {});
 
-  const fontes = (config.fontes ?? []).filter((f) => f.ativo !== false && (!args.fontes || args.fontes.includes(f.fonte)));
+  // Algumas instâncias bloqueiam IPs de datacenter (GitHub Actions). No CI elas são puladas; numa máquina comum, coletadas.
+  const noCI = process.env.GITHUB_ACTIONS === 'true';
+  const ativas = (config.fontes ?? []).filter((f) => f.ativo !== false && (!args.fontes || args.fontes.includes(f.fonte)));
+  const puladas = ativas.filter((f) => noCI && f.bloqueadoNoCI);
+  const fontes = ativas.filter((f) => !puladas.includes(f));
   log(`Fontes ativas: ${fontes.map((f) => f.fonte).join(', ') || 'nenhuma'} · palavras-chave: ${palavras.incluir.length} incluir / ${palavras.excluir.length} excluir · base: ${existentes.length} registros`);
+  if (puladas.length) log(`Puladas no CI (bloqueiam IPs de datacenter; rode localmente para atualizá-las): ${puladas.map((f) => f.fonte).join(', ')}`);
   if (args.soIa) log('Modo --so-ia: nenhuma fonte será consultada.');
 
   // 1. Coleta, fonte a fonte. A falha de uma nunca derruba as outras.
@@ -266,6 +271,7 @@ async function main() {
   const totalNovos = Object.values(mesclado.novosPorFonte).reduce((s, n) => s + n, 0);
   const fontesMeta = (config.fontes ?? []).map((f) => ({
     fonte: f.fonte, nome: f.nome ?? f.fonte, tipo: f.tipo, ativo: f.ativo !== false, observacao: f.observacao ?? null,
+    bloqueadoNoCI: Boolean(f.bloqueadoNoCI), puladaNestaExecucao: puladas.includes(f),
     ...(statsFontes.find((s) => s.fonte === f.fonte) ?? {}),
     naBase: porFonte[f.fonte]?.total ?? 0, aprovadosNaBase: porFonte[f.fonte]?.S ?? 0,
   }));

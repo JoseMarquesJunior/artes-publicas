@@ -6,8 +6,10 @@
   ],
   "fontes": [
     { "fonte": "pncp", "tipo": "pncp", "ativo": true, "nome": "PNCP" },
-    { "fonte": "mapas:bh", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural BH", "base": "https://mapaculturalbh.pbh.gov.br", "uf": "MG", "municipio": "Belo Horizonte" },
-    { "fonte": "mapas:lagoa-santa", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Lagoa Santa", "base": "https://mapacultural.lagoasanta.mg.gov.br", "uf": "MG", "municipio": "Lagoa Santa" },
+    { "fonte": "mapas:bh", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural BH", "base": "https://mapaculturalbh.pbh.gov.br", "uf": "MG", "municipio": "Belo Horizonte",
+      "bloqueadoNoCI": true, "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum." },
+    { "fonte": "mapas:lagoa-santa", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Lagoa Santa", "base": "https://mapacultural.lagoasanta.mg.gov.br", "uf": "MG", "municipio": "Lagoa Santa",
+      "bloqueadoNoCI": true, "observacao": "Desafio JavaScript do Cloudflare para IPs de datacenter (GitHub Actions). Só é coletada quando o fetch.mjs roda numa máquina comum." },
     { "fonte": "mapas:nova-lima", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Nova Lima", "base": "https://mapacultural.novalima.mg.gov.br", "uf": "MG", "municipio": "Nova Lima" },
     { "fonte": "mapas:santa-luzia", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Santa Luzia", "base": "https://mapacultural.santaluzia.mg.gov.br", "uf": "MG", "municipio": "Santa Luzia" },
     { "fonte": "mapas:ribeirao-das-neves", "tipo": "mapas", "ativo": true, "nome": "Mapa da Cultura Nevense", "base": "https://mapaculturaneves.com.br", "uf": "MG", "municipio": "Ribeirão das Neves" },

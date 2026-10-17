@@ -156,7 +156,7 @@
   function mostrarFontes(meta) {
     const ativas = Array.isArray(meta?.fontes) ? meta.fontes.filter((f) => f.ativo) : [];
     if (!ativas.length) return; // mantém o texto padrão do HTML
-    const nomes = ativas.map((f) => (f.tipo === 'pncp' ? `${f.nome} (contratações de serviço)` : f.nome));
+    const nomes = ativas.map((f) => (f.tipo === 'pncp' ? `${f.nome} (contratações de serviço)` : f.bloqueadoNoCI ? `${f.nome} (atualização manual)` : f.nome));
     el.fontesAviso.textContent = `Fontes ativas: ${nomes.join(', ')}. Editais de fomento e prêmios publicados em outros canais (Lei Paulo Gustavo, PNAB estaduais, editais de secretarias sem Mapa Cultural) ainda não aparecem aqui.`;
     const inativas = (meta.fontes ?? []).filter((f) => !f.ativo && f.observacao);
     if (inativas.length) {
