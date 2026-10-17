@@ -17,7 +17,7 @@
   };
 
   const el = {};
-  for (const id of ['busca', 'uf', 'modalidade', 'ordem', 'abertas', 'duvida', 'limpar', 'contagem', 'status', 'lista', 'mais', 'atualizado', 'filtros', 'abas', 'fontes-aviso']) {
+  for (const id of ['busca', 'uf', 'regiao', 'modalidade', 'ordem', 'abertas', 'duvida', 'limpar', 'contagem', 'status', 'lista', 'mais', 'atualizado', 'filtros', 'abas', 'fontes-aviso']) {
     el[id.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = document.getElementById(id);
   }
 
@@ -72,6 +72,7 @@
       tipo: tipo === 'contratacao' || tipo === 'fomento' ? tipo : '',
       q: p.get('q') ?? '',
       uf: p.get('uf') ?? UF_PADRAO,
+      reg: ['Grande BH', 'Inconfidentes', 'Outras'].includes(p.get('regiao')) ? p.get('regiao') : '',
       mod: p.get('mod') ?? '',
       abertas: p.get('abertas') === '1',
       duvida: p.get('duvida') === '1',
@@ -85,6 +86,7 @@
     if (f.tipo) p.set('tipo', f.tipo);
     if (f.q) p.set('q', f.q);
     if (f.uf !== UF_PADRAO) p.set('uf', f.uf);
+    if (f.reg) p.set('regiao', f.reg);
     if (f.mod) p.set('mod', f.mod);
     if (f.abertas) p.set('abertas', '1');
     if (f.duvida) p.set('duvida', '1');
@@ -99,6 +101,7 @@
     garantirOpcao(el.uf, f.uf);
     garantirOpcao(el.modalidade, f.mod);
     el.uf.value = f.uf;
+    el.regiao.value = f.reg;
     el.modalidade.value = f.mod;
     el.abertas.checked = f.abertas;
     el.duvida.checked = f.duvida;
@@ -174,13 +177,14 @@
   }
 
   function filtrar() {
-    const { tipo, q, uf, mod, abertas, duvida, ord } = estado.filtros;
+    const { tipo, q, uf, reg, mod, abertas, duvida, ord } = estado.filtros;
     const termos = normalizar(q).split(/\s+/).filter(Boolean);
     const agora = Date.now();
 
     const semTipo = estado.base.filter((r) => {
       if (!duvida && veredito(r) === 'D') return false;
       if (!passaUf(r, uf)) return false;
+      if (reg && (r.regiao ?? (r.uf ? 'Outras' : null)) !== reg) return false;
       if (mod && r.detalhes?.modalidade !== mod) return false;
       if (abertas && !(r._enc !== null && r._enc > agora)) return false;
       if (termos.length && !termos.every((t) => r._busca.includes(t))) return false;
@@ -223,7 +227,7 @@
       ? plural(n, 'oportunidade', 'oportunidades')
       : `${plural(n, 'oportunidade encontrada', 'oportunidades encontradas')} de ${total.toLocaleString('pt-BR')}`;
     const f = estado.filtros;
-    const temFiltro = Boolean(f.tipo || f.q || f.mod || f.abertas || f.duvida) || f.uf !== UF_PADRAO || f.ord !== 'recentes';
+    const temFiltro = Boolean(f.tipo || f.q || f.reg || f.mod || f.abertas || f.duvida) || f.uf !== UF_PADRAO || f.ord !== 'recentes';
     el.limpar.hidden = !temFiltro;
   }
 
@@ -283,13 +287,14 @@
     }
     card.append(topo);
 
-    // título (+ texto completo ou resumo, com "ver mais")
+    // título (+ texto completo ou resumo, com "ver mais"). No Diário Oficial o título vem da IA e o resumo é o destaque.
+    const diario = r.fonte === 'querido-diario';
     const completo = r.detalhes?.objetoCompleto && r.detalhes.objetoCompleto.length > (r.titulo ?? '').length - 1 ? r.detalhes.objetoCompleto : null;
     const titulo = h('h2', 'titulo', completo ?? r.titulo ?? '(sem título)');
     card.append(titulo);
     if (completo && completo.length > LIMITE_TRUNCAR) adicionarVerMais(card, titulo);
     if (r.resumo && !completo) {
-      const resumo = h('p', 'resumo', r.resumo);
+      const resumo = h('p', diario ? 'resumo resumo-destaque' : 'resumo', r.resumo);
       card.append(resumo);
       if (r.resumo.length > LIMITE_TRUNCAR) adicionarVerMais(card, resumo);
     }
@@ -309,8 +314,8 @@
     adicionarDado(
       dl,
       fomento ? 'Inscrições até' : 'Propostas até',
-      enc !== null ? (r.encerramento.length === 10 ? fmtData.format(enc) : fmtDataHora.format(enc)) : (r.detalhes?.fluxoContinuo ? 'Fluxo contínuo' : 'Não informado'),
-      enc !== null && !aberto ? 'encerrado' : urgente ? 'destaque' : '',
+      enc !== null ? (r.encerramento.length === 10 ? fmtData.format(enc) : fmtDataHora.format(enc)) : (r.detalhes?.fluxoContinuo ? 'Fluxo contínuo' : diario ? '⚠ prazo não identificado' : 'Não informado'),
+      enc !== null && !aberto ? 'encerrado' : urgente ? 'destaque' : (enc === null && diario ? 'alerta' : ''),
     );
     if (r.detalhes?.amparoLegal) adicionarDado(dl, 'Amparo legal', r.detalhes.amparoLegal);
     if (r.detalhes?.areas?.length) adicionarDado(dl, 'Áreas (segundo a fonte)', r.detalhes.areas.slice(0, 4).join(', '));
@@ -383,6 +388,7 @@
       ...estado.filtros,
       q: el.busca.value.trim(),
       uf: el.uf.value,
+      reg: el.regiao.value,
       mod: el.modalidade.value,
       abertas: el.abertas.checked,
       duvida: el.duvida.checked,
@@ -403,7 +409,7 @@
   function ligarEventos() {
     el.filtros.addEventListener('submit', (e) => e.preventDefault());
     el.busca.addEventListener('input', debounce(aoMudarFiltro, 150));
-    for (const c of [el.uf, el.modalidade, el.ordem, el.abertas, el.duvida]) c.addEventListener('change', aoMudarFiltro);
+    for (const c of [el.uf, el.regiao, el.modalidade, el.ordem, el.abertas, el.duvida]) c.addEventListener('change', aoMudarFiltro);
     el.abas.addEventListener('click', (e) => {
       const b = e.target.closest('[data-tipo]');
       if (!b) return;
@@ -421,7 +427,7 @@
       prox.click();
     });
     el.limpar.addEventListener('click', () => {
-      estado.filtros = { tipo: '', q: '', uf: UF_PADRAO, mod: '', abertas: false, duvida: false, ord: 'recentes' };
+      estado.filtros = { tipo: '', q: '', uf: UF_PADRAO, reg: '', mod: '', abertas: false, duvida: false, ord: 'recentes' };
       aplicarFiltrosNosControles();
       gravarFiltrosNaUrl();
       filtrar();

@@ -13,6 +13,38 @@
     { "fonte": "mapas:nova-lima", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Nova Lima", "base": "https://mapacultural.novalima.mg.gov.br", "uf": "MG", "municipio": "Nova Lima" },
     { "fonte": "mapas:santa-luzia", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Santa Luzia", "base": "https://mapacultural.santaluzia.mg.gov.br", "uf": "MG", "municipio": "Santa Luzia" },
     { "fonte": "mapas:ribeirao-das-neves", "tipo": "mapas", "ativo": true, "nome": "Mapa da Cultura Nevense", "base": "https://mapaculturaneves.com.br", "uf": "MG", "municipio": "Ribeirão das Neves" },
+    {
+      "fonte": "querido-diario", "tipo": "querido-diario", "ativo": true, "nome": "Diário Oficial (Querido Diário)",
+      "base": "https://api.queridodiario.org.br",
+      "_ajuda": "coberta=false: o Querido Diário não coleta o diário dessa cidade (verificado em 2026-10-17 em /cities/{ibge} e /gazettes). Belo Horizonte está cadastrada, mas o último diário coletado é de 2026-03-25.",
+      "territorios": [
+        { "nome": "Belo Horizonte",     "ibge": "3106200", "regiao": "Grande BH", "coberta": true,  "observacao": "cadastrada no QD desde 2021-10-08, mas sem diários depois de 2026-03-25" },
+        { "nome": "Contagem",           "ibge": "3118601", "regiao": "Grande BH", "coberta": true },
+        { "nome": "Betim",              "ibge": "3106705", "regiao": "Grande BH", "coberta": true },
+        { "nome": "Nova Lima",          "ibge": "3144805", "regiao": "Grande BH", "coberta": false },
+        { "nome": "Sabará",             "ibge": "3156700", "regiao": "Grande BH", "coberta": false },
+        { "nome": "Santa Luzia",        "ibge": "3157807", "regiao": "Grande BH", "coberta": false },
+        { "nome": "Ribeirão das Neves", "ibge": "3154606", "regiao": "Grande BH", "coberta": false },
+        { "nome": "Ibirité",            "ibge": "3129806", "regiao": "Grande BH", "coberta": false },
+        { "nome": "Vespasiano",         "ibge": "3171204", "regiao": "Grande BH", "coberta": false },
+        { "nome": "Lagoa Santa",        "ibge": "3137601", "regiao": "Grande BH", "coberta": false },
+        { "nome": "Brumadinho",         "ibge": "3109006", "regiao": "Grande BH", "coberta": false },
+        { "nome": "Ouro Preto",         "ibge": "3146107", "regiao": "Inconfidentes", "coberta": false },
+        { "nome": "Mariana",            "ibge": "3140001", "regiao": "Inconfidentes", "coberta": false },
+        { "nome": "Itabirito",          "ibge": "3131901", "regiao": "Inconfidentes", "coberta": false },
+        { "nome": "Congonhas",          "ibge": "3118007", "regiao": "Inconfidentes", "coberta": false }
+      ],
+      "consultas": [
+        "edital artes visuais",
+        "edital fomento cultura",
+        "chamamento público cultura",
+        "prêmio artes",
+        "credenciamento artistas",
+        "lei paulo gustavo",
+        "política nacional aldir blanc",
+        "exposição artes"
+      ]
+    },
     { "fonte": "mapas:nacional", "tipo": "mapas", "ativo": false, "nome": "Mapa da Cultura (nacional)", "base": "https://mapas.cultura.gov.br", "uf": null, "municipio": null,
       "observacao": "Desligada em 2026-10-17: a API responde 403 com desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador. Religue se o bloqueio cair." }
   ]

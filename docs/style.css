@@ -279,6 +279,18 @@ a:hover { text-decoration-thickness: 2px; }
 .tag-categoria { background: var(--accent); color: var(--accent-text); font-weight: 600; }
 .aviso-fraco { opacity: 0.8; }
 
+/* Diário Oficial: o resumo extraído pela IA é o conteúdo principal do card. */
+.resumo-destaque {
+  color: var(--text);
+  font-size: 1rem;
+  padding: 10px 12px;
+  margin-top: 10px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+}
+.dado.alerta dd { color: var(--accent); }
+
 /* ------------------------------------------------------------ botões */
 
 .botao {

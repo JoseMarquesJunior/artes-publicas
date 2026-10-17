@@ -113,9 +113,162 @@ async function chamarModelo(chave, lote, ia) {
   }
 }
 
+// ---------------------------------------------------------------- modo extrator (Querido Diário)
+
+const EXTRATOR_LOTE = 8;                 // trechos por requisição (texto longo)
+const EXTRATOR_TOKENS_POR_ITEM = 150;
+const EXTRATOR_MARGEM_TOKENS = 100;
+const TIPOS_EXTRATOR = ['contratacao', 'fomento', 'premio', 'residencia', 'chamamento', 'outro'];
+
+const PROMPT_EXTRATOR = `Você recebe trechos numerados de diários oficiais de municípios de Minas Gerais (Grande Belo Horizonte). Cada trecho reúne as partes de uma edição do diário que casaram com buscas por edital, cultura, artes, fomento, prêmio, Lei Paulo Gustavo ou Política Nacional Aldir Blanc. Um trecho pode misturar vários atos administrativos sem relação entre si.
+
+Para cada trecho, foque apenas no que diz respeito a edital, chamamento público, prêmio, credenciamento ou contratação na área de cultura e artes visuais, e responda:
+- relevante: "S" se o trecho anuncia uma oportunidade em que uma profissional formada em artes visuais (criação artística, curadoria, exposições, oficinas de arte, ilustração, design gráfico, murais, cenografia, restauro, arte-educação, mediação cultural, produção cultural) pode se inscrever, concorrer ou ser contratada; editais de cultura amplos (todas as linguagens) contam como "S"; "N" se for só menção de passagem (nomeação de comissão, homologação ou resultado, extrato de contrato já assinado, retificação sem conteúdo, convocação de aprovados, concurso público para cargos) ou exclusivo de música, audiovisual, literatura, dança ou teatro; "D" se houver indício de edital aberto mas o trecho não permitir decidir.
+- titulo: nome curto do edital/oportunidade (até 120 caracteres); para "N", o assunto principal do trecho.
+- tipo: "contratacao", "fomento", "premio", "residencia", "chamamento" ou "outro".
+- resumo: até 200 caracteres, o que é e para quem.
+- orgao: órgão responsável, ou null.
+- encerramento: prazo final de inscrição/proposta em formato AAAA-MM-DD (converta datas brasileiras como 23/10/2026); null se o prazo não estiver no trecho. Nunca invente.
+- valor: valor total em reais como número (sem R$, sem pontos de milhar), ou null.
+- categoria: uma destas palavras: curadoria, oficina, design, ilustracao, mural, restauro, exposicao, premio, residencia, fomento-geral, producao, outro.
+
+Responda apenas com um JSON em uma única linha, mapeando o número de cada trecho a um objeto com essas oito chaves, por exemplo {"1":{"relevante":"S","titulo":"Edital PNAB 02/2026 - Multilinguagem","tipo":"fomento","resumo":"...","orgao":"Secretaria Municipal de Cultura de Contagem","encerramento":"2026-11-10","valor":500000,"categoria":"fomento-geral"},"2":{"relevante":"N","titulo":"Homologação de resultado","tipo":"outro","resumo":"...","orgao":null,"encerramento":null,"valor":null,"categoria":"outro"}}. Inclua todos os números. Sem texto fora do JSON.`;
+
+function descreverTrecho(r, i) {
+  const cab = `${i + 1}. [${r.detalhes?.fonteNome ?? 'Diário Oficial'} · ${r.publicadoEm ?? ''}${r.detalhes?.edicao ? ` · edição ${r.detalhes.edicao}` : ''}]`;
+  return `${cab}\n${String(r.detalhes?.textoBruto ?? '').trim()}`;
+}
+
+function dataISOouNull(valor) {
+  if (!valor || typeof valor !== 'string') return null;
+  let m = valor.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+  m = valor.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+  if (m) return `${m[3]}-${m[2]}-${m[1]}`;
+  return null;
+}
+
+function interpretarExtracao(v) {
+  if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
+  const relevante = String(v.relevante ?? '').trim().toUpperCase();
+  if (!['S', 'N', 'D'].includes(relevante)) return null;
+  const valorNum = typeof v.valor === 'number' ? v.valor : Number(String(v.valor ?? '').replace(/[^\d,.-]/g, '').replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.'));
+  let categoria = normalizar(v.categoria ?? '').replace(/\s+/g, '-');
+  if (!CATEGORIAS.includes(categoria)) categoria = relevante === 'N' ? null : 'outro';
+  const tipo = TIPOS_EXTRATOR.includes(v.tipo) ? v.tipo : 'outro';
+  return {
+    relevante,
+    titulo: truncar(v.titulo ?? '', 160) || null,
+    tipo,
+    resumo: truncar(v.resumo ?? '', 200) || null,
+    orgao: typeof v.orgao === 'string' && v.orgao.trim() ? truncar(v.orgao, 160) : null,
+    encerramento: dataISOouNull(v.encerramento),
+    valor: Number.isFinite(valorNum) && valorNum > 0 ? valorNum : null,
+    categoria: relevante === 'N' ? null : categoria,
+  };
+}
+
+async function chamarExtrator(chave, lote, stats) {
+  const corpo = {
+    model: IA_MODELO,
+    max_tokens: lote.length * EXTRATOR_TOKENS_POR_ITEM + EXTRATOR_MARGEM_TOKENS,
+    system: PROMPT_EXTRATOR,
+    thinking: { type: 'disabled' },
+    output_config: { effort: 'low' },
+    messages: [{ role: 'user', content: lote.map(descreverTrecho).join('\n\n') }],
+  };
+  for (let tentativa = 1; ; tentativa++) {
+    stats.requisicoes++;
+    try {
+      const res = await fetch(IA_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-api-key': chave, 'anthropic-version': IA_VERSAO },
+        body: JSON.stringify(corpo),
+        signal: AbortSignal.timeout(IA_TIMEOUT_MS * 2),
+      });
+      if (!res.ok) throw new ErroHttp(res.status, IA_URL, await res.text().catch(() => ''), res.headers.get('retry-after'));
+      return await res.json();
+    } catch (erro) {
+      const retentavel = erro instanceof ErroHttp ? erro.retentavel : true;
+      if (!retentavel || tentativa >= IA_MAX_TENTATIVAS) throw erro;
+      const espera = (erro instanceof ErroHttp && erro.retryAfterMs) || 2000 * 2 ** (tentativa - 1);
+      log(`  IA extrator: ${descreverErro(erro)} — tentativa ${tentativa}/${IA_MAX_TENTATIVAS}, nova tentativa em ${Math.round(espera / 1000)} s`);
+      await dormir(espera);
+    }
+  }
+}
+
 /**
- * Preenche `ia` e `categoriaIA` nos itens da lista que ainda não têm veredito.
- * Devolve estatísticas para o meta.json (tokens, custo, contagens).
+ * Modo extrator: para registros do Querido Diário ainda pendentes, a IA decide relevância E preenche
+ * título, tipo, resumo, órgão, prazo, valor e categoria a partir do texto bruto. O texto bruto é
+ * removido depois de processado (não vai para o JSON público). Devolve estatísticas separadas.
+ */
+export async function extrair(lista) {
+  const chave = process.env.ANTHROPIC_API_KEY;
+  const stats = {
+    modelo: IA_MODELO, ativo: Boolean(chave),
+    processados: 0, relevantes: 0, descartados: 0, duvidas: 0, pendentes: 0,
+    lotes: 0, lotesFalhos: 0, requisicoes: 0, tokensEntrada: 0, tokensSaida: 0, custoUsd: 0,
+  };
+  const fila = lista.filter((r) => r.fonte === 'querido-diario' && !['S', 'N', 'D'].includes(r.ia) && r.detalhes?.textoBruto);
+  if (!chave) {
+    stats.pendentes = fila.length;
+    if (fila.length) log(`IA extrator: ANTHROPIC_API_KEY não definida; ${fila.length} trechos de diário ficam pendentes (com texto bruto guardado).`);
+    return stats;
+  }
+  if (fila.length === 0) return stats;
+
+  log(`IA extrator: ${fila.length} trechos de diário oficial, em lotes de ${EXTRATOR_LOTE}.`);
+  for (let i = 0; i < fila.length; i += EXTRATOR_LOTE) {
+    const lote = fila.slice(i, i + EXTRATOR_LOTE);
+    stats.lotes++;
+    let respostas = null;
+    try {
+      const resposta = await chamarExtrator(chave, lote, stats);
+      stats.tokensEntrada += resposta.usage?.input_tokens ?? 0;
+      stats.tokensSaida += resposta.usage?.output_tokens ?? 0;
+      if (resposta.stop_reason === 'refusal') log('  IA extrator: lote recusado (refusal); trechos ficam pendentes');
+      else {
+        const texto = (resposta.content ?? []).filter((b) => b.type === 'text').map((b) => b.text).join('');
+        respostas = extrairJson(texto);
+        if (!respostas) log(`  IA extrator: resposta sem JSON válido (stop_reason ${resposta.stop_reason}); trechos do lote ficam pendentes`);
+        else if (resposta.stop_reason === 'max_tokens') log('  IA extrator: resposta cortada por max_tokens; trechos faltantes ficam pendentes');
+      }
+    } catch (erro) {
+      stats.lotesFalhos++;
+      log(`  IA extrator: lote ${stats.lotes} falhou de vez (${descreverErro(erro)}); trechos ficam pendentes`);
+    }
+
+    lote.forEach((r, idx) => {
+      const ex = respostas ? interpretarExtracao(respostas[String(idx + 1)]) : null;
+      if (!ex) { r.ia = 'pendente'; stats.pendentes++; return; }
+      stats.processados++;
+      r.ia = ex.relevante;
+      r.categoriaIA = ex.categoria;
+      r.tipo = ex.tipo;
+      if (ex.titulo) r.titulo = ex.titulo;
+      r.resumo = ex.resumo;
+      r.orgao = ex.orgao;
+      r.encerramento = ex.encerramento;
+      r.valor = ex.valor;
+      if (r.detalhes) delete r.detalhes.textoBruto;
+      if (ex.relevante === 'S') stats.relevantes++;
+      else if (ex.relevante === 'N') stats.descartados++;
+      else stats.duvidas++;
+    });
+
+    if (stats.lotes % 5 === 0) log(`  IA extrator: ${Math.min(i + EXTRATOR_LOTE, fila.length)}/${fila.length} trechos processados`);
+    if (i + EXTRATOR_LOTE < fila.length) await dormir(IA_INTERVALO_MS);
+  }
+  stats.custoUsd = Number(((stats.tokensEntrada * IA_PRECO_ENTRADA_USD_POR_MTOK + stats.tokensSaida * IA_PRECO_SAIDA_USD_POR_MTOK) / 1e6).toFixed(4));
+  return stats;
+}
+
+// ---------------------------------------------------------------- modo classificador (PNCP, Mapas)
+
+/**
+ * Preenche `ia` e `categoriaIA` nos itens da lista que ainda não têm veredito (exceto os do Querido Diário,
+ * que passam pelo extrator). Devolve estatísticas para o meta.json (tokens, custo, contagens).
  */
 export async function classificar(lista) {
   const chave = process.env.ANTHROPIC_API_KEY;
@@ -127,7 +280,7 @@ export async function classificar(lista) {
     tokensEntrada: 0, tokensSaida: 0, custoUsd: 0,
     porTipo: {},
   };
-  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia));
+  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia) && r.fonte !== 'querido-diario');
 
   if (!chave) {
     for (const r of fila) r.ia = 'pendente';

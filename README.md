@@ -18,9 +18,9 @@ A página **não consulta nenhuma API ao vivo**. Todo dia às 06:00 UTC o workfl
 A página em [`docs/`](docs/) lê só esses JSON e faz busca, filtros e ordenação no navegador.
 
 ```
-scripts/fontes/pncp.mjs  ─┐
-scripts/fontes/mapas.mjs ─┤→ scripts/fetch.mjs → classificar.mjs → docs/data/*.json → GitHub Pages
-(Fase B: querido-diario) ─┘
+scripts/fontes/pncp.mjs           ─┐
+scripts/fontes/mapas.mjs          ─┤→ scripts/fetch.mjs → classificar.mjs (classificador + extrator) → docs/data/*.json → GitHub Pages
+scripts/fontes/querido-diario.mjs ─┘
 ```
 
 ## Fontes
@@ -32,6 +32,15 @@ scripts/fontes/mapas.mjs ─┤→ scripts/fetch.mjs → classificar.mjs → doc
 | `mapas:bh` | Mapa Cultural BH (Fundação Municipal de Cultura) | ativa, mas **bloqueada no CI**: o WAF (GoCache) devolve 403 a IPs de datacenter, inclusive do GitHub Actions, com qualquer cabeçalho. Só é coletada quando `fetch.mjs` roda numa máquina comum (`bloqueadoNoCI: true` em `fontes.json`) |
 | `mapas:lagoa-santa` | Mapa Cultural Lagoa Santa | ativa, **bloqueada no CI** (desafio JavaScript do Cloudflare para datacenters); mesma regra acima |
 | `mapas:nacional` | Mapa da Cultura (MinC) | **desligada**: desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador, inclusive de casa (verificado em 2026-10-17) |
+| `querido-diario` | Busca textual nos diários oficiais municipais via API do [Querido Diário](https://queridodiario.ok.org.br) (Open Knowledge Brasil); a IA extrai título, prazo, órgão e valor de cada trecho | ativa para **Contagem** e **Betim**; ver cobertura abaixo |
+
+### Querido Diário: cobertura e funcionamento
+
+Dos 15 municípios de interesse (Grande BH e Inconfidentes), em 2026-10-17 o Querido Diário só coleta regularmente **Contagem** e **Betim** (último diário no dia anterior). **Belo Horizonte** está cadastrada desde 2021, mas o raspador deles parou em **25/03/2026** e não há diários desde então; fica ativa na configuração para voltar a funcionar sozinha quando o QD retomar. As outras 12 cidades (Nova Lima, Sabará, Santa Luzia, Ribeirão das Neves, Ibirité, Vespasiano, Lagoa Santa, Brumadinho, Ouro Preto, Mariana, Itabirito, Congonhas) não têm diário coletado (`coberta: false` em `fontes.json`; os códigos IBGE foram todos validados na API do IBGE).
+
+Para cada território coberto × consulta de `fontes.json`, o adaptador busca `GET /gazettes` com `territory_ids`, `querystring`, `published_since`/`published_until` (os últimos `--dias`), `size=50`, `excerpt_size=500`, `number_of_excerpts=3`, com 1 s entre requisições. Observações da API: `territory_ids` precisa ser repetido (lista separada por vírgula não funciona); palavras soltas casam qualquer uma delas ("edital" sozinho casa concursos públicos), frases entre aspas são exatas. Cada **edição** do diário vira um registro bruto (`idNaFonte` = `ibge:data:hash(url do PDF)`, estável entre execuções) com os trechos de todas as consultas concatenados, ordenados por densidade de termos culturais, até 3.000 caracteres. Nada é extraído por regex: título, tipo, resumo, órgão, prazo e valor vêm do **extrator por IA**.
+
+**Extrator** (`scripts/classificar.mjs`, modo `extrair`): lotes de 8 trechos, `max_tokens` ≈ 150 por trecho, mesmo modelo e parâmetros do classificador (o Haiku 5.5 rejeita `temperature`; usa-se `thinking: disabled` + `effort: low`). Para cada trecho devolve `relevante` (S/N/D), `titulo`, `tipo`, `resumo` (≤ 200 caracteres), `orgao`, `encerramento` (ISO; `null` se não estiver no texto), `valor`, `categoria`. Menções de passagem (comissões, homologações, extratos de contrato, retificações, concursos para cargos) são "N" e vão para `docs/data/_descartados-qd.json` (só id e data) para não serem reprocessadas. O texto bruto é apagado depois da extração. Tokens e custo ficam separados em `meta.json` (`ia` para a classificação, `ia.extracao` para a extração).
 
 Fontes com `bloqueadoNoCI` são puladas quando a variável `GITHUB_ACTIONS` existe e coletadas normalmente num computador pessoal: rode `node scripts/fetch.mjs --fontes mapas:bh,mapas:lagoa-santa` e commite `docs/data`; os itens entram como "pendente" e o próximo Action os classifica. Os editais da Prefeitura de BH também saem no Diário Oficial do Município, que a Fase B (Querido Diário) passa a cobrir.
 
@@ -73,7 +82,7 @@ Um registro por linha:
 | `coletadoEm` | ISO datetime |
 | `publicadoEm`, `detalhes` | extensões para a página: data de publicação na fonte e dados específicos (objeto completo, modalidade, situação, amparo legal, áreas, projeto) |
 
-`docs/data/_duplicados.json` guarda `{idPerdedor: idVencedor}` das fusões entre fontes, para a duplicata não voltar nem ser reclassificada. A migração do antigo `contratacoes.json` foi feita uma única vez pelo próprio `fetch.mjs`.
+`docs/data/_duplicados.json` guarda `{idPerdedor: idVencedor}` das fusões entre fontes, para a duplicata não voltar nem ser reclassificada; `docs/data/_descartados-qd.json` guarda os trechos de diário que a IA marcou "N". A migração do antigo `contratacoes.json` foi feita uma única vez pelo próprio `fetch.mjs`. Registros do Diário Oficial trazem também `regiao` ("Grande BH" ou "Inconfidentes"); os demais recebem `regiao` pelo município.
 
 ## Classificação por IA
 
@@ -86,7 +95,7 @@ Cada item novo que passou pelas palavras-chave vai, em lotes de 30, ao `claude-h
 
 ## Deduplicação entre fontes
 
-Depois da IA, registros de fontes **diferentes** com `ia != N` são comparados: títulos com similaridade de Jaccard ≥ 0,5 sobre palavras **e** (mesmo órgão normalizado **ou** mesma data de encerramento); encerramentos diferentes, ambos informados, impedem a fusão. Vence a fonte estruturada (PNCP/Mapas sobre Diário Oficial) e, em empate, o registro com mais campos preenchidos; o link do perdedor vai para `linksExtras`. A regra é mais estrita que "mesmo órgão" sozinho porque uma prefeitura publica dezenas de dispensas sem data de encerramento, e isso fundiria contratos distintos. `meta.json` registra `dedup.fundidosNestaExecucao`.
+Depois da IA, registros de fontes **diferentes** com `ia != N` são comparados: títulos com similaridade de Jaccard ≥ 0,5 sobre palavras **e** (mesmo órgão normalizado **ou** mesma data de encerramento); encerramentos diferentes, ambos informados, impedem a fusão. Vence a fonte estruturada (PNCP e Mapas Culturais sobre Diário Oficial, cujo título vem da IA) e, em empate, o registro com mais campos preenchidos; o link do perdedor vai para `linksExtras` (no card: "Também em …"). A regra é mais estrita que "mesmo órgão" sozinho porque uma prefeitura publica dezenas de dispensas sem data de encerramento, e isso fundiria contratos distintos. `meta.json` registra `dedup.fundidosNestaExecucao`.
 
 ## Editar as palavras-chave
 
@@ -121,7 +130,8 @@ python -m http.server 8080 --directory docs
 ## Página
 
 - Abas **Todas | Contratações | Fomento e prêmios** (fomento + prêmio + residência + chamamento), refletidas na URL (`?tipo=fomento`).
-- UF **MG** pré-selecionada; opções **Todas** e **Nacional** (itens com `uf` nula valem para qualquer UF).
+- UF **MG** pré-selecionada; opções **Todas** e **Nacional** (itens com `uf` nula valem para qualquer UF). Filtro de **Região** (Grande BH | Inconfidentes | Outras), derivado do município (campo `regiao`, preenchido pelo coletor a partir da lista de territórios de `fontes.json`).
+- Cards do Diário Oficial mostram "Diário Oficial de {município}" no selo, o resumo extraído em destaque (o título vem da IA), botão "Ver no Diário Oficial (PDF)" e, quando a IA não achou o prazo no trecho, "⚠ prazo não identificado".
 - Busca em título, resumo, objeto completo, órgão e município; filtro por modalidade (PNCP); "Só com prazo aberto"; ordenação por data ou prazo; "Mostrar também os em dúvida".
 - Cada card mostra selo de tipo, fonte, categoria da IA (tag colorida), palavras-chave, "Propostas até"/"Inscrições até", destaque para prazos nos próximos 7 dias, e botão para a página original. Itens reprovados pela IA nunca aparecem.
 - O rodapé lista as fontes ativas lendo `meta.json`.
