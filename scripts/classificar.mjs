@@ -138,10 +138,10 @@ const EXTRATOR_TOKENS_POR_ITEM = 300;    // título + resumo de 200 caracteres +
 const EXTRATOR_MARGEM_TOKENS = 200;
 const TIPOS_EXTRATOR = ['contratacao', 'fomento', 'premio', 'residencia', 'chamamento', 'outro'];
 
-const PROMPT_EXTRATOR = `Você recebe trechos numerados de diários oficiais de municípios de Minas Gerais (Grande Belo Horizonte). Cada trecho reúne as partes de uma edição do diário que casaram com buscas por edital, cultura, artes, fomento, prêmio, Lei Paulo Gustavo ou Política Nacional Aldir Blanc. Um trecho pode misturar vários atos administrativos sem relação entre si.
+const PROMPT_EXTRATOR = `Você recebe trechos numerados de diários oficiais de municípios de Minas Gerais (Grande Belo Horizonte). Cada trecho é um fragmento de uma edição do diário que casou com buscas por edital, cultura, artes, fomento, prêmio, Lei Paulo Gustavo ou Política Nacional Aldir Blanc. Um trecho pode começar ou terminar no meio de um ato, e pode misturar atos sem relação entre si.
 
 Para cada trecho, foque apenas no que diz respeito a edital, chamamento público, prêmio, credenciamento ou contratação na área de cultura e artes visuais, e responda:
-- relevante: "S" se o trecho anuncia uma oportunidade em que uma profissional formada em artes visuais (criação artística, curadoria, exposições, oficinas de arte, ilustração, design gráfico, murais, cenografia, restauro, arte-educação, mediação cultural, produção cultural) pode se inscrever, concorrer ou ser contratada; editais de cultura amplos (todas as linguagens) contam como "S"; "N" se for só menção de passagem (nomeação de comissão, homologação ou resultado, extrato de contrato já assinado, retificação sem conteúdo, convocação de aprovados, concurso público para cargos) ou exclusivo de música, audiovisual, literatura, dança ou teatro; "D" se houver indício de edital aberto mas o trecho não permitir decidir.
+- relevante: "S" se o trecho anuncia (ou prorroga o prazo de) uma oportunidade em que uma profissional formada em artes visuais (criação artística, curadoria, exposições, oficinas de arte, ilustração, design gráfico, murais, cenografia, restauro, arte-educação, mediação cultural, produção cultural) pode se inscrever, concorrer ou ser contratada; editais de cultura amplos (todas as linguagens, multilinguagem, pontos de cultura, patrimônio) contam como "S". "N" se for só menção de passagem (nomeação de comissão, homologação ou resultado, lista de habilitados, extrato de contrato ou termo já assinado, retificação sem conteúdo novo, convocação de aprovados, concurso público para cargos, ata de reunião). REGRA FORTE: oportunidade exclusiva de música, audiovisual, literatura, dança ou teatro é "N" mesmo que seja um edital aberto com prazo e valor (ex.: festival de música, edital de bandas, mostra de cinema, concurso literário). "D" se houver indício de edital aberto mas o trecho não permitir decidir se artes visuais cabem.
 - titulo: nome curto do edital/oportunidade (até 120 caracteres); para "N", o assunto principal do trecho.
 - tipo: "contratacao", "fomento", "premio", "residencia", "chamamento" ou "outro".
 - resumo: até 200 caracteres, o que é e para quem.
@@ -277,6 +277,68 @@ export async function extrair(lista) {
 
     if (stats.lotes % 5 === 0) log(`  IA extrator: ${Math.min(i + EXTRATOR_LOTE, fila.length)}/${fila.length} trechos processados`);
     if (i + EXTRATOR_LOTE < fila.length) await dormir(IA_INTERVALO_MS);
+  }
+  stats.custoUsd = Number(((stats.tokensEntrada * IA_PRECO_ENTRADA_USD_POR_MTOK + stats.tokensSaida * IA_PRECO_SAIDA_USD_POR_MTOK) / 1e6).toFixed(4));
+  return stats;
+}
+
+// ---------------------------------------------------------------- modo categorizador (só categoria, sem mexer no veredito)
+
+const CATEGORIZAR_LOTE = 30;
+const CATEGORIZAR_TOKENS_POR_ITEM = 8;   // "1":"exposicao", ≈ 6 tokens
+const PROMPT_CATEGORIZADOR = `Você recebe uma lista numerada de oportunidades públicas já consideradas relevantes para uma profissional de artes visuais. Para cada item, escolha a categoria que melhor descreve o trabalho, uma destas palavras: curadoria, oficina, design, ilustracao, mural, restauro, exposicao, premio, residencia, fomento-geral, producao, outro.
+
+Responda apenas com um JSON em uma única linha mapeando o número de cada item à categoria, por exemplo {"1":"exposicao","2":"design","3":"outro"}. Inclua todos os números. Sem texto fora do JSON.`;
+
+/**
+ * Preenche `categoriaIA` nos itens com veredito S ou D que ainda não têm categoria (itens classificados
+ * antes de a categoria existir). Não altera o veredito. Passada única na prática: depois de preenchida,
+ * a categoria é preservada nas execuções seguintes.
+ */
+export async function categorizar(lista) {
+  const chave = process.env.ANTHROPIC_API_KEY;
+  const stats = { modelo: IA_MODELO, ativo: Boolean(chave), categorizados: 0, pendentes: 0, lotes: 0, lotesFalhos: 0, requisicoes: 0, tokensEntrada: 0, tokensSaida: 0, custoUsd: 0 };
+  const fila = lista.filter((r) => (r.ia === 'S' || r.ia === 'D') && !r.categoriaIA);
+  if (!chave || fila.length === 0) { stats.pendentes = fila.length; return stats; }
+
+  log(`IA categorizador: ${fila.length} itens aprovados/dúvida sem categoria, em lotes de ${CATEGORIZAR_LOTE}.`);
+  for (let i = 0; i < fila.length; i += CATEGORIZAR_LOTE) {
+    const lote = fila.slice(i, i + CATEGORIZAR_LOTE);
+    stats.lotes++;
+    let respostas = null;
+    try {
+      const corpo = {
+        model: IA_MODELO,
+        max_tokens: lote.length * CATEGORIZAR_TOKENS_POR_ITEM + IA_MARGEM_TOKENS,
+        system: PROMPT_CATEGORIZADOR,
+        thinking: { type: 'disabled' },
+        output_config: { effort: 'low' },
+        messages: [{ role: 'user', content: lote.map(descreverItem).join('\n') }],
+      };
+      stats.requisicoes++;
+      const res = await fetch(IA_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-api-key': chave, 'anthropic-version': IA_VERSAO },
+        body: JSON.stringify(corpo),
+        signal: AbortSignal.timeout(IA_TIMEOUT_MS),
+      });
+      if (!res.ok) throw new ErroHttp(res.status, IA_URL, await res.text().catch(() => ''), res.headers.get('retry-after'));
+      const resposta = await res.json();
+      stats.tokensEntrada += resposta.usage?.input_tokens ?? 0;
+      stats.tokensSaida += resposta.usage?.output_tokens ?? 0;
+      const texto = (resposta.content ?? []).filter((b) => b.type === 'text').map((b) => b.text).join('');
+      respostas = extrairJsonTolerante(texto);
+    } catch (erro) {
+      stats.lotesFalhos++;
+      log(`  IA categorizador: lote ${stats.lotes} falhou (${descreverErro(erro)}); itens ficam sem categoria`);
+      if (erro instanceof ErroHttp && erro.status === 429) await dormir(erro.retryAfterMs ?? 10_000);
+    }
+    lote.forEach((r, idx) => {
+      const cat = respostas ? normalizar(String(respostas[String(idx + 1)] ?? '')).replace(/\s+/g, '-') : '';
+      if (CATEGORIAS.includes(cat)) { r.categoriaIA = cat; stats.categorizados++; } else stats.pendentes++;
+    });
+    if (stats.lotes % 10 === 0) log(`  IA categorizador: ${Math.min(i + CATEGORIZAR_LOTE, fila.length)}/${fila.length}`);
+    if (i + CATEGORIZAR_LOTE < fila.length) await dormir(IA_INTERVALO_MS);
   }
   stats.custoUsd = Number(((stats.tokensEntrada * IA_PRECO_ENTRADA_USD_POR_MTOK + stats.tokensSaida * IA_PRECO_SAIDA_USD_POR_MTOK) / 1e6).toFixed(4));
   return stats;

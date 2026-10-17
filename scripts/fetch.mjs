@@ -19,7 +19,7 @@ import { log, hojeUTC, somarDias, fmtISO, lerDataISO, descreverErro, carregarPal
 import * as pncp from './fontes/pncp.mjs';
 import * as mapas from './fontes/mapas.mjs';
 import * as queridoDiario from './fontes/querido-diario.mjs';
-import { classificar, extrair } from './classificar.mjs';
+import { classificar, extrair, categorizar } from './classificar.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -171,6 +171,8 @@ const PRIORIDADE_FONTE = (r) => (r.fonte === 'pncp' || r.fonte.startsWith('mapas
 /**
  * Funde registros de FONTES DIFERENTES que parecem ser o mesmo edital: títulos similares (Jaccard >= DEDUP_SIMILARIDADE)
  * e, além disso, mesmo órgão normalizado OU mesma data de encerramento; encerramentos diferentes (ambos informados) impedem a fusão.
+ * Exceção: dois trechos do Diário Oficial (mesma fonte) também se fundem quando são do mesmo município e os títulos
+ * extraídos pela IA são muito parecidos (Jaccard >= 0,6), porque o mesmo edital aparece em vários trechos e edições.
  * Só considera itens com ia != "N". O vencedor é a fonte estruturada e, em empate, o registro com mais campos preenchidos;
  * o link do perdedor vai para linksExtras do vencedor.
  */
@@ -186,20 +188,30 @@ function deduplicar(lista, duplicadosConhecidos) {
     const ia = info.get(a.id);
     for (let j = i + 1; j < candidatos.length; j++) {
       const b = candidatos[j];
-      if (removidos.has(b.id) || a.fonte === b.fonte) continue;
+      if (removidos.has(b.id)) continue;
+      const ambosDiario = a.fonte === 'querido-diario' && b.fonte === 'querido-diario';
+      if (a.fonte === b.fonte && !ambosDiario) continue;
       const ib = info.get(b.id);
       if (ia.enc && ib.enc && ia.enc !== ib.enc) continue;
       if (a.uf && b.uf && a.uf !== b.uf) continue;
-      const mesmoOrgao = ia.orgao && ia.orgao === ib.orgao;
-      const mesmoPrazo = ia.enc && ia.enc === ib.enc;
-      if (!mesmoOrgao && !mesmoPrazo) continue;
-      if (jaccard(ia.palavras, ib.palavras) < DEDUP_SIMILARIDADE) continue;
+      if (ambosDiario) {
+        if (normalizar(a.municipio ?? '') !== normalizar(b.municipio ?? '')) continue;
+        if (jaccard(ia.palavras, ib.palavras) < 0.6) continue;
+      } else {
+        const mesmoOrgao = ia.orgao && ia.orgao === ib.orgao;
+        const mesmoPrazo = ia.enc && ia.enc === ib.enc;
+        if (!mesmoOrgao && !mesmoPrazo) continue;
+        if (jaccard(ia.palavras, ib.palavras) < DEDUP_SIMILARIDADE) continue;
+      }
 
       let vencedor = a;
       let perdedor = b;
-      const pa = PRIORIDADE_FONTE(a) * 1000 + camposPreenchidos(a);
-      const pb = PRIORIDADE_FONTE(b) * 1000 + camposPreenchidos(b);
+      const pa = PRIORIDADE_FONTE(a) * 1000 + camposPreenchidos(a) + (a.encerramento ? 5 : 0);
+      const pb = PRIORIDADE_FONTE(b) * 1000 + camposPreenchidos(b) + (b.encerramento ? 5 : 0);
       if (pb > pa) { vencedor = b; perdedor = a; }
+      if (ambosDiario) { // completa o vencedor com o que o perdedor tinha
+        for (const campo of ['encerramento', 'valor', 'orgao', 'resumo']) if (vencedor[campo] == null && perdedor[campo] != null) vencedor[campo] = perdedor[campo];
+      }
       vencedor.linksExtras = [...new Set([...vencedor.linksExtras, perdedor.link, ...perdedor.linksExtras])].filter((l) => l !== vencedor.link);
       if (!['S', 'N', 'D'].includes(vencedor.ia) && ['S', 'D'].includes(perdedor.ia)) { vencedor.ia = perdedor.ia; vencedor.categoriaIA = perdedor.categoriaIA; }
       removidos.add(perdedor.id);
@@ -277,6 +289,7 @@ async function main() {
   const mesclado = mesclar(existentes, coletados, palavras, hoje, duplicadosConhecidos);
   const ia = await classificar(mesclado.lista);
   const extracao = await extrair(mesclado.lista);
+  const categorizacao = await categorizar(mesclado.lista);
   // Trechos de diário marcados "N" saem da base e vão para o arquivo de descartados (só id + data).
   const descartadosAgora = mesclado.lista.filter((r) => r.fonte === 'querido-diario' && r.ia === 'N');
   for (const r of descartadosAgora) descartadosQd.push({ idNaFonte: r.idNaFonte, data: r.publicadoEm ?? r.coletadoEm?.slice(0, 10) ?? null });
@@ -316,7 +329,7 @@ async function main() {
     base: { aprovados: porVeredito.S, reprovados: porVeredito.N, duvidas: porVeredito.D, pendentes: porVeredito.pendente },
     porTipo,
     fontes: fontesMeta,
-    ia: { ...ia, candidatosNestaExecucao: coletados.length, extracao },
+    ia: { ...ia, candidatosNestaExecucao: coletados.length, extracao, categorizacao },
     queridoDiario: { descartadosNestaExecucao: descartadosAgora.length, descartadosTotal: descartadosQd.length },
     dedup: { fundidosNestaExecucao: dedup.fundidos, duplicadosConhecidos: Object.keys(duplicadosConhecidos).length },
     periodoPncp: statsFontes.find((s) => s.fonte === 'pncp')?.periodo ?? null,
@@ -355,9 +368,12 @@ async function main() {
   } else if (!extracao.ativo && extracao.pendentes) {
     console.log(`  IA extrator: desligado (sem chave) · ${extracao.pendentes} trechos de diário pendentes`);
   }
+  if (categorizacao.categorizados || categorizacao.lotesFalhos) {
+    console.log(`  IA categorizador: ${categorizacao.categorizados} itens antigos ganharam categoria · ${categorizacao.pendentes} sem categoria · custo estimado US$ ${categorizacao.custoUsd.toFixed(4)}`);
+  }
   const statQd = statsFontes.find((s) => s.fonte === 'querido-diario');
   if (statQd?.territorios) {
-    for (const t of statQd.territorios) console.log(`    diário ${t.nome.padEnd(16)} ${String(t.diarios).padStart(4)} diários com ocorrências · ${t.novos} novos · ${t.pulados} já processados${t.erros ? ` · ${t.erros} erro(s)` : ''}`);
+    for (const t of statQd.territorios) console.log(`    diário ${t.nome.padEnd(16)} ${String(t.diarios).padStart(4)} diários · ${t.trechos} trechos · ${t.novos} novos · ${t.pulados} já processados · ${t.semTermos} sem termos culturais${t.erros ? ` · ${t.erros} erro(s)` : ''}`);
     if (statQd.naoCobertos?.length) console.log(`    não cobertos pelo Querido Diário: ${statQd.naoCobertos.join(', ')}`);
   }
   console.log(`  Deduplicação entre fontes: ${dedup.fundidos} fundidos nesta execução (${Object.keys(duplicadosConhecidos).length} conhecidos)`);

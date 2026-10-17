@@ -10,18 +10,21 @@
  *       txt_url, excerpts: [string], edition, is_extra_edition }] }
  *   GET /cities/{ibge} → { city: { territory_id, territory_name, level, availability_date, publication_urls } }
  *
- * Cada diário (uma edição) vira UM registro bruto com os trechos que casaram em qualquer consulta, concatenados.
- * O id na fonte é `${ibge}:${date}:${hash do url do PDF}`: estável entre execuções (o hash dos trechos mudaria
- * conforme as consultas, e geraria duplicatas). Título, prazo e valor NÃO são extraídos aqui: isso é trabalho
- * do extrator por IA (scripts/classificar.mjs).
+ * Cada TRECHO (excerpt) de um diário vira um registro bruto próprio, para o extrator por IA julgar cada ato
+ * administrativo isoladamente (uma edição mistura dezenas de atos). O id na fonte é
+ * `${ibge}:${date}:${hash do url do PDF}:${hash do texto do trecho}`, estável entre execuções.
+ * Trechos sem nenhum termo cultural são descartados antes da IA (consultas com palavras soltas casam
+ * "edital" em concursos públicos). Título, prazo e valor NÃO são extraídos aqui: isso é trabalho do extrator
+ * (scripts/classificar.mjs), que depois funde trechos do mesmo edital.
  */
-import { log, dormir, hojeUTC, somarDias, fmtISO, requisitarJson, hashCurto, registroUnificado } from '../util.mjs';
+import { log, dormir, hojeUTC, somarDias, fmtISO, requisitarJson, hashCurto, registroUnificado, normalizar } from '../util.mjs';
 
 export const INTERVALO_MS = 1000;      // 1 s entre requisições
 const TAMANHO_PAGINA = 50;
 const MAX_POR_CONSULTA = 300;          // teto de diários por (território × consulta)
 const EXCERPT_SIZE = 500;
 const NUMERO_EXCERPTS = 3;
+const TRECHO_MINIMO = 80;              // caracteres; abaixo disso não há o que extrair
 export const LIMITE_TEXTO_BRUTO = 3000;
 
 /** Registros do Querido Diário não passam por palavras-chave: as consultas já selecionam, e a IA extrai. */
@@ -69,15 +72,16 @@ export async function coletar({ instancia, dias = 2, jaProcessados = new Set() }
   const contexto = { requisicoes: 0 };
   const territorios = (instancia.territorios ?? []).filter((t) => t.coberta !== false);
   const consultas = instancia.consultas ?? [];
-  const porTerritorio = territorios.map((t) => ({ nome: t.nome, ibge: t.ibge, regiao: t.regiao, diarios: 0, novos: 0, pulados: 0, erros: 0 }));
-  const diarios = new Map(); // idNaFonte → registro em construção
+  const porTerritorio = territorios.map((t) => ({ nome: t.nome, ibge: t.ibge, regiao: t.regiao, diarios: 0, trechos: 0, novos: 0, pulados: 0, semTermos: 0, erros: 0 }));
+  const trechos = new Map(); // idNaFonte do trecho → registro em construção
   const erros = [];
 
   log(`[querido-diario] ${territorios.length} territórios cobertos × ${consultas.length} consultas · ${desde} a ${ate}`);
 
   for (const territorio of territorios) {
     const stat = porTerritorio.find((s) => s.ibge === territorio.ibge);
-    const vistosNoTerritorio = new Set();
+    const edicoesVistas = new Set();
+    const trechosVistos = new Set();
     for (const consulta of consultas) {
       let offset = 0;
       let total = null;
@@ -91,21 +95,24 @@ export async function coletar({ instancia, dias = 2, jaProcessados = new Set() }
 
           for (const g of lista) {
             if (!g?.url || !g?.date) continue;
-            const idNaFonte = `${territorio.ibge}:${g.date}:${hashCurto(g.url)}`;
-            if (!vistosNoTerritorio.has(idNaFonte)) { vistosNoTerritorio.add(idNaFonte); stat.diarios++; }
-            if (jaProcessados.has(idNaFonte)) { stat.pulados++; continue; }
-            let reg = diarios.get(idNaFonte);
-            if (!reg) {
-              reg = {
+            const idEdicao = `${territorio.ibge}:${g.date}:${hashCurto(g.url)}`;
+            if (!edicoesVistas.has(idEdicao)) { edicoesVistas.add(idEdicao); stat.diarios++; }
+            for (const t of g.excerpts ?? []) {
+              const limpo = limparTrecho(t);
+              if (limpo.length < TRECHO_MINIMO) continue;
+              const idNaFonte = `${idEdicao}:${hashCurto(normalizar(limpo))}`;
+              if (trechosVistos.has(idNaFonte)) { trechos.get(idNaFonte)?.consultas.add(consulta); continue; }
+              trechosVistos.add(idNaFonte);
+              stat.trechos++;
+              if (jaProcessados.has(idNaFonte)) { stat.pulados++; continue; }
+              if (pontuacaoCultural(limpo) === 0) { stat.semTermos++; continue; }
+              trechos.set(idNaFonte, {
                 idNaFonte, data: g.date, url: g.url, txtUrl: g.txt_url ?? null, edicao: g.edition ?? null,
                 extra: Boolean(g.is_extra_edition), municipio: territorio.nome, regiao: territorio.regiao ?? null,
-                ibge: territorio.ibge, trechos: new Set(), consultas: new Set(),
-              };
-              diarios.set(idNaFonte, reg);
+                ibge: territorio.ibge, texto: limpo, consultas: new Set([consulta]),
+              });
               stat.novos++;
             }
-            reg.consultas.add(consulta);
-            for (const t of g.excerpts ?? []) { const limpo = limparTrecho(t); if (limpo) reg.trechos.add(limpo); }
           }
 
           offset += lista.length;
@@ -119,24 +126,16 @@ export async function coletar({ instancia, dias = 2, jaProcessados = new Set() }
       }
       await dormir(INTERVALO_MS);
     }
-    log(`[querido-diario ${territorio.nome}] ${stat.diarios} diários com ocorrências, ${stat.novos} novos, ${stat.pulados} já processados`);
+    log(`[querido-diario ${territorio.nome}] ${stat.diarios} diários, ${stat.trechos} trechos distintos: ${stat.novos} novos para a IA, ${stat.pulados} já processados, ${stat.semTermos} sem termos culturais`);
   }
 
-  const registros = [...diarios.values()].map((d) => {
-    // Consultas com palavras soltas casam qualquer uma delas ("edital" sozinho casa concursos públicos),
-    // então os trechos mais ligados a cultura vêm primeiro e são os que sobrevivem ao corte de tamanho.
-    const ordenados = [...d.trechos].sort((a, b) => pontuacaoCultural(b) - pontuacaoCultural(a));
-    let texto = '';
-    for (const t of ordenados) {
-      if (texto.length >= LIMITE_TEXTO_BRUTO) break;
-      texto = texto ? `${texto} […] ${t}` : t;
-    }
-    texto = texto.slice(0, LIMITE_TEXTO_BRUTO);
+  const registros = [...trechos.values()].map((d) => {
+    const texto = d.texto.slice(0, LIMITE_TEXTO_BRUTO);
     return registroUnificado({
       fonte: 'querido-diario',
       idNaFonte: d.idNaFonte,
       tipo: 'outro',
-      titulo: `Diário Oficial de ${d.municipio} · ${d.data}${d.edicao ? ` · edição ${d.edicao}` : ''}`,
+      titulo: `Diário Oficial de ${d.municipio} · ${d.data}${d.edicao ? ` · edição ${d.edicao}` : ''} · trecho`,
       resumo: null,
       orgao: null,
       uf: 'MG',
@@ -166,7 +165,8 @@ export async function coletar({ instancia, dias = 2, jaProcessados = new Set() }
   return {
     registros,
     stats: {
-      lidos: porTerritorio.reduce((s, t) => s + t.diarios, 0),
+      lidos: porTerritorio.reduce((s, t) => s + t.trechos, 0),
+      diarios: porTerritorio.reduce((s, t) => s + t.diarios, 0),
       candidatos: registros.length,
       requisicoes: contexto.requisicoes,
       periodo: { de: desde, ate, dias },
