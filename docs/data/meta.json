@@ -1,11 +1,11 @@
 {
-  "atualizadoEm": "2026-10-17T13:26:00.462Z",
-  "total": 6211,
-  "totalNovos": 0,
-  "totalAtualizados": 0,
+  "atualizadoEm": "2026-10-17T15:37:28.748Z",
+  "total": 6212,
+  "totalNovos": 1,
+  "totalAtualizados": 10,
   "removidos": {
-    "antigos": 0,
-    "foraDoFiltro": 3,
+    "antigos": 1,
+    "foraDoFiltro": 0,
     "reprovadosAntigos": 0,
     "duplicadosConhecidos": 0
   },
@@ -14,15 +14,15 @@
     "aprovados": 1731,
     "reprovados": 3878,
     "duvidas": 602,
-    "pendentes": 0
+    "pendentes": 1
   },
   "porTipo": {
     "contratacao": {
-      "total": 6207,
+      "total": 6208,
       "S": 1730,
       "N": 3877,
       "D": 600,
-      "pendente": 0
+      "pendente": 1
     },
     "fomento": {
       "total": 3,
@@ -46,7 +46,61 @@
       "tipo": "pncp",
       "ativo": true,
       "observacao": null,
-      "naBase": 6207,
+      "lidos": 118490,
+      "candidatos": 6112,
+      "requisicoes": 2383,
+      "erro": null,
+      "bloqueios429": 6,
+      "periodo": {
+        "de": "2026-09-17",
+        "ate": "2026-10-17",
+        "dias": 30
+      },
+      "modalidades": [
+        {
+          "codigo": 3,
+          "nome": "Concurso",
+          "lidos": 6,
+          "candidatos": 4,
+          "paginas": 1,
+          "falhas": 0
+        },
+        {
+          "codigo": 8,
+          "nome": "Dispensa de licitação",
+          "lidos": 61150,
+          "candidatos": 1720,
+          "paginas": 1224,
+          "falhas": 0
+        },
+        {
+          "codigo": 9,
+          "nome": "Inexigibilidade",
+          "lidos": 21967,
+          "candidatos": 3382,
+          "paginas": 441,
+          "falhas": 0
+        },
+        {
+          "codigo": 12,
+          "nome": "Credenciamento",
+          "lidos": 2033,
+          "candidatos": 171,
+          "paginas": 41,
+          "falhas": 0
+        },
+        {
+          "codigo": 6,
+          "nome": "Pregão eletrônico",
+          "lidos": 33334,
+          "candidatos": 835,
+          "paginas": 668,
+          "falhas": 0
+        }
+      ],
+      "erros": [],
+      "novos": 1,
+      "naBase": 6208,
       "aprovadosNaBase": 1730
     },
     {
@@ -55,6 +109,13 @@
       "tipo": "mapas",
       "ativo": true,
       "observacao": null,
+      "lidos": 4,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -64,6 +125,13 @@
       "tipo": "mapas",
       "ativo": true,
       "observacao": null,
+      "lidos": 0,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -132,7 +200,7 @@
     "aprovados": 0,
     "reprovados": 0,
     "duvidas": 0,
-    "pendentes": 0,
+    "pendentes": 1,
     "lotes": 0,
     "lotesFalhos": 0,
     "requisicoes": 0,
@@ -140,14 +208,18 @@
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 3
+    "candidatosNestaExecucao": 6117
   },
   "dedup": {
     "fundidosNestaExecucao": 0,
     "duplicadosConhecidos": 0
   },
-  "periodoPncp": null,
+  "periodoPncp": {
+    "de": "2026-09-17",
+    "ate": "2026-10-17",
+    "dias": 30
+  },
   "retencaoDias": 365,
-  "duracaoSegundos": 2,
+  "duracaoSegundos": 7822,
   "erros": []
 }
