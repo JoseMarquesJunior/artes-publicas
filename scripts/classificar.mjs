@@ -69,6 +69,24 @@ function extrairJson(texto) {
   }
 }
 
+/**
+ * Para respostas cortadas por max_tokens: recua até o último objeto interno completo e fecha o JSON,
+ * aproveitando os itens inteiros; os que ficaram de fora continuam pendentes.
+ */
+function extrairJsonTolerante(texto) {
+  const completo = extrairJson(texto);
+  if (completo) return completo;
+  const ini = texto.indexOf('{');
+  if (ini < 0) return null;
+  for (let i = texto.lastIndexOf('}'); i > ini; i = texto.lastIndexOf('}', i - 1)) {
+    try {
+      const valor = JSON.parse(`${texto.slice(ini, i + 1)}}`);
+      if (valor && typeof valor === 'object' && !Array.isArray(valor) && Object.keys(valor).length) return valor;
+    } catch { /* tenta um fechamento anterior */ }
+  }
+  return null;
+}
+
 /** Aceita ["S","exposicao"], "S" ou {"veredito":"S","categoria":"x"}. */
 function interpretarResposta(valor) {
   let letra = '';
@@ -116,8 +134,8 @@ async function chamarModelo(chave, lote, ia) {
 // ---------------------------------------------------------------- modo extrator (Querido Diário)
 
 const EXTRATOR_LOTE = 8;                 // trechos por requisição (texto longo)
-const EXTRATOR_TOKENS_POR_ITEM = 150;
-const EXTRATOR_MARGEM_TOKENS = 100;
+const EXTRATOR_TOKENS_POR_ITEM = 300;    // título + resumo de 200 caracteres + campos ≈ 200–260 tokens em português
+const EXTRATOR_MARGEM_TOKENS = 200;
 const TIPOS_EXTRATOR = ['contratacao', 'fomento', 'premio', 'residencia', 'chamamento', 'outro'];
 
 const PROMPT_EXTRATOR = `Você recebe trechos numerados de diários oficiais de municípios de Minas Gerais (Grande Belo Horizonte). Cada trecho reúne as partes de uma edição do diário que casaram com buscas por edital, cultura, artes, fomento, prêmio, Lei Paulo Gustavo ou Política Nacional Aldir Blanc. Um trecho pode misturar vários atos administrativos sem relação entre si.
@@ -230,9 +248,9 @@ export async function extrair(lista) {
       if (resposta.stop_reason === 'refusal') log('  IA extrator: lote recusado (refusal); trechos ficam pendentes');
       else {
         const texto = (resposta.content ?? []).filter((b) => b.type === 'text').map((b) => b.text).join('');
-        respostas = extrairJson(texto);
+        respostas = extrairJsonTolerante(texto);
         if (!respostas) log(`  IA extrator: resposta sem JSON válido (stop_reason ${resposta.stop_reason}); trechos do lote ficam pendentes`);
-        else if (resposta.stop_reason === 'max_tokens') log('  IA extrator: resposta cortada por max_tokens; trechos faltantes ficam pendentes');
+        else if (resposta.stop_reason === 'max_tokens') log(`  IA extrator: resposta cortada por max_tokens; ${Object.keys(respostas).length}/${lote.length} itens aproveitados, os demais ficam pendentes`);
       }
     } catch (erro) {
       stats.lotesFalhos++;
