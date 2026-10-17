@@ -1,7 +1,7 @@
 {
-  "atualizadoEm": "2026-10-17T15:48:25.669Z",
-  "total": 6229,
-  "totalNovos": 35,
+  "atualizadoEm": "2026-10-17T15:51:44.382Z",
+  "total": 6214,
+  "totalNovos": 0,
   "totalAtualizados": 0,
   "removidos": {
     "antigos": 0,
@@ -11,10 +11,10 @@
   },
   "migrados": 0,
   "base": {
-    "aprovados": 1732,
+    "aprovados": 1733,
     "reprovados": 3879,
     "duvidas": 602,
-    "pendentes": 16
+    "pendentes": 0
   },
   "porTipo": {
     "contratacao": {
@@ -24,16 +24,9 @@
       "D": 600,
       "pendente": 0
     },
-    "outro": {
-      "total": 16,
-      "S": 0,
-      "N": 0,
-      "D": 0,
-      "pendente": 16
-    },
     "fomento": {
-      "total": 4,
-      "S": 1,
+      "total": 5,
+      "S": 2,
       "N": 1,
       "D": 2,
       "pendente": 0
@@ -122,8 +115,8 @@
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
       "lidos": 35,
-      "candidatos": 35,
-      "requisicoes": 30,
+      "candidatos": 0,
+      "requisicoes": 24,
       "erro": null,
       "periodo": {
         "de": "2026-09-17",
@@ -145,8 +138,8 @@
           "ibge": "3118601",
           "regiao": "Grande BH",
           "diarios": 20,
-          "novos": 20,
-          "pulados": 0,
+          "novos": 0,
+          "pulados": 140,
           "erros": 0
         },
         {
@@ -154,8 +147,8 @@
           "ibge": "3106705",
           "regiao": "Grande BH",
           "diarios": 15,
-          "novos": 15,
-          "pulados": 0,
+          "novos": 0,
+          "pulados": 87,
           "erros": 0
         }
       ],
@@ -174,9 +167,9 @@
         "Congonhas"
       ],
       "erros": [],
-      "novos": 35,
-      "naBase": 17,
-      "aprovadosNaBase": 1
+      "novos": 0,
+      "naBase": 2,
+      "aprovadosNaBase": 2
     },
     {
       "fonte": "mapas:nacional",
@@ -193,44 +186,38 @@
   "ia": {
     "modelo": "claude-haiku-5-5",
     "ativo": true,
-    "classificados": 1,
+    "classificados": 0,
     "aprovados": 0,
-    "reprovados": 1,
+    "reprovados": 0,
     "duvidas": 0,
     "pendentes": 0,
-    "lotes": 1,
+    "lotes": 0,
     "lotesFalhos": 0,
-    "requisicoes": 1,
-    "tokensEntrada": 818,
-    "tokensSaida": 12,
-    "custoUsd": 0.0001,
-    "porTipo": {
-      "contratacao": {
-        "S": 0,
-        "N": 1,
-        "D": 0
-      }
-    },
-    "candidatosNestaExecucao": 35,
+    "requisicoes": 0,
+    "tokensEntrada": 0,
+    "tokensSaida": 0,
+    "custoUsd": 0,
+    "porTipo": {},
+    "candidatosNestaExecucao": 0,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": true,
-      "processados": 19,
+      "processados": 16,
       "relevantes": 1,
-      "descartados": 18,
+      "descartados": 15,
       "duvidas": 0,
-      "pendentes": 16,
-      "lotes": 5,
+      "pendentes": 0,
+      "lotes": 2,
       "lotesFalhos": 0,
-      "requisicoes": 5,
-      "tokensEntrada": 60550,
-      "tokensSaida": 5657,
-      "custoUsd": 0.0089
+      "requisicoes": 2,
+      "tokensEntrada": 26844,
+      "tokensSaida": 2622,
+      "custoUsd": 0.004
     }
   },
   "queridoDiario": {
-    "descartadosNestaExecucao": 18,
-    "descartadosTotal": 18
+    "descartadosNestaExecucao": 15,
+    "descartadosTotal": 33
   },
   "dedup": {
     "fundidosNestaExecucao": 0,
@@ -238,6 +225,6 @@
   },
   "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 615,
+  "duracaoSegundos": 117,
   "erros": []
 }
