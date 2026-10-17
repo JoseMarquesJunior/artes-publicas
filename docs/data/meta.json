@@ -1,7 +1,7 @@
 {
-  "atualizadoEm": "2026-10-17T15:51:44.382Z",
-  "total": 6214,
-  "totalNovos": 0,
+  "atualizadoEm": "2026-10-17T19:37:10.828Z",
+  "total": 6220,
+  "totalNovos": 233,
   "totalAtualizados": 0,
   "removidos": {
     "antigos": 0,
@@ -11,31 +11,31 @@
   },
   "migrados": 0,
   "base": {
-    "aprovados": 1733,
+    "aprovados": 1737,
     "reprovados": 3879,
-    "duvidas": 602,
+    "duvidas": 604,
     "pendentes": 0
   },
   "porTipo": {
     "contratacao": {
-      "total": 6208,
+      "total": 6209,
       "S": 1730,
       "N": 3878,
-      "D": 600,
-      "pendente": 0
-    },
-    "fomento": {
-      "total": 5,
-      "S": 2,
-      "N": 1,
-      "D": 2,
+      "D": 601,
       "pendente": 0
     },
     "chamamento": {
-      "total": 1,
-      "S": 1,
+      "total": 5,
+      "S": 5,
       "N": 0,
       "D": 0,
+      "pendente": 0
+    },
+    "fomento": {
+      "total": 6,
+      "S": 2,
+      "N": 1,
+      "D": 3,
       "pendente": 0
     }
   },
@@ -114,10 +114,11 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 35,
-      "candidatos": 0,
+      "lidos": 548,
+      "candidatos": 233,
       "requisicoes": 24,
       "erro": null,
+      "diarios": 35,
       "periodo": {
         "de": "2026-09-17",
         "ate": "2026-10-17",
@@ -129,8 +130,10 @@
           "ibge": "3106200",
           "regiao": "Grande BH",
           "diarios": 0,
+          "trechos": 0,
           "novos": 0,
           "pulados": 0,
+          "semTermos": 0,
           "erros": 0
         },
         {
@@ -138,8 +141,10 @@
           "ibge": "3118601",
           "regiao": "Grande BH",
           "diarios": 20,
-          "novos": 0,
-          "pulados": 140,
+          "trechos": 343,
+          "novos": 161,
+          "pulados": 0,
+          "semTermos": 182,
           "erros": 0
         },
         {
@@ -147,8 +152,10 @@
           "ibge": "3106705",
           "regiao": "Grande BH",
           "diarios": 15,
-          "novos": 0,
-          "pulados": 87,
+          "trechos": 205,
+          "novos": 72,
+          "pulados": 0,
+          "semTermos": 133,
           "erros": 0
         }
       ],
@@ -167,9 +174,9 @@
         "Congonhas"
       ],
       "erros": [],
-      "novos": 0,
-      "naBase": 2,
-      "aprovadosNaBase": 2
+      "novos": 233,
+      "naBase": 8,
+      "aprovadosNaBase": 6
     },
     {
       "fonte": "mapas:nacional",
@@ -198,33 +205,45 @@
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 0,
+    "candidatosNestaExecucao": 233,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": true,
-      "processados": 16,
-      "relevantes": 1,
-      "descartados": 15,
-      "duvidas": 0,
+      "processados": 233,
+      "relevantes": 8,
+      "descartados": 223,
+      "duvidas": 2,
       "pendentes": 0,
-      "lotes": 2,
+      "lotes": 30,
       "lotesFalhos": 0,
-      "requisicoes": 2,
-      "tokensEntrada": 26844,
-      "tokensSaida": 2622,
-      "custoUsd": 0.004
+      "requisicoes": 30,
+      "tokensEntrada": 102392,
+      "tokensSaida": 34680,
+      "custoUsd": 0.0276
+    },
+    "categorizacao": {
+      "modelo": "claude-haiku-5-5",
+      "ativo": true,
+      "categorizados": 2327,
+      "pendentes": 2,
+      "lotes": 78,
+      "lotesFalhos": 0,
+      "requisicoes": 78,
+      "tokensEntrada": 300756,
+      "tokensSaida": 15367,
+      "custoUsd": 0.0378
     }
   },
   "queridoDiario": {
-    "descartadosNestaExecucao": 15,
-    "descartadosTotal": 33
+    "descartadosNestaExecucao": 223,
+    "descartadosTotal": 223
   },
   "dedup": {
-    "fundidosNestaExecucao": 0,
-    "duplicadosConhecidos": 0
+    "fundidosNestaExecucao": 2,
+    "duplicadosConhecidos": 2
   },
   "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 117,
+  "duracaoSegundos": 286,
   "erros": []
 }
