@@ -1,31 +1,38 @@
-/* Artes Públicas: busca e filtros no navegador sobre docs/data/contratacoes.json.
+/* Artes Públicas: busca e filtros no navegador sobre docs/data/oportunidades.json.
    Vanilla JS, sem build, sem dependências. */
 (() => {
   'use strict';
 
   const LOTE = 60;             // cards renderizados por vez
   const DIAS_URGENTE = 7;      // destaque para prazos que encerram em até N dias
-  const LIMITE_TRUNCAR = 260;  // objetos maiores que isso ganham "ver mais"
+  const LIMITE_TRUNCAR = 220;  // textos maiores que isso ganham "ver mais"
   const DIA_MS = 86_400_000;
+  const UF_PADRAO = 'MG';
+
+  const TIPO_ROTULO = { contratacao: 'Contratação', fomento: 'Fomento', premio: 'Prêmio', residencia: 'Residência', chamamento: 'Chamamento', outro: 'Outro' };
+  const GRUPO_FOMENTO = new Set(['fomento', 'premio', 'residencia', 'chamamento']);
+  const CATEGORIA_ROTULO = {
+    curadoria: 'curadoria', oficina: 'oficina', design: 'design', ilustracao: 'ilustração', mural: 'mural', restauro: 'restauro',
+    exposicao: 'exposição', premio: 'prêmio', residencia: 'residência', 'fomento-geral': 'fomento geral', producao: 'produção', outro: 'outro',
+  };
 
   const el = {};
-  for (const id of ['busca', 'uf', 'modalidade', 'ordem', 'abertas', 'duvida', 'limpar', 'contagem', 'status', 'lista', 'mais', 'atualizado', 'filtros']) {
-    el[id] = document.getElementById(id);
+  for (const id of ['busca', 'uf', 'modalidade', 'ordem', 'abertas', 'duvida', 'limpar', 'contagem', 'status', 'lista', 'mais', 'atualizado', 'filtros', 'abas', 'fontes-aviso']) {
+    el[id.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = document.getElementById(id);
   }
 
   const fmtMoeda = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
   const fmtData = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   const fmtDataHora = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-  // dados: tudo que veio do JSON; base: o que pode aparecer (a IA reprovou os "N", que nunca são exibidos).
+  // dados: tudo que veio do JSON; base: o que pode aparecer (os "N" da IA nunca são exibidos).
   const estado = { dados: [], base: [], filtrados: [], visiveis: 0, filtros: lerFiltrosDaUrl() };
 
-  /** Veredito da classificação por IA: S (aprovado), N (reprovado), D (dúvida) ou pendente (não verificado). */
-  function veredito(r) {
-    return r.ia === 'S' || r.ia === 'N' || r.ia === 'D' ? r.ia : 'pendente';
-  }
-
   // ------------------------------------------------------------ utilidades
+
+  const veredito = (r) => (r.ia === 'S' || r.ia === 'N' || r.ia === 'D' ? r.ia : 'pendente');
+  const grupoTipo = (r) => (r.tipo === 'contratacao' ? 'contratacao' : GRUPO_FOMENTO.has(r.tipo) ? 'fomento' : 'outro');
+  const ehUrlHttp = (s) => typeof s === 'string' && /^https?:\/\//i.test(s);
 
   function normalizar(texto) {
     return String(texto ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -33,7 +40,7 @@
 
   function paraMs(iso) {
     if (!iso) return null;
-    const ms = new Date(iso).getTime();
+    const ms = new Date(iso.length === 10 ? `${iso}T23:59:59` : iso).getTime();
     return Number.isNaN(ms) ? null : ms;
   }
 
@@ -48,15 +55,23 @@
     return `${n.toLocaleString('pt-BR')} ${n === 1 ? singular : pluralForma}`;
   }
 
-  const ehUrlHttp = (s) => typeof s === 'string' && /^https?:\/\//i.test(s);
+  function nomeFonte(r) {
+    if (r.fonte === 'pncp') return 'PNCP';
+    if (r.detalhes?.fonteNome) return r.detalhes.fonteNome;
+    if (r.fonte.startsWith('mapas')) return 'Mapa Cultural';
+    if (r.fonte === 'querido-diario') return 'Diário Oficial';
+    return r.fonte;
+  }
 
   // ------------------------------------------------------------ URL <-> filtros
 
   function lerFiltrosDaUrl() {
     const p = new URLSearchParams(location.search);
+    const tipo = p.get('tipo');
     return {
+      tipo: tipo === 'contratacao' || tipo === 'fomento' ? tipo : '',
       q: p.get('q') ?? '',
-      uf: p.get('uf') ?? '',
+      uf: p.get('uf') ?? UF_PADRAO,
       mod: p.get('mod') ?? '',
       abertas: p.get('abertas') === '1',
       duvida: p.get('duvida') === '1',
@@ -67,8 +82,9 @@
   function gravarFiltrosNaUrl() {
     const f = estado.filtros;
     const p = new URLSearchParams();
+    if (f.tipo) p.set('tipo', f.tipo);
     if (f.q) p.set('q', f.q);
-    if (f.uf) p.set('uf', f.uf);
+    if (f.uf !== UF_PADRAO) p.set('uf', f.uf);
     if (f.mod) p.set('mod', f.mod);
     if (f.abertas) p.set('abertas', '1');
     if (f.duvida) p.set('duvida', '1');
@@ -87,9 +103,13 @@
     el.abertas.checked = f.abertas;
     el.duvida.checked = f.duvida;
     el.ordem.value = f.ord;
+    for (const b of el.abas.querySelectorAll('[data-tipo]')) {
+      const ativo = b.dataset.tipo === f.tipo;
+      b.setAttribute('aria-selected', String(ativo));
+      b.tabIndex = ativo ? 0 : -1;
+    }
   }
 
-  /** Se a URL trouxe um valor que não existe nos dados, cria a opção para o select refletir o filtro. */
   function garantirOpcao(select, valor) {
     if (!valor) return;
     if (![...select.options].some((o) => o.value === valor)) select.append(new Option(valor, valor));
@@ -105,9 +125,10 @@
 
   function preparar(registro) {
     const r = { ...registro };
-    r._pub = paraMs(r.dataPublicacaoPncp);
-    r._enc = paraMs(r.dataEncerramentoProposta);
-    r._busca = normalizar([r.objetoCompra, r.orgao, r.unidade, r.municipio, r.uf, r.numeroControlePNCP].filter(Boolean).join(' '));
+    r._pub = paraMs(r.publicadoEm ?? r.coletadoEm);
+    r._enc = paraMs(r.encerramento);
+    r._grupo = grupoTipo(r);
+    r._busca = normalizar([r.titulo, r.resumo, r.detalhes?.objetoCompleto, r.orgao, r.detalhes?.unidade, r.municipio, r.uf, r.idNaFonte, r.categoriaIA].filter(Boolean).join(' '));
     return r;
   }
 
@@ -123,31 +144,57 @@
     }
     const partes = [`Atualizado em ${fmtData.format(d)} às ${d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`];
     const aprovadas = estado.dados.filter((r) => veredito(r) === 'S').length;
-    partes.push(`${plural(aprovadas, 'contratação confirmada', 'contratações confirmadas')} nos últimos 12 meses`);
+    partes.push(`${plural(aprovadas, 'oportunidade confirmada', 'oportunidades confirmadas')} nos últimos 12 meses`);
     if (typeof meta.totalNovos === 'number' && meta.totalNovos > 0) partes.push(`${plural(meta.totalNovos, 'nova candidata', 'novas candidatas')} na última coleta`);
     el.atualizado.textContent = partes.join(' · ');
     if (Array.isArray(meta.erros) && meta.erros.length) {
       el.atualizado.append(' ');
-      const aviso = h('span', 'aviso-inline', `(a última coleta falhou em ${plural(meta.erros.length, 'consulta', 'consultas')}; alguns editais podem estar faltando)`);
-      el.atualizado.append(aviso);
+      el.atualizado.append(h('span', 'aviso-inline', `(a última coleta falhou em ${plural(meta.erros.length, 'consulta', 'consultas')}; alguns editais podem estar faltando)`));
+    }
+  }
+
+  function mostrarFontes(meta) {
+    const ativas = Array.isArray(meta?.fontes) ? meta.fontes.filter((f) => f.ativo) : [];
+    if (!ativas.length) return; // mantém o texto padrão do HTML
+    const nomes = ativas.map((f) => (f.tipo === 'pncp' ? `${f.nome} (contratações de serviço)` : f.nome));
+    el.fontesAviso.textContent = `Fontes ativas: ${nomes.join(', ')}. Editais de fomento e prêmios publicados em outros canais (Lei Paulo Gustavo, PNAB estaduais, editais de secretarias sem Mapa Cultural) ainda não aparecem aqui.`;
+    const inativas = (meta.fontes ?? []).filter((f) => !f.ativo && f.observacao);
+    if (inativas.length) {
+      el.fontesAviso.append(' ');
+      el.fontesAviso.append(h('span', 'aviso-fraco', `Desligadas: ${inativas.map((f) => `${f.nome} (${f.observacao.split('.')[0].toLowerCase()})`).join('; ')}.`));
     }
   }
 
   // ------------------------------------------------------------ filtro e ordenação
 
+  function passaUf(r, uf) {
+    if (uf === 'todas') return true;
+    if (uf === 'nacional') return !r.uf;
+    return r.uf === uf || !r.uf; // itens nacionais (uf nula) valem para qualquer estado
+  }
+
   function filtrar() {
-    const { q, uf, mod, abertas, duvida, ord } = estado.filtros;
+    const { tipo, q, uf, mod, abertas, duvida, ord } = estado.filtros;
     const termos = normalizar(q).split(/\s+/).filter(Boolean);
     const agora = Date.now();
 
-    const lista = estado.base.filter((r) => {
+    const semTipo = estado.base.filter((r) => {
       if (!duvida && veredito(r) === 'D') return false;
-      if (uf && r.uf !== uf) return false;
-      if (mod && r.modalidadeNome !== mod) return false;
+      if (!passaUf(r, uf)) return false;
+      if (mod && r.detalhes?.modalidade !== mod) return false;
       if (abertas && !(r._enc !== null && r._enc > agora)) return false;
       if (termos.length && !termos.every((t) => r._busca.includes(t))) return false;
       return true;
     });
+
+    const contagens = { '': semTipo.length, contratacao: 0, fomento: 0 };
+    for (const r of semTipo) if (r._grupo in contagens) contagens[r._grupo]++;
+    for (const b of el.abas.querySelectorAll('[data-tipo]')) {
+      const n = b.querySelector('.aba-n');
+      if (n) n.textContent = (contagens[b.dataset.tipo] ?? 0).toLocaleString('pt-BR');
+    }
+
+    const lista = tipo ? semTipo.filter((r) => r._grupo === tipo) : semTipo;
 
     if (ord === 'prazo') {
       // Prazos futuros primeiro (mais próximo no topo); depois os sem prazo ou já encerrados, por publicação.
@@ -173,9 +220,10 @@
     const n = estado.filtrados.length;
     const total = estado.base.filter((r) => estado.filtros.duvida || veredito(r) !== 'D').length;
     el.contagem.textContent = n === total
-      ? plural(n, 'contratação', 'contratações')
-      : `${plural(n, 'contratação encontrada', 'contratações encontradas')} de ${total.toLocaleString('pt-BR')}`;
-    const temFiltro = Object.entries(estado.filtros).some(([k, v]) => (k === 'ord' ? v !== 'recentes' : Boolean(v)));
+      ? plural(n, 'oportunidade', 'oportunidades')
+      : `${plural(n, 'oportunidade encontrada', 'oportunidades encontradas')} de ${total.toLocaleString('pt-BR')}`;
+    const f = estado.filtros;
+    const temFiltro = Boolean(f.tipo || f.q || f.mod || f.abertas || f.duvida) || f.uf !== UF_PADRAO || f.ord !== 'recentes';
     el.limpar.hidden = !temFiltro;
   }
 
@@ -187,9 +235,7 @@
     el.lista.append(frag);
     estado.visiveis += fatia.length;
 
-    if (estado.filtrados.length === 0) {
-      el.lista.append(criarVazio());
-    }
+    if (estado.filtrados.length === 0) el.lista.append(criarVazio());
     const restam = estado.filtrados.length - estado.visiveis;
     el.mais.hidden = restam <= 0;
     if (restam > 0) el.mais.textContent = `Mostrar mais (${restam.toLocaleString('pt-BR')} restantes)`;
@@ -197,29 +243,33 @@
 
   function criarVazio() {
     const box = h('div', 'vazio');
-    box.append(h('p', '', 'Nenhuma contratação corresponde aos filtros.'));
-    box.append(h('p', 'dica', 'Tente outras palavras, remova o filtro de UF ou desligue "Só com propostas abertas".'));
+    box.append(h('p', '', 'Nenhuma oportunidade corresponde aos filtros.'));
+    box.append(h('p', 'dica', 'Tente outras palavras, troque a UF para "Todas" ou desligue "Só com prazo aberto".'));
     return box;
   }
 
   // ------------------------------------------------------------ card
 
   function criarCard(r, agora) {
-    const card = h('article', 'card');
+    const card = h('article', `card tipo-${r._grupo}`);
     const enc = r._enc;
     const aberto = enc !== null && enc > agora;
     const diasRestantes = aberto ? Math.ceil((enc - agora) / DIA_MS) : null;
     const urgente = aberto && diasRestantes <= DIAS_URGENTE;
     if (urgente) card.classList.add('urgente');
+    const fomento = r._grupo === 'fomento';
 
-    // linha superior: modalidade, situação e estado do prazo
+    // linha superior: tipo, fonte, situação e estado do prazo
     const topo = h('div', 'card-topo');
-    topo.append(h('span', 'pill pill-modalidade', r.modalidadeNome ?? 'Modalidade não informada'));
-    if (r.situacaoCompraNome) topo.append(h('span', 'pill', r.situacaoCompraNome));
+    topo.append(h('span', `pill pill-tipo pill-tipo-${r.tipo}`, TIPO_ROTULO[r.tipo] ?? r.tipo));
+    topo.append(h('span', 'pill pill-fonte', nomeFonte(r)));
+    if (r.detalhes?.modalidade) topo.append(h('span', 'pill', r.detalhes.modalidade));
+    if (r.detalhes?.situacao) topo.append(h('span', 'pill', r.detalhes.situacao));
+    if (r.detalhes?.fluxoContinuo) topo.append(h('span', 'pill pill-aberta', 'Fluxo contínuo'));
     if (urgente) {
       topo.append(h('span', 'pill pill-urgente', diasRestantes <= 1 ? 'Encerra em menos de 1 dia' : `Encerra em ${diasRestantes} dias`));
     } else if (aberto) {
-      topo.append(h('span', 'pill pill-aberta', 'Propostas abertas'));
+      topo.append(h('span', 'pill pill-aberta', fomento ? 'Inscrições abertas' : 'Propostas abertas'));
     }
     const v = veredito(r);
     if (v === 'pendente') {
@@ -233,70 +283,90 @@
     }
     card.append(topo);
 
-    // objeto, com truncamento
-    const objeto = h('p', 'objeto', r.objetoCompra || '(objeto não informado)');
-    card.append(objeto);
-    if ((r.objetoCompra ?? '').length > LIMITE_TRUNCAR) {
-      objeto.classList.add('truncado');
-      const btn = h('button', 'link-botao ver-mais', 'ver mais');
-      btn.type = 'button';
-      btn.setAttribute('aria-expanded', 'false');
-      btn.addEventListener('click', () => {
-        const truncado = objeto.classList.toggle('truncado');
-        btn.textContent = truncado ? 'ver mais' : 'ver menos';
-        btn.setAttribute('aria-expanded', String(!truncado));
-      });
-      card.append(btn);
+    // título (+ texto completo ou resumo, com "ver mais")
+    const completo = r.detalhes?.objetoCompleto && r.detalhes.objetoCompleto.length > (r.titulo ?? '').length - 1 ? r.detalhes.objetoCompleto : null;
+    const titulo = h('h2', 'titulo', completo ?? r.titulo ?? '(sem título)');
+    card.append(titulo);
+    if (completo && completo.length > LIMITE_TRUNCAR) adicionarVerMais(card, titulo);
+    if (r.resumo && !completo) {
+      const resumo = h('p', 'resumo', r.resumo);
+      card.append(resumo);
+      if (r.resumo.length > LIMITE_TRUNCAR) adicionarVerMais(card, resumo);
     }
 
     // órgão e local
     const orgao = h('p', 'orgao');
     orgao.append(h('strong', '', r.orgao ?? 'Órgão não informado'));
-    const local = [r.municipio, r.uf].filter(Boolean).join(' / ');
-    if (local) orgao.append(h('span', 'local', local));
+    const local = [r.municipio, r.uf].filter(Boolean).join(' / ') || (r.uf ? r.uf : 'Abrangência nacional');
+    orgao.append(h('span', 'local', local));
     card.append(orgao);
 
     // dados em grade
     const dl = h('dl', 'dados');
-    adicionarDado(dl, 'Valor estimado', r.valorTotalEstimado ? fmtMoeda.format(r.valorTotalEstimado) : 'Não informado');
+    if (r.valor) adicionarDado(dl, 'Valor estimado', fmtMoeda.format(r.valor));
     adicionarDado(dl, 'Publicado em', r._pub !== null ? fmtData.format(r._pub) : 'Não informado');
+    if (fomento && r.abertura) adicionarDado(dl, 'Inscrições de', fmtData.format(paraMs(r.abertura)));
     adicionarDado(
       dl,
-      'Encerramento das propostas',
-      enc !== null ? fmtDataHora.format(enc) : 'Não informado',
+      fomento ? 'Inscrições até' : 'Propostas até',
+      enc !== null ? (r.encerramento.length === 10 ? fmtData.format(enc) : fmtDataHora.format(enc)) : (r.detalhes?.fluxoContinuo ? 'Fluxo contínuo' : 'Não informado'),
       enc !== null && !aberto ? 'encerrado' : urgente ? 'destaque' : '',
     );
-    if (r.amparoLegal) adicionarDado(dl, 'Amparo legal', r.amparoLegal);
+    if (r.detalhes?.amparoLegal) adicionarDado(dl, 'Amparo legal', r.detalhes.amparoLegal);
+    if (r.detalhes?.areas?.length) adicionarDado(dl, 'Áreas (segundo a fonte)', r.detalhes.areas.slice(0, 4).join(', '));
     card.append(dl);
 
-    // palavras-chave que bateram
-    if (Array.isArray(r.tags) && r.tags.length) {
-      const ul = h('ul', 'tags');
-      ul.setAttribute('aria-label', 'Palavras-chave encontradas');
-      for (const t of r.tags) ul.append(h('li', 'tag', t));
-      card.append(ul);
-    }
+    // categoria da IA + palavras-chave que bateram
+    const ul = h('ul', 'tags');
+    ul.setAttribute('aria-label', 'Categoria e palavras-chave');
+    if (r.categoriaIA) ul.append(h('li', 'tag tag-categoria', CATEGORIA_ROTULO[r.categoriaIA] ?? r.categoriaIA));
+    for (const t of r.tags ?? []) ul.append(h('li', 'tag', t));
+    if (ul.children.length) card.append(ul);
 
     // ações
     const acoes = h('div', 'acoes');
-    if (ehUrlHttp(r.linkPncp)) {
-      const a = h('a', 'botao', 'Ver no PNCP');
-      a.href = r.linkPncp;
+    if (ehUrlHttp(r.link)) {
+      const a = h('a', 'botao', r.fonte === 'pncp' ? 'Ver no PNCP' : r.fonte.startsWith('mapas') ? 'Ver no Mapa Cultural' : r.fonte === 'querido-diario' ? 'Ver no Diário Oficial (PDF)' : 'Ver edital');
+      a.href = r.link;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
       acoes.append(a);
     }
-    if (ehUrlHttp(r.linkSistemaOrigem)) {
-      const a = h('a', 'link-secundario', 'Sistema de origem');
-      a.href = r.linkSistemaOrigem;
+    for (const extra of (r.linksExtras ?? []).filter(ehUrlHttp).slice(0, 3)) {
+      const a = h('a', 'link-secundario', rotuloLinkExtra(extra));
+      a.href = extra;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
       acoes.append(a);
     }
-    acoes.append(h('span', 'controle', r.numeroControlePNCP));
+    acoes.append(h('span', 'controle', r.idNaFonte));
     card.append(acoes);
 
     return card;
+  }
+
+  function rotuloLinkExtra(url) {
+    try {
+      const host = new URL(url).hostname.replace(/^www\./, '');
+      if (host === 'pncp.gov.br') return 'Também no PNCP';
+      if (/mapacultur|mapas\.cultura/.test(host)) return 'Também no Mapa Cultural';
+      return `Também em ${host}`;
+    } catch {
+      return 'Outro link';
+    }
+  }
+
+  function adicionarVerMais(card, alvo) {
+    alvo.classList.add('truncado');
+    const btn = h('button', 'link-botao ver-mais', 'ver mais');
+    btn.type = 'button';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.addEventListener('click', () => {
+      const truncado = alvo.classList.toggle('truncado');
+      btn.textContent = truncado ? 'ver mais' : 'ver menos';
+      btn.setAttribute('aria-expanded', String(!truncado));
+    });
+    card.append(btn);
   }
 
   function adicionarDado(dl, rotulo, valor, classe) {
@@ -310,6 +380,7 @@
 
   function aoMudarFiltro() {
     estado.filtros = {
+      ...estado.filtros,
       q: el.busca.value.trim(),
       uf: el.uf.value,
       mod: el.modalidade.value,
@@ -333,14 +404,27 @@
     el.filtros.addEventListener('submit', (e) => e.preventDefault());
     el.busca.addEventListener('input', debounce(aoMudarFiltro, 150));
     for (const c of [el.uf, el.modalidade, el.ordem, el.abertas, el.duvida]) c.addEventListener('change', aoMudarFiltro);
+    el.abas.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-tipo]');
+      if (!b) return;
+      estado.filtros.tipo = b.dataset.tipo;
+      aplicarFiltrosNosControles();
+      gravarFiltrosNaUrl();
+      filtrar();
+    });
+    el.abas.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const abas = [...el.abas.querySelectorAll('[data-tipo]')];
+      const i = abas.findIndex((b) => b.getAttribute('aria-selected') === 'true');
+      const prox = abas[(i + (e.key === 'ArrowRight' ? 1 : abas.length - 1)) % abas.length];
+      prox.focus();
+      prox.click();
+    });
     el.limpar.addEventListener('click', () => {
-      el.busca.value = '';
-      el.uf.value = '';
-      el.modalidade.value = '';
-      el.abertas.checked = false;
-      el.duvida.checked = false;
-      el.ordem.value = 'recentes';
-      aoMudarFiltro();
+      estado.filtros = { tipo: '', q: '', uf: UF_PADRAO, mod: '', abertas: false, duvida: false, ord: 'recentes' };
+      aplicarFiltrosNosControles();
+      gravarFiltrosNaUrl();
+      filtrar();
       el.busca.focus();
     });
     el.mais.addEventListener('click', renderizarMais);
@@ -361,21 +445,22 @@
 
   async function iniciar() {
     ligarEventos();
-    mostrarStatus('Carregando contratações…');
+    mostrarStatus('Carregando oportunidades…');
     try {
       const [meta, dados] = await Promise.all([
         carregarJson('data/meta.json').catch(() => null),
-        carregarJson('data/contratacoes.json'),
+        carregarJson('data/oportunidades.json'),
       ]);
-      if (!Array.isArray(dados)) throw new Error('contratacoes.json não é uma lista');
+      if (!Array.isArray(dados)) throw new Error('oportunidades.json não é uma lista');
 
       estado.dados = dados.map(preparar);
       estado.base = estado.dados.filter((r) => veredito(r) !== 'N'); // reprovados pela IA nunca aparecem
       mostrarAtualizado(meta);
+      mostrarFontes(meta);
 
       const ufs = [...new Set(estado.base.map((r) => r.uf).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-      const modalidades = [...new Set(estado.base.map((r) => r.modalidadeNome).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-      preencherSelect(el.uf, ufs);
+      preencherSelect(el.uf, ufs.filter((u) => u !== UF_PADRAO));
+      const modalidades = [...new Set(estado.base.map((r) => r.detalhes?.modalidade).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
       preencherSelect(el.modalidade, modalidades);
 
       aplicarFiltrosNosControles();

@@ -1,85 +1,174 @@
 {
-  "atualizadoEm": "2026-10-17T10:27:47.771Z",
-  "total": 6206,
-  "totalNovos": 8,
-  "totalAtualizados": 4,
+  "atualizadoEm": "2026-10-17T13:23:55.752Z",
+  "total": 6213,
+  "totalNovos": 0,
+  "totalAtualizados": 0,
   "removidos": {
-    "antigos": 0,
+    "antigos": 1,
     "foraDoFiltro": 0,
-    "reprovadosIA": 234
+    "reprovadosAntigos": 0,
+    "duplicadosConhecidos": 0
   },
+  "migrados": 0,
   "base": {
     "aprovados": 1730,
     "reprovados": 3877,
     "duvidas": 599,
-    "pendentes": 0
+    "pendentes": 7
   },
-  "ia": {
-    "modelo": "claude-haiku-5-5",
-    "ativo": true,
-    "classificados": 8,
-    "aprovados": 0,
-    "reprovados": 3,
-    "duvidas": 5,
-    "pendentes": 0,
-    "lotes": 1,
-    "lotesFalhos": 0,
-    "requisicoes": 1,
-    "tokensEntrada": 1873,
-    "tokensSaida": 45,
-    "custoUsd": 0.0002,
-    "candidatosRegexNestaExecucao": 601
+  "porTipo": {
+    "contratacao": {
+      "total": 6206,
+      "S": 1730,
+      "N": 3877,
+      "D": 599,
+      "pendente": 0
+    },
+    "chamamento": {
+      "total": 3,
+      "S": 0,
+      "N": 0,
+      "D": 0,
+      "pendente": 3
+    },
+    "premio": {
+      "total": 1,
+      "S": 0,
+      "N": 0,
+      "D": 0,
+      "pendente": 1
+    },
+    "fomento": {
+      "total": 3,
+      "S": 0,
+      "N": 0,
+      "D": 0,
+      "pendente": 3
+    }
   },
-  "periodo": {
-    "de": "2026-10-15",
-    "ate": "2026-10-17",
-    "dias": 2
-  },
-  "retencaoDias": 365,
-  "requisicoes": 239,
-  "bloqueios429": 2,
-  "duracaoSegundos": 723,
-  "modalidades": [
+  "fontes": [
     {
-      "codigo": 3,
-      "nome": "Concurso",
-      "lidos": 1,
-      "selecionados": 0,
+      "fonte": "pncp",
+      "nome": "PNCP",
+      "tipo": "pncp",
+      "ativo": true,
+      "observacao": null,
+      "naBase": 6206,
+      "aprovadosNaBase": 1730
+    },
+    {
+      "fonte": "mapas:bh",
+      "nome": "Mapa Cultural BH",
+      "tipo": "mapas",
+      "ativo": true,
+      "observacao": null,
+      "lidos": 4,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
       "paginas": 1,
-      "falhas": 0
+      "novos": 0,
+      "naBase": 1,
+      "aprovadosNaBase": 0
     },
     {
-      "codigo": 8,
-      "nome": "Dispensa de licitação",
-      "lidos": 6199,
-      "selecionados": 200,
-      "paginas": 124,
-      "falhas": 0
+      "fonte": "mapas:lagoa-santa",
+      "nome": "Mapa Cultural Lagoa Santa",
+      "tipo": "mapas",
+      "ativo": true,
+      "observacao": null,
+      "lidos": 0,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
+      "naBase": 0,
+      "aprovadosNaBase": 0
     },
     {
-      "codigo": 9,
-      "nome": "Inexigibilidade",
-      "lidos": 2046,
-      "selecionados": 300,
-      "paginas": 41,
-      "falhas": 0
+      "fonte": "mapas:nova-lima",
+      "nome": "Mapa Cultural Nova Lima",
+      "tipo": "mapas",
+      "ativo": true,
+      "observacao": null,
+      "lidos": 2,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
+      "naBase": 2,
+      "aprovadosNaBase": 0
     },
     {
-      "codigo": 12,
-      "nome": "Credenciamento",
-      "lidos": 168,
-      "selecionados": 17,
-      "paginas": 4,
-      "falhas": 0
+      "fonte": "mapas:santa-luzia",
+      "nome": "Mapa Cultural Santa Luzia",
+      "tipo": "mapas",
+      "ativo": true,
+      "observacao": null,
+      "lidos": 7,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 7,
+      "paginas": 1,
+      "novos": 0,
+      "naBase": 3,
+      "aprovadosNaBase": 0
     },
     {
-      "codigo": 6,
-      "nome": "Pregão eletrônico",
-      "lidos": 3325,
-      "selecionados": 84,
-      "paginas": 67,
-      "falhas": 0
+      "fonte": "mapas:ribeirao-das-neves",
+      "nome": "Mapa da Cultura Nevense",
+      "tipo": "mapas",
+      "ativo": true,
+      "observacao": null,
+      "lidos": 1,
+      "candidatos": 1,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
+      "naBase": 1,
+      "aprovadosNaBase": 0
+    },
+    {
+      "fonte": "mapas:nacional",
+      "nome": "Mapa da Cultura (nacional)",
+      "tipo": "mapas",
+      "ativo": false,
+      "observacao": "Desligada em 2026-10-17: a API responde 403 com desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador. Religue se o bloqueio cair.",
+      "naBase": 0,
+      "aprovadosNaBase": 0
     }
   ],
+  "ia": {
+    "modelo": "claude-haiku-5-5",
+    "ativo": false,
+    "classificados": 0,
+    "aprovados": 0,
+    "reprovados": 0,
+    "duvidas": 0,
+    "pendentes": 7,
+    "lotes": 0,
+    "lotesFalhos": 0,
+    "requisicoes": 0,
+    "tokensEntrada": 0,
+    "tokensSaida": 0,
+    "custoUsd": 0,
+    "porTipo": {},
+    "candidatosNestaExecucao": 5
+  },
+  "dedup": {
+    "fundidosNestaExecucao": 0,
+    "duplicadosConhecidos": 0
+  },
+  "periodoPncp": null,
+  "retencaoDias": 365,
+  "duracaoSegundos": 5,
   "erros": []
 }

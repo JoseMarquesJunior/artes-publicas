@@ -104,6 +104,46 @@ a:hover { text-decoration-thickness: 2px; }
 
 .aviso-inline { color: var(--accent); }
 
+/* ------------------------------------------------------------ abas de tipo */
+
+.abas {
+  display: flex;
+  gap: 4px;
+  margin: 22px 0 0;
+  padding: 4px;
+  background: var(--surface-2);
+  border-radius: 10px;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.abas [role="tab"] {
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 40px;
+}
+.abas [role="tab"][aria-selected="true"] {
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.abas [role="tab"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.aba-n {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+  margin-left: 2px;
+}
+.aba-n:empty { display: none; }
+
 /* ------------------------------------------------------------ filtros */
 
 .filtros {
@@ -111,7 +151,7 @@ a:hover { text-decoration-thickness: 2px; }
   grid-template-columns: repeat(12, minmax(0, 1fr)); /* minmax(0, …) deixa as colunas encolherem no celular */
   gap: 12px 14px;
   align-items: end;
-  margin: 22px 0 14px;
+  margin: 12px 0 14px;
   padding: 16px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -217,6 +257,27 @@ a:hover { text-decoration-thickness: 2px; }
 
 .pill-pendente { background: transparent; border: 1px dashed var(--border); }
 .pill-duvida { background: var(--accent-soft); color: var(--accent-soft-text); }
+
+/* selo de tipo (contratação × fomento) e fonte */
+.pill-tipo { color: var(--text); border: 1px solid var(--border); background: var(--surface); }
+.card.tipo-fomento .pill-tipo { background: var(--accent); color: var(--accent-text); border-color: transparent; }
+.pill-fonte { text-transform: none; letter-spacing: 0; font-weight: 500; background: transparent; border: 1px solid var(--border); }
+
+.resumo {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.resumo.truncado {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tag-categoria { background: var(--accent); color: var(--accent-text); font-weight: 600; }
+.aviso-fraco { opacity: 0.8; }
 
 /* ------------------------------------------------------------ botões */
 
@@ -332,6 +393,7 @@ a:hover { text-decoration-thickness: 2px; }
 .pill-urgente { background: var(--accent); color: var(--accent-text); }
 .pill-aberta { background: var(--ok-soft); color: var(--ok-text); }
 
+.titulo,
 .objeto {
   margin: 0;
   font-size: 1.04rem;
@@ -339,6 +401,7 @@ a:hover { text-decoration-thickness: 2px; }
   font-weight: 500;
   overflow-wrap: anywhere;
 }
+.titulo.truncado,
 .objeto.truncado {
   display: -webkit-box;
   -webkit-line-clamp: 3;

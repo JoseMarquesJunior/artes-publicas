@@ -1,0 +1,17 @@
+{
+  "_ajuda": [
+    "Fontes consultadas pelo coletor, em ordem. Para desligar uma fonte, troque \"ativo\" para false.",
+    "Para adicionar uma instância do Mapas Culturais, copie um bloco com \"tipo\": \"mapas\", informe o endereço base (sem barra no fim), a UF e o município.",
+    "Antes de adicionar, confirme que {base}/api/opportunity/find responde JSON (algumas instâncias bloqueiam robôs; a nacional usa desafio JavaScript do Cloudflare e não responde a scripts)."
+  ],
+  "fontes": [
+    { "fonte": "pncp", "tipo": "pncp", "ativo": true, "nome": "PNCP" },
+    { "fonte": "mapas:bh", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural BH", "base": "https://mapaculturalbh.pbh.gov.br", "uf": "MG", "municipio": "Belo Horizonte" },
+    { "fonte": "mapas:lagoa-santa", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Lagoa Santa", "base": "https://mapacultural.lagoasanta.mg.gov.br", "uf": "MG", "municipio": "Lagoa Santa" },
+    { "fonte": "mapas:nova-lima", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Nova Lima", "base": "https://mapacultural.novalima.mg.gov.br", "uf": "MG", "municipio": "Nova Lima" },
+    { "fonte": "mapas:santa-luzia", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Santa Luzia", "base": "https://mapacultural.santaluzia.mg.gov.br", "uf": "MG", "municipio": "Santa Luzia" },
+    { "fonte": "mapas:ribeirao-das-neves", "tipo": "mapas", "ativo": true, "nome": "Mapa da Cultura Nevense", "base": "https://mapaculturaneves.com.br", "uf": "MG", "municipio": "Ribeirão das Neves" },
+    { "fonte": "mapas:nacional", "tipo": "mapas", "ativo": false, "nome": "Mapa da Cultura (nacional)", "base": "https://mapas.cultura.gov.br", "uf": null, "municipio": null,
+      "observacao": "Desligada em 2026-10-17: a API responde 403 com desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador. Religue se o bloqueio cair." }
+  ]
+}

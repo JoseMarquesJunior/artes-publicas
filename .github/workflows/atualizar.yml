@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Coletar contratações no PNCP
+      - name: Coletar oportunidades (PNCP + Mapas Culturais) e classificar
         # No cron os inputs são nulos: cai em 2 dias e sem --ate.
         # A chave da Anthropic vem de um segredo do repositório; sem ela a coleta roda e marca os itens como "pendente".
         env:
@@ -49,6 +49,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/data/*.json
+          git add -A docs/data
           git commit -m "dados: atualização automática $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
