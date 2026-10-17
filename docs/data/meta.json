@@ -1,32 +1,39 @@
 {
-  "atualizadoEm": "2026-10-17T15:37:28.748Z",
-  "total": 6212,
-  "totalNovos": 1,
-  "totalAtualizados": 10,
+  "atualizadoEm": "2026-10-17T15:48:25.669Z",
+  "total": 6229,
+  "totalNovos": 35,
+  "totalAtualizados": 0,
   "removidos": {
-    "antigos": 1,
+    "antigos": 0,
     "foraDoFiltro": 0,
     "reprovadosAntigos": 0,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
   "base": {
-    "aprovados": 1731,
-    "reprovados": 3878,
+    "aprovados": 1732,
+    "reprovados": 3879,
     "duvidas": 602,
-    "pendentes": 1
+    "pendentes": 16
   },
   "porTipo": {
     "contratacao": {
       "total": 6208,
       "S": 1730,
-      "N": 3877,
+      "N": 3878,
       "D": 600,
-      "pendente": 1
+      "pendente": 0
+    },
+    "outro": {
+      "total": 16,
+      "S": 0,
+      "N": 0,
+      "D": 0,
+      "pendente": 16
     },
     "fomento": {
-      "total": 3,
-      "S": 0,
+      "total": 4,
+      "S": 1,
       "N": 1,
       "D": 2,
       "pendente": 0
@@ -46,60 +53,8 @@
       "tipo": "pncp",
       "ativo": true,
       "observacao": null,
-      "lidos": 118490,
-      "candidatos": 6112,
-      "requisicoes": 2383,
-      "erro": null,
-      "bloqueios429": 6,
-      "periodo": {
-        "de": "2026-09-17",
-        "ate": "2026-10-17",
-        "dias": 30
-      },
-      "modalidades": [
-        {
-          "codigo": 3,
-          "nome": "Concurso",
-          "lidos": 6,
-          "candidatos": 4,
-          "paginas": 1,
-          "falhas": 0
-        },
-        {
-          "codigo": 8,
-          "nome": "Dispensa de licitação",
-          "lidos": 61150,
-          "candidatos": 1720,
-          "paginas": 1224,
-          "falhas": 0
-        },
-        {
-          "codigo": 9,
-          "nome": "Inexigibilidade",
-          "lidos": 21967,
-          "candidatos": 3382,
-          "paginas": 441,
-          "falhas": 0
-        },
-        {
-          "codigo": 12,
-          "nome": "Credenciamento",
-          "lidos": 2033,
-          "candidatos": 171,
-          "paginas": 41,
-          "falhas": 0
-        },
-        {
-          "codigo": 6,
-          "nome": "Pregão eletrônico",
-          "lidos": 33334,
-          "candidatos": 835,
-          "paginas": 668,
-          "falhas": 0
-        }
-      ],
-      "erros": [],
-      "novos": 1,
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
       "naBase": 6208,
       "aprovadosNaBase": 1730
     },
@@ -108,14 +63,9 @@
       "nome": "Mapa Cultural BH",
       "tipo": "mapas",
       "ativo": true,
-      "observacao": null,
-      "lidos": 4,
-      "candidatos": 2,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
+      "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum.",
+      "bloqueadoNoCI": true,
+      "puladaNestaExecucao": false,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -124,14 +74,9 @@
       "nome": "Mapa Cultural Lagoa Santa",
       "tipo": "mapas",
       "ativo": true,
-      "observacao": null,
-      "lidos": 0,
-      "candidatos": 0,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
+      "observacao": "Desafio JavaScript do Cloudflare para IPs de datacenter (GitHub Actions). Só é coletada quando o fetch.mjs roda numa máquina comum.",
+      "bloqueadoNoCI": true,
+      "puladaNestaExecucao": false,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -141,13 +86,8 @@
       "tipo": "mapas",
       "ativo": true,
       "observacao": null,
-      "lidos": 2,
-      "candidatos": 2,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
       "naBase": 2,
       "aprovadosNaBase": 0
     },
@@ -157,13 +97,8 @@
       "tipo": "mapas",
       "ativo": true,
       "observacao": null,
-      "lidos": 7,
-      "candidatos": 0,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 7,
-      "paginas": 1,
-      "novos": 0,
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -173,15 +108,75 @@
       "tipo": "mapas",
       "ativo": true,
       "observacao": null,
-      "lidos": 1,
-      "candidatos": 1,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
       "naBase": 1,
       "aprovadosNaBase": 0
+    },
+    {
+      "fonte": "querido-diario",
+      "nome": "Diário Oficial (Querido Diário)",
+      "tipo": "querido-diario",
+      "ativo": true,
+      "observacao": null,
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
+      "lidos": 35,
+      "candidatos": 35,
+      "requisicoes": 30,
+      "erro": null,
+      "periodo": {
+        "de": "2026-09-17",
+        "ate": "2026-10-17",
+        "dias": 30
+      },
+      "territorios": [
+        {
+          "nome": "Belo Horizonte",
+          "ibge": "3106200",
+          "regiao": "Grande BH",
+          "diarios": 0,
+          "novos": 0,
+          "pulados": 0,
+          "erros": 0
+        },
+        {
+          "nome": "Contagem",
+          "ibge": "3118601",
+          "regiao": "Grande BH",
+          "diarios": 20,
+          "novos": 20,
+          "pulados": 0,
+          "erros": 0
+        },
+        {
+          "nome": "Betim",
+          "ibge": "3106705",
+          "regiao": "Grande BH",
+          "diarios": 15,
+          "novos": 15,
+          "pulados": 0,
+          "erros": 0
+        }
+      ],
+      "naoCobertos": [
+        "Nova Lima",
+        "Sabará",
+        "Santa Luzia",
+        "Ribeirão das Neves",
+        "Ibirité",
+        "Vespasiano",
+        "Lagoa Santa",
+        "Brumadinho",
+        "Ouro Preto",
+        "Mariana",
+        "Itabirito",
+        "Congonhas"
+      ],
+      "erros": [],
+      "novos": 35,
+      "naBase": 17,
+      "aprovadosNaBase": 1
     },
     {
       "fonte": "mapas:nacional",
@@ -189,37 +184,60 @@
       "tipo": "mapas",
       "ativo": false,
       "observacao": "Desligada em 2026-10-17: a API responde 403 com desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador. Religue se o bloqueio cair.",
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
       "naBase": 0,
       "aprovadosNaBase": 0
     }
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": false,
-    "classificados": 0,
+    "ativo": true,
+    "classificados": 1,
     "aprovados": 0,
-    "reprovados": 0,
+    "reprovados": 1,
     "duvidas": 0,
-    "pendentes": 1,
-    "lotes": 0,
+    "pendentes": 0,
+    "lotes": 1,
     "lotesFalhos": 0,
-    "requisicoes": 0,
-    "tokensEntrada": 0,
-    "tokensSaida": 0,
-    "custoUsd": 0,
-    "porTipo": {},
-    "candidatosNestaExecucao": 6117
+    "requisicoes": 1,
+    "tokensEntrada": 818,
+    "tokensSaida": 12,
+    "custoUsd": 0.0001,
+    "porTipo": {
+      "contratacao": {
+        "S": 0,
+        "N": 1,
+        "D": 0
+      }
+    },
+    "candidatosNestaExecucao": 35,
+    "extracao": {
+      "modelo": "claude-haiku-5-5",
+      "ativo": true,
+      "processados": 19,
+      "relevantes": 1,
+      "descartados": 18,
+      "duvidas": 0,
+      "pendentes": 16,
+      "lotes": 5,
+      "lotesFalhos": 0,
+      "requisicoes": 5,
+      "tokensEntrada": 60550,
+      "tokensSaida": 5657,
+      "custoUsd": 0.0089
+    }
+  },
+  "queridoDiario": {
+    "descartadosNestaExecucao": 18,
+    "descartadosTotal": 18
   },
   "dedup": {
     "fundidosNestaExecucao": 0,
     "duplicadosConhecidos": 0
   },
-  "periodoPncp": {
-    "de": "2026-09-17",
-    "ate": "2026-10-17",
-    "dias": 30
-  },
+  "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 7822,
+  "duracaoSegundos": 615,
   "erros": []
 }
