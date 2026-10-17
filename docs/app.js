@@ -325,7 +325,7 @@
     const ul = h('ul', 'tags');
     ul.setAttribute('aria-label', 'Categoria e palavras-chave');
     if (r.categoriaIA) ul.append(h('li', 'tag tag-categoria', CATEGORIA_ROTULO[r.categoriaIA] ?? r.categoriaIA));
-    for (const t of r.tags ?? []) ul.append(h('li', 'tag', t));
+    for (const t of (r.tags ?? []).filter((t) => !t.startsWith('consulta:'))) ul.append(h('li', 'tag', t)); // as consultas do diário são internas
     if (ul.children.length) card.append(ul);
 
     // ações
@@ -353,6 +353,7 @@
   function rotuloLinkExtra(url) {
     try {
       const host = new URL(url).hostname.replace(/^www\./, '');
+      if (/\.txt$/i.test(url)) return 'Texto do diário (.txt)';
       if (host === 'pncp.gov.br') return 'Também no PNCP';
       if (/mapacultur|mapas\.cultura/.test(host)) return 'Também no Mapa Cultural';
       return `Também em ${host}`;
