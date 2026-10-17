@@ -196,7 +196,9 @@ function deduplicar(lista, duplicadosConhecidos) {
       if (a.uf && b.uf && a.uf !== b.uf) continue;
       if (ambosDiario) {
         if (normalizar(a.municipio ?? '') !== normalizar(b.municipio ?? '')) continue;
-        if (jaccard(ia.palavras, ib.palavras) < 0.6) continue;
+        // Mesma edição e mesmo órgão: os títulos extraídos de trechos vizinhos do mesmo ato variam muito; limiar baixo.
+        const mesmaEdicaoEOrgao = a.link === b.link && ia.orgao && ia.orgao === ib.orgao;
+        if (jaccard(ia.palavras, ib.palavras) < (mesmaEdicaoEOrgao ? 0.3 : 0.6)) continue;
       } else {
         const mesmoOrgao = ia.orgao && ia.orgao === ib.orgao;
         const mesmoPrazo = ia.enc && ia.enc === ib.enc;
