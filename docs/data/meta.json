@@ -1,95 +1,97 @@
 {
-  "atualizadoEm": "2026-10-18T21:35:20.716Z",
-  "total": 4224,
+  "atualizadoEm": "2026-10-18T21:36:57.230Z",
+  "total": 4214,
   "totalNovos": 0,
   "totalAtualizados": 0,
   "removidos": {
     "antigos": 0,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 23,
+    "reprovadosAntigos": 10,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
   "base": {
-    "aprovados": 237,
-    "reprovados": 3688,
-    "duvidas": 209,
-    "pendentes": 90
+    "aprovados": 270,
+    "reprovados": 3686,
+    "duvidas": 258,
+    "pendentes": 0
   },
   "porAcionavel": {
     "aberta": 569,
-    "fluxo-continuo": 11,
-    "encerrada": 927,
-    "radar": 2717,
+    "fluxo-continuo": 8,
+    "encerrada": 925,
+    "radar": 2712,
     "prazoDesconhecido": 15
   },
   "porAcionavelAprovados": {
-    "aberta": 33,
-    "fluxo-continuo": 3,
-    "abertasMG": 11,
-    "encerrada": 40,
-    "radar": 161
+    "aberta": 35,
+    "fluxo-continuo": 4,
+    "abertasMG": 14,
+    "encerrada": 46,
+    "radar": 185
   },
   "porParticipacao": {
     "S": {
-      "prestar-servico": 215,
-      "inscrever-projeto": 10,
-      "enviar-obra": 11,
+      "inscrever-projeto": 12,
+      "prestar-servico": 245,
+      "enviar-obra": 12,
       "formacao": 1
     },
     "D": {
-      "prestar-servico": 173,
-      "outro": 9,
-      "inscrever-projeto": 27
+      "inscrever-projeto": 39,
+      "enviar-obra": 3,
+      "outro": 10,
+      "residencia": 1,
+      "prestar-servico": 205
     },
     "abertasS": {
+      "inscrever-projeto": 7,
       "prestar-servico": 25,
-      "inscrever-projeto": 5,
-      "enviar-obra": 6
+      "enviar-obra": 7
     }
   },
   "porTipo": {
     "premio": {
       "total": 5,
-      "S": 1,
+      "S": 2,
       "N": 1,
-      "D": 0,
-      "pendente": 3
+      "D": 2,
+      "pendente": 0
     },
     "fomento": {
-      "total": 29,
-      "S": 5,
-      "N": 13,
-      "D": 6,
-      "pendente": 5
+      "total": 26,
+      "S": 7,
+      "N": 10,
+      "D": 9,
+      "pendente": 0
     },
     "outro": {
       "total": 5,
       "S": 0,
       "N": 4,
-      "D": 0,
-      "pendente": 1
+      "D": 1,
+      "pendente": 0
     },
     "contratacao": {
-      "total": 4176,
-      "S": 228,
-      "N": 3670,
-      "D": 200,
-      "pendente": 78
+      "total": 4169,
+      "S": 258,
+      "N": 3671,
+      "D": 240,
+      "pendente": 0
     },
     "chamamento": {
       "total": 8,
       "S": 3,
       "N": 0,
-      "D": 3,
-      "pendente": 2
+      "D": 5,
+      "pendente": 0
     },
     "residencia": {
       "total": 1,
       "S": 0,
       "N": 0,
-      "D": 0,
-      "pendente": 1
+      "D": 1,
+      "pendente": 0
     }
   },
   "fontes": [
@@ -155,8 +157,8 @@
       ],
       "erros": [],
       "novos": 0,
-      "naBase": 4174,
-      "aprovadosNaBase": 228
+      "naBase": 4167,
+      "aprovadosNaBase": 258
     },
     {
       "fonte": "mapas:bh",
@@ -277,7 +279,7 @@
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
       "naBase": 12,
-      "aprovadosNaBase": 0
+      "aprovadosNaBase": 2
     },
     {
       "fonte": "pbh-fmc",
@@ -320,44 +322,54 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "naBase": 15,
-      "aprovadosNaBase": 4
+      "naBase": 12,
+      "aprovadosNaBase": 5
     }
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
     "ativo": true,
-    "classificados": 615,
-    "aprovados": 245,
-    "reprovados": 169,
-    "duvidas": 201,
-    "pendentes": 90,
-    "lotes": 24,
+    "classificados": 90,
+    "aprovados": 34,
+    "reprovados": 8,
+    "duvidas": 48,
+    "pendentes": 0,
+    "lotes": 3,
     "lotesFalhos": 0,
-    "requisicoes": 24,
-    "tokensEntrada": 160135,
-    "tokensSaida": 11234,
-    "custoUsd": 0.0216,
+    "requisicoes": 3,
+    "tokensEntrada": 21293,
+    "tokensSaida": 1633,
+    "custoUsd": 0.0029,
     "porTipo": {
       "contratacao": {
-        "S": 236,
-        "N": 165,
-        "D": 192
-      },
-      "fomento": {
-        "S": 5,
-        "N": 4,
-        "D": 6
+        "S": 31,
+        "N": 8,
+        "D": 39
       },
       "chamamento": {
-        "S": 3,
+        "S": 0,
+        "N": 0,
+        "D": 2
+      },
+      "fomento": {
+        "S": 2,
         "N": 0,
         "D": 3
       },
       "premio": {
         "S": 1,
         "N": 0,
-        "D": 0
+        "D": 2
+      },
+      "outro": {
+        "S": 0,
+        "N": 0,
+        "D": 1
+      },
+      "residencia": {
+        "S": 0,
+        "N": 0,
+        "D": 1
       }
     },
     "candidatosNestaExecucao": 0,
@@ -379,14 +391,14 @@
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
       "ativo": true,
-      "categorizados": 14,
+      "categorizados": 7,
       "pendentes": 0,
       "lotes": 1,
       "lotesFalhos": 0,
       "requisicoes": 1,
-      "tokensEntrada": 1809,
-      "tokensSaida": 95,
-      "custoUsd": 0.0002
+      "tokensEntrada": 944,
+      "tokensSaida": 47,
+      "custoUsd": 0.0001
     },
     "participacao": {
       "ativo": true,
@@ -410,9 +422,9 @@
       "tokensSaida": 0,
       "custoUsd": 0
     },
-    "rebaixadosPortao": 8,
+    "rebaixadosPortao": 1,
     "revisadosAplicados": 0,
-    "reclassificacao": true
+    "reclassificacao": false
   },
   "queridoDiario": {
     "descartadosNestaExecucao": 0,
@@ -428,7 +440,7 @@
     "dias": 0
   },
   "retencaoDias": 365,
-  "duracaoSegundos": 62,
+  "duracaoSegundos": 17,
   "erros": [],
   "errosPorFonte": {}
 }
