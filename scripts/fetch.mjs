@@ -44,25 +44,27 @@ const FONTES_TEXTUAIS = new Set(['querido-diario', 'html', 'dom-bh']);
 /** Diários oficiais: trechos "N" saem da base e vão para o arquivo de descartados; itens já vistos não são recoletados. */
 const TIPOS_DIARIO = new Set(['querido-diario', 'dom-bh']);
 
-const USO = `Uso: node scripts/fetch.mjs [--dias N] [--ate AAAA-MM-DD] [--intervalo MS] [--paralelo N] [--fontes a,b] [--so-ia]
+const USO = `Uso: node scripts/fetch.mjs [--dias N] [--ate AAAA-MM-DD] [--intervalo MS] [--paralelo N] [--fontes a,b] [--so-ia] [--so-reprocessar]
   --dias N         PNCP: quantos dias para trás buscar a partir de --ate (padrão 2)
   --ate AAAA-MM-DD PNCP: data final do período (padrão: hoje). Útil para dividir a carga inicial em partes
   --intervalo MS   PNCP: espera mínima entre requisições (padrão ${pncp.INTERVALO_PADRAO_MS}; a API bloqueia com menos)
   --paralelo N     PNCP: tarefas simultâneas (padrão ${pncp.PARALELO_PADRAO})
   --fontes a,b     roda só estas fontes (nomes de scripts/fontes.json)
   --so-ia          não consulta nenhuma fonte; só classifica com IA os itens pendentes da base
+  --so-reprocessar não consulta fontes nem IA; só recalcula os campos derivados (acionavel, regiao, dedup) sobre a base
 
 Classificação por IA: exige a variável de ambiente ANTHROPIC_API_KEY. Sem ela, os itens novos ficam "pendente".`;
 
 // ---------------------------------------------------------------- argumentos
 
 function lerArgumentos(argv) {
-  const args = { dias: 2, ate: null, intervalo: pncp.INTERVALO_PADRAO_MS, paralelo: pncp.PARALELO_PADRAO, fontes: null, soIa: false };
+  const args = { dias: 2, ate: null, intervalo: pncp.INTERVALO_PADRAO_MS, paralelo: pncp.PARALELO_PADRAO, fontes: null, soIa: false, soReprocessar: false };
   const minimos = { dias: 0, intervalo: 0, paralelo: 1 };
   for (let i = 0; i < argv.length; i++) {
     let [chave, valor] = argv[i].split('=', 2);
     if (chave === '--help' || chave === '-h') { console.log(USO); process.exit(0); }
     if (chave === '--so-ia') { args.soIa = true; continue; }
+    if (chave === '--so-reprocessar') { args.soIa = true; args.soReprocessar = true; continue; }
     const nome = chave.startsWith('--') ? chave.slice(2) : '';
     if (!(nome in minimos) && nome !== 'ate' && nome !== 'fontes') throw new Error(`Argumento desconhecido: ${argv[i]}\n${USO}`);
     if (valor === undefined) valor = argv[++i];
@@ -182,6 +184,34 @@ function mesclar(existentes, coletados, palavras, hoje, duplicadosConhecidos) {
   return { lista: [...mapa.values()], novosPorFonte, atualizados, removidos };
 }
 
+// ---------------------------------------------------------------- campos derivados
+
+const TIPOS_INSCRICAO = new Set(['fomento', 'premio', 'chamamento', 'residencia']);
+const CONTRATACAO_DIRETA = /inexigibilidade|dispensa/;
+
+/**
+ * "acionavel": o que dá para fazer com o item.
+ *   aberta         prazo no futuro (ou edital de inscrição sem prazo identificado: prazoDesconhecido = true)
+ *   fluxo-continuo inscrição permanente, ou credenciamento sem prazo
+ *   encerrada      prazo (ou abertura de propostas) no passado
+ *   radar          contratação já decidida (inexigibilidade/dispensa sem prazo) ou sem prazo e sem abertura
+ * A página recalcula aberta × encerrada pela data atual; o campo gravado é a base, não a verdade final.
+ */
+function derivarAcionavel(r, hojeISO) {
+  const modalidade = normalizar(r.detalhes?.modalidade ?? '');
+  const enc = r.encerramento ? r.encerramento.slice(0, 10) : null;
+  const abertura = r.abertura ? r.abertura.slice(0, 10) : null;
+  r.prazoDesconhecido = false;
+  if (enc && enc >= hojeISO) { r.acionavel = 'aberta'; return; }
+  if (r.detalhes?.fluxoContinuo === true || (modalidade.includes('credenciamento') && !enc)) { r.acionavel = 'fluxo-continuo'; return; }
+  if (enc && enc < hojeISO) { r.acionavel = 'encerrada'; return; }
+  if (TIPOS_INSCRICAO.has(r.tipo)) { r.acionavel = 'aberta'; r.prazoDesconhecido = true; return; }
+  if (r.tipo === 'contratacao' && CONTRATACAO_DIRETA.test(modalidade)) { r.acionavel = 'radar'; return; }
+  if (!abertura) { r.acionavel = 'radar'; return; }
+  // contratação com abertura de propostas mas sem encerramento informado
+  if (abertura >= hojeISO) { r.acionavel = 'aberta'; r.prazoDesconhecido = true; } else r.acionavel = 'encerrada';
+}
+
 // ---------------------------------------------------------------- deduplicação entre fontes
 
 const camposPreenchidos = (r) => Object.values(r).filter((v) => v !== null && v !== undefined && v !== '' && !(Array.isArray(v) && v.length === 0)).length;
@@ -276,7 +306,9 @@ async function main() {
   const fontes = ativas.filter((f) => !puladas.includes(f));
   log(`Fontes ativas: ${fontes.map((f) => f.fonte).join(', ') || 'nenhuma'} · palavras-chave: ${palavras.incluir.length} incluir / ${palavras.excluir.length} excluir · base: ${existentes.length} registros`);
   if (puladas.length) log(`Puladas no CI (bloqueiam IPs de datacenter; rode localmente para atualizá-las): ${puladas.map((f) => f.fonte).join(', ')}`);
-  if (args.soIa) log('Modo --so-ia: nenhuma fonte será consultada.');
+  if (args.soReprocessar) log('Modo --so-reprocessar: nenhuma fonte nem IA; só campos derivados.');
+  else if (args.soIa) log('Modo --so-ia: nenhuma fonte será consultada.');
+  if (args.soReprocessar) delete process.env.ANTHROPIC_API_KEY; // garante que nenhuma chamada à IA aconteça
 
   // 1. Coleta, fonte a fonte. A falha de uma nunca derruba as outras.
   const coletados = [];
@@ -320,7 +352,19 @@ async function main() {
   mesclado.lista = mesclado.lista.filter((r) => !(ehDiario(r) && r.ia === 'N'));
   atribuirRegiao(mesclado.lista, regioes);
   const dedup = deduplicar(mesclado.lista, duplicadosConhecidos);
+  const hojeISO = fmtISO(hoje);
+  for (const r of dedup.lista) derivarAcionavel(r, hojeISO);
   const lista = dedup.lista.sort((a, b) => (b.publicadoEm ?? b.coletadoEm ?? '').localeCompare(a.publicadoEm ?? a.coletadoEm ?? '') || a.id.localeCompare(b.id));
+  const porAcionavel = { aberta: 0, 'fluxo-continuo': 0, encerrada: 0, radar: 0, prazoDesconhecido: 0 };
+  for (const r of lista) { porAcionavel[r.acionavel] = (porAcionavel[r.acionavel] ?? 0) + 1; if (r.prazoDesconhecido) porAcionavel.prazoDesconhecido++; }
+  const abertasAprovadas = lista.filter((r) => r.ia === 'S' && (r.acionavel === 'aberta' || r.acionavel === 'fluxo-continuo'));
+  const porAcionavelAprovados = {
+    aberta: abertasAprovadas.filter((r) => r.acionavel === 'aberta').length,
+    'fluxo-continuo': abertasAprovadas.filter((r) => r.acionavel === 'fluxo-continuo').length,
+    abertasMG: abertasAprovadas.filter((r) => r.uf === 'MG' || !r.uf).length,
+    encerrada: lista.filter((r) => r.ia === 'S' && r.acionavel === 'encerrada').length,
+    radar: lista.filter((r) => r.ia === 'S' && r.acionavel === 'radar').length,
+  };
   for (const s of statsFontes) s.novos = mesclado.novosPorFonte[s.fonte] ?? 0;
 
   const porVeredito = { S: 0, N: 0, D: 0, pendente: 0 };
@@ -351,6 +395,8 @@ async function main() {
     removidos: mesclado.removidos,
     migrados,
     base: { aprovados: porVeredito.S, reprovados: porVeredito.N, duvidas: porVeredito.D, pendentes: porVeredito.pendente },
+    porAcionavel,
+    porAcionavelAprovados,
     porTipo,
     fontes: fontesMeta,
     ia: { ...ia, candidatosNestaExecucao: coletados.length, extracao, categorizacao, prazos },
@@ -410,6 +456,8 @@ async function main() {
   console.log(`  Deduplicação entre fontes: ${dedup.fundidos} fundidos nesta execução (${Object.keys(duplicadosConhecidos).length} conhecidos)`);
   console.log(`  Removidos: ${mesclado.removidos.antigos} antigos · ${mesclado.removidos.foraDoFiltro} fora do filtro · ${mesclado.removidos.reprovadosAntigos} reprovados antigos · ${mesclado.removidos.duplicadosConhecidos} duplicatas conhecidas${migrados ? ` · migrados do esquema antigo: ${migrados}` : ''}`);
   console.log(`  Base final: ${lista.length} registros (${porVeredito.S} S · ${porVeredito.N} N · ${porVeredito.D} D · ${porVeredito.pendente} pendentes)`);
+  console.log(`  Acionável (toda a base): ${Object.entries(porAcionavel).map(([k, v]) => `${k} ${v}`).join(' · ')}`);
+  console.log(`  Acionável (aprovados):   aberta ${porAcionavelAprovados.aberta} · fluxo-contínuo ${porAcionavelAprovados['fluxo-continuo']} · abertas em MG ${porAcionavelAprovados.abertasMG} · encerrada ${porAcionavelAprovados.encerrada} · radar ${porAcionavelAprovados.radar}`);
   for (const [tipo, t] of Object.entries(porTipo)) console.log(`    ${tipo.padEnd(14)} ${String(t.total).padStart(5)} total · ${t.S} aprovados`);
   if (erros.length) {
     console.log(`  Erros (${erros.length}):`);

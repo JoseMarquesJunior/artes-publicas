@@ -1,34 +1,48 @@
 {
-  "atualizadoEm": "2026-10-18T12:40:20.399Z",
-  "total": 4313,
-  "totalNovos": 58,
+  "atualizadoEm": "2026-10-18T14:49:11.418Z",
+  "total": 4288,
+  "totalNovos": 0,
   "totalAtualizados": 0,
   "removidos": {
     "antigos": 0,
-    "foraDoFiltro": 1697,
-    "reprovadosAntigos": 0,
+    "foraDoFiltro": 85,
+    "reprovadosAntigos": 1,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
   "base": {
-    "aprovados": 1266,
-    "reprovados": 2479,
-    "duvidas": 568,
+    "aprovados": 1264,
+    "reprovados": 2458,
+    "duvidas": 566,
     "pendentes": 0
+  },
+  "porAcionavel": {
+    "aberta": 561,
+    "fluxo-continuo": 4,
+    "encerrada": 948,
+    "radar": 2775,
+    "prazoDesconhecido": 13
+  },
+  "porAcionavelAprovados": {
+    "aberta": 120,
+    "fluxo-continuo": 2,
+    "abertasMG": 30,
+    "encerrada": 181,
+    "radar": 961
   },
   "porTipo": {
     "outro": {
-      "total": 5,
+      "total": 4,
       "S": 0,
-      "N": 4,
+      "N": 3,
       "D": 1,
       "pendente": 0
     },
     "contratacao": {
-      "total": 4282,
-      "S": 1255,
-      "N": 2473,
-      "D": 554,
+      "total": 4258,
+      "S": 1253,
+      "N": 2453,
+      "D": 552,
       "pendente": 0
     },
     "fomento": {
@@ -69,8 +83,8 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 4280,
-      "aprovadosNaBase": 1255
+      "naBase": 4256,
+      "aprovadosNaBase": 1253
     },
     {
       "fonte": "mapas:bh",
@@ -135,67 +149,6 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 67,
-      "candidatos": 32,
-      "requisicoes": 32,
-      "erro": null,
-      "diarios": 8,
-      "periodo": {
-        "de": "2026-10-11",
-        "ate": "2026-10-18",
-        "dias": 7
-      },
-      "territorios": [
-        {
-          "nome": "Belo Horizonte",
-          "ibge": "3106200",
-          "regiao": "Grande BH",
-          "diarios": 0,
-          "trechos": 0,
-          "novos": 0,
-          "pulados": 0,
-          "semTermos": 0,
-          "erros": 0
-        },
-        {
-          "nome": "Contagem",
-          "ibge": "3118601",
-          "regiao": "Grande BH",
-          "diarios": 4,
-          "trechos": 40,
-          "novos": 20,
-          "pulados": 12,
-          "semTermos": 8,
-          "erros": 0
-        },
-        {
-          "nome": "Betim",
-          "ibge": "3106705",
-          "regiao": "Grande BH",
-          "diarios": 4,
-          "trechos": 27,
-          "novos": 12,
-          "pulados": 8,
-          "semTermos": 7,
-          "erros": 0
-        }
-      ],
-      "naoCobertos": [
-        "Nova Lima",
-        "Sabará",
-        "Santa Luzia",
-        "Ribeirão das Neves",
-        "Ibirité",
-        "Vespasiano",
-        "Lagoa Santa",
-        "Brumadinho",
-        "Ouro Preto",
-        "Mariana",
-        "Itabirito",
-        "Congonhas"
-      ],
-      "erros": [],
-      "novos": 32,
       "naBase": 11,
       "aprovadosNaBase": 6
     },
@@ -207,15 +160,6 @@
       "observacao": "API pública da Prodabel (sem token): edições por data → sumário → conteúdo de cada ato. Substitui a cobertura de BH que o Querido Diário perdeu em março de 2026.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 369,
-      "candidatos": 6,
-      "requisicoes": 18,
-      "erro": null,
-      "edicoes": 4,
-      "atos": 369,
-      "pulados": 0,
-      "erros": [],
-      "novos": 6,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -227,13 +171,7 @@
       "observacao": "Editais federais do MinC, inclusive os ligados à Lei Rouanet (a Rouanet em si é um mecanismo de incentivo, não um canal de editais).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 3,
-      "candidatos": 3,
-      "requisicoes": 5,
-      "erro": null,
-      "erros": [],
-      "novos": 3,
-      "naBase": 3,
+      "naBase": 2,
       "aprovadosNaBase": 2
     },
     {
@@ -244,17 +182,6 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 3,
-      "candidatos": 3,
-      "requisicoes": 6,
-      "erro": null,
-      "erros": [
-        {
-          "janela": "https://www.gov.br/funarte/pt-br/editais/editais-abertos/2a-edicao-edital-de-selecao-cultura-viva-fomento-a-rede-de-pontoes-cultura-viva",
-          "mensagem": "HTTP 403"
-        }
-      ],
-      "novos": 3,
       "naBase": 3,
       "aprovadosNaBase": 0
     },
@@ -266,12 +193,6 @@
       "observacao": "Os editais são PDFs sem página própria; o registro usa o título do link (que costuma trazer 'prazo prorrogado até'). Retificações do mesmo edital viram links extras.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 154,
-      "candidatos": 14,
-      "requisicoes": 2,
-      "erro": null,
-      "erros": [],
-      "novos": 14,
       "naBase": 12,
       "aprovadosNaBase": 2
     },
@@ -289,7 +210,7 @@
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": true,
+    "ativo": false,
     "classificados": 0,
     "aprovados": 0,
     "reprovados": 0,
@@ -302,25 +223,25 @@
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 58,
+    "candidatosNestaExecucao": 0,
     "extracao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": true,
-      "processados": 58,
-      "relevantes": 9,
-      "descartados": 36,
-      "duvidas": 13,
+      "ativo": false,
+      "processados": 0,
+      "relevantes": 0,
+      "descartados": 0,
+      "duvidas": 0,
       "pendentes": 0,
-      "lotes": 8,
+      "lotes": 0,
       "lotesFalhos": 0,
-      "requisicoes": 8,
-      "tokensEntrada": 30766,
-      "tokensSaida": 9771,
-      "custoUsd": 0.008
+      "requisicoes": 0,
+      "tokensEntrada": 0,
+      "tokensSaida": 0,
+      "custoUsd": 0
     },
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": true,
+      "ativo": false,
       "categorizados": 0,
       "pendentes": 0,
       "lotes": 0,
@@ -331,39 +252,28 @@
       "custoUsd": 0
     },
     "prazos": {
-      "ativo": true,
-      "tentados": 10,
-      "encontrados": 4,
+      "ativo": false,
+      "tentados": 0,
+      "encontrados": 0,
       "semTexto": 0,
-      "falhas": 1,
-      "requisicoes": 9,
-      "tokensEntrada": 26878,
-      "tokensSaida": 253,
-      "custoUsd": 0.0028
+      "falhas": 0,
+      "requisicoes": 0,
+      "tokensEntrada": 0,
+      "tokensSaida": 0,
+      "custoUsd": 0
     }
   },
   "queridoDiario": {
-    "descartadosNestaExecucao": 31,
+    "descartadosNestaExecucao": 0,
     "descartadosTotal": 254
   },
   "dedup": {
-    "fundidosNestaExecucao": 4,
+    "fundidosNestaExecucao": 0,
     "duplicadosConhecidos": 8
   },
   "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 856,
-  "erros": [
-    {
-      "fonte": "funarte",
-      "mensagem": "https://www.gov.br/funarte/pt-br/editais/editais-abertos/2a-edicao-edital-de-selecao-cultura-viva-fomento-a-rede-de-pontoes-cultura-viva: HTTP 403"
-    }
-  ],
-  "errosPorFonte": {
-    "funarte": {
-      "falhas": 1,
-      "total": null,
-      "completa": false
-    }
-  }
+  "duracaoSegundos": 1,
+  "erros": [],
+  "errosPorFonte": {}
 }
