@@ -1,12 +1,12 @@
 {
-  "atualizadoEm": "2026-10-18T15:29:05.637Z",
-  "total": 4209,
-  "totalNovos": 9,
-  "totalAtualizados": 0,
+  "atualizadoEm": "2026-10-18T20:15:46.396Z",
+  "total": 4246,
+  "totalNovos": 37,
+  "totalAtualizados": 1,
   "removidos": {
-    "antigos": 0,
+    "antigos": 14,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 83,
+    "reprovadosAntigos": 0,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
@@ -14,11 +14,11 @@
     "aprovados": 285,
     "reprovados": 3513,
     "duvidas": 411,
-    "pendentes": 0
+    "pendentes": 37
   },
   "porAcionavel": {
-    "aberta": 561,
-    "fluxo-continuo": 4,
+    "aberta": 574,
+    "fluxo-continuo": 28,
     "encerrada": 927,
     "radar": 2717,
     "prazoDesconhecido": 15
@@ -31,6 +31,20 @@
     "radar": 209
   },
   "porTipo": {
+    "premio": {
+      "total": 5,
+      "S": 1,
+      "N": 0,
+      "D": 2,
+      "pendente": 2
+    },
+    "fomento": {
+      "total": 51,
+      "S": 4,
+      "N": 4,
+      "D": 9,
+      "pendente": 34
+    },
     "outro": {
       "total": 5,
       "S": 0,
@@ -45,26 +59,12 @@
       "D": 392,
       "pendente": 0
     },
-    "fomento": {
-      "total": 17,
-      "S": 4,
-      "N": 4,
-      "D": 9,
-      "pendente": 0
-    },
     "chamamento": {
-      "total": 7,
+      "total": 8,
       "S": 1,
       "N": 0,
       "D": 6,
-      "pendente": 0
-    },
-    "premio": {
-      "total": 3,
-      "S": 1,
-      "N": 0,
-      "D": 2,
-      "pendente": 0
+      "pendente": 1
     },
     "residencia": {
       "total": 1,
@@ -94,6 +94,13 @@
       "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
+      "lidos": 4,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 0
     },
@@ -105,6 +112,13 @@
       "observacao": "Desafio JavaScript do Cloudflare para IPs de datacenter (GitHub Actions). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
+      "lidos": 0,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -149,74 +163,6 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 0,
-      "candidatos": 0,
-      "requisicoes": 9,
-      "erro": null,
-      "diarios": 0,
-      "periodo": {
-        "de": "2026-10-04",
-        "ate": "2026-10-18",
-        "dias": 14
-      },
-      "territorios": [
-        {
-          "nome": "Contagem",
-          "ibge": "3118601",
-          "regiao": "Grande BH",
-          "diarios": 0,
-          "trechos": 0,
-          "novos": 0,
-          "pulados": 0,
-          "semTermos": 0,
-          "erros": 3
-        },
-        {
-          "nome": "Betim",
-          "ibge": "3106705",
-          "regiao": "Grande BH",
-          "diarios": 0,
-          "trechos": 0,
-          "novos": 0,
-          "pulados": 0,
-          "semTermos": 0,
-          "erros": 0
-        }
-      ],
-      "naoCobertos": [
-        "Belo Horizonte",
-        "Nova Lima",
-        "Sabará",
-        "Santa Luzia",
-        "Ribeirão das Neves",
-        "Ibirité",
-        "Vespasiano",
-        "Lagoa Santa",
-        "Brumadinho",
-        "Ouro Preto",
-        "Mariana",
-        "Itabirito",
-        "Congonhas"
-      ],
-      "erros": [
-        {
-          "janela": "Contagem · \"\"artes visuais\"\"",
-          "mensagem": "HTTP 522 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-10-04&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-        },
-        {
-          "janela": "Contagem · \"\"aldir blanc\"\"",
-          "mensagem": "HTTP 522 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22aldir+blanc%22&published_since=2026-10-04&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-        },
-        {
-          "janela": "Contagem · \"\"paulo gustavo\"\"",
-          "mensagem": "HTTP 522 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-10-04&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-        },
-        {
-          "janela": "disjuntor",
-          "mensagem": "API fora do ar: 3 consultas seguidas falharam; fonte abandonada nesta execução"
-        }
-      ],
-      "novos": 0,
       "naBase": 11,
       "aprovadosNaBase": 2
     },
@@ -239,55 +185,6 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 14,
-      "candidatos": 9,
-      "requisicoes": 46,
-      "erro": null,
-      "periodo": {
-        "de": "2026-10-04",
-        "ate": "2026-10-18",
-        "dias": 14
-      },
-      "entidades": [
-        {
-          "nome": "Prefeitura de Ribeirão das Neves",
-          "municipio": "Ribeirão das Neves",
-          "materias": 11,
-          "novas": 6,
-          "puladas": 0,
-          "ignoradas": 5,
-          "erros": 0
-        },
-        {
-          "nome": "Prefeitura de Vespasiano",
-          "municipio": "Vespasiano",
-          "materias": 0,
-          "novas": 0,
-          "puladas": 0,
-          "ignoradas": 0,
-          "erros": 0
-        },
-        {
-          "nome": "Prefeitura de Santa Luzia",
-          "municipio": "Santa Luzia",
-          "materias": 0,
-          "novas": 0,
-          "puladas": 0,
-          "ignoradas": 0,
-          "erros": 0
-        },
-        {
-          "nome": "Prefeitura de Lagoa Santa",
-          "municipio": "Lagoa Santa",
-          "materias": 3,
-          "novas": 3,
-          "puladas": 0,
-          "ignoradas": 0,
-          "erros": 0
-        }
-      ],
-      "erros": [],
-      "novos": 9,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -365,18 +262,25 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "naBase": 0,
+      "lidos": 64,
+      "candidatos": 50,
+      "requisicoes": 2,
+      "erro": null,
+      "fases": 0,
+      "paginas": 2,
+      "novos": 37,
+      "naBase": 37,
       "aprovadosNaBase": 0
     }
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": true,
+    "ativo": false,
     "classificados": 0,
     "aprovados": 0,
     "reprovados": 0,
     "duvidas": 0,
-    "pendentes": 0,
+    "pendentes": 37,
     "lotes": 0,
     "lotesFalhos": 0,
     "requisicoes": 0,
@@ -384,25 +288,25 @@
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 9,
+    "candidatosNestaExecucao": 52,
     "extracao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": true,
-      "processados": 9,
+      "ativo": false,
+      "processados": 0,
       "relevantes": 0,
-      "descartados": 9,
+      "descartados": 0,
       "duvidas": 0,
       "pendentes": 0,
-      "lotes": 2,
+      "lotes": 0,
       "lotesFalhos": 0,
-      "requisicoes": 2,
-      "tokensEntrada": 15266,
-      "tokensSaida": 1718,
-      "custoUsd": 0.0024
+      "requisicoes": 0,
+      "tokensEntrada": 0,
+      "tokensSaida": 0,
+      "custoUsd": 0
     },
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": true,
+      "ativo": false,
       "categorizados": 0,
       "pendentes": 0,
       "lotes": 0,
@@ -413,7 +317,7 @@
       "custoUsd": 0
     },
     "prazos": {
-      "ativo": true,
+      "ativo": false,
       "tentados": 0,
       "encontrados": 0,
       "semTexto": 0,
@@ -428,7 +332,7 @@
     "reclassificacao": false
   },
   "queridoDiario": {
-    "descartadosNestaExecucao": 9,
+    "descartadosNestaExecucao": 0,
     "descartadosTotal": 263
   },
   "dedup": {
@@ -437,30 +341,7 @@
   },
   "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 361,
-  "erros": [
-    {
-      "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"artes visuais\"\": HTTP 522 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-10-04&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-    },
-    {
-      "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"aldir blanc\"\": HTTP 522 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22aldir+blanc%22&published_since=2026-10-04&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-    },
-    {
-      "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"paulo gustavo\"\": HTTP 522 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-10-04&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-    },
-    {
-      "fonte": "querido-diario",
-      "mensagem": "disjuntor: API fora do ar: 3 consultas seguidas falharam; fonte abandonada nesta execução"
-    }
-  ],
-  "errosPorFonte": {
-    "querido-diario": {
-      "falhas": 4,
-      "total": 16,
-      "completa": false
-    }
-  }
+  "duracaoSegundos": 3,
+  "erros": [],
+  "errosPorFonte": {}
 }
