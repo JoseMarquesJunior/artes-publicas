@@ -20,6 +20,7 @@
 import { log, dormir, hojeUTC, somarDias, fmtISO, requisitarJson, hashCurto, registroUnificado, normalizar } from '../util.mjs';
 
 export const INTERVALO_MS = 1000;      // 1 s entre requisições
+const FALHAS_SEGUIDAS_PARA_DESISTIR = 3; // disjuntor: a API cai com frequência; depois de 3 consultas seguidas falhando, desiste nesta execução
 const TAMANHO_PAGINA = 50;
 const MAX_POR_CONSULTA = 300;          // teto de diários por (território × consulta)
 const EXCERPT_SIZE = 500;
@@ -77,20 +78,25 @@ export async function coletar({ instancia, dias = 2, jaProcessados = new Set() }
   const erros = [];
 
   log(`[querido-diario] ${territorios.length} territórios cobertos × ${consultas.length} consultas · ${desde} a ${ate}`);
+  let falhasSeguidas = 0;
+  let desistiu = false;
 
   for (const territorio of territorios) {
+    if (desistiu) break;
     const stat = porTerritorio.find((s) => s.ibge === territorio.ibge);
     const edicoesVistas = new Set();
     const trechosVistos = new Set();
     for (const consulta of consultas) {
+      if (desistiu) break;
       let offset = 0;
       let total = null;
       try {
         while (true) {
-          // A API cai com frequência (503/520/timeout); espera longa entre tentativas: 15 s, 30 s, 60 s.
+          // A API cai com frequência (503/520/timeout): 3 tentativas com 10 s e 20 s de espera, timeout de 45 s.
           const { corpo } = await requisitarJson(montarUrl(base, { ibge: territorio.ibge, consulta, desde, ate, offset }), {
-            contexto, rotulo: `[querido-diario ${territorio.nome}] `, maxTentativas: 4, espera429Ms: 15_000, esperaErroMs: 15_000, timeoutMs: 90_000,
+            contexto, rotulo: `[querido-diario ${territorio.nome}] `, maxTentativas: 3, espera429Ms: 10_000, esperaErroMs: 10_000, timeoutMs: 45_000,
           });
+          falhasSeguidas = 0;
           const lista = Array.isArray(corpo?.gazettes) ? corpo.gazettes : [];
           total = corpo?.total_gazettes ?? total ?? 0;
 
@@ -122,8 +128,14 @@ export async function coletar({ instancia, dias = 2, jaProcessados = new Set() }
         }
       } catch (erro) {
         stat.erros++;
+        falhasSeguidas++;
         erros.push({ janela: `${territorio.nome} · "${consulta}"`, mensagem: erro?.message ?? String(erro) });
         log(`  [querido-diario ${territorio.nome}] consulta "${consulta}" falhou: ${erro?.message ?? erro} — seguindo`);
+        if (falhasSeguidas >= FALHAS_SEGUIDAS_PARA_DESISTIR) {
+          desistiu = true;
+          erros.push({ janela: 'disjuntor', mensagem: `API fora do ar: ${falhasSeguidas} consultas seguidas falharam; fonte abandonada nesta execução` });
+          log(`[querido-diario] API fora do ar (${falhasSeguidas} consultas seguidas falharam); desistindo nesta execução`);
+        }
       }
       await dormir(INTERVALO_MS);
     }
