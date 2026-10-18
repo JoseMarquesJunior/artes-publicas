@@ -143,7 +143,8 @@ python -m http.server 8080 --directory docs
 - Abas **Todas | Contratações | Fomento e prêmios** (fomento + prêmio + residência + chamamento), refletidas na URL (`?tipo=fomento`).
 - UF **MG** pré-selecionada; opções **Todas** e **Nacional** (itens com `uf` nula valem para qualquer UF). Filtro de **Região** (Grande BH | Inconfidentes | Outras), derivado do município (campo `regiao`, preenchido pelo coletor a partir da lista de territórios de `fontes.json`).
 - Cards do Diário Oficial mostram "Diário Oficial de {município}" no selo, o resumo extraído em destaque (o título vem da IA), botão "Ver no Diário Oficial (PDF)" e, quando a IA não achou o prazo no trecho, "⚠ prazo não identificado".
-- Busca em título, resumo, objeto completo, órgão e município; filtro por modalidade (PNCP); "Só com prazo aberto"; ordenação por data ou prazo; "Mostrar também os em dúvida".
+- Busca em título, resumo, objeto completo, órgão e município; filtro por modalidade (PNCP); "Só com prazo aberto"; "Mostrar também os em dúvida".
+- Ordenação padrão por **relevância**: aprovados antes dos não verificados, categorias claramente de artes visuais (exposição, curadoria, mural, ilustração, restauro, design, oficina, prêmio, residência) antes de fomento geral, produção e "outro", e mais recentes primeiro nos empates. Também por data ou por prazo (`?ord=recentes`, `?ord=prazo`).
 - Cada card mostra selo de tipo, fonte, categoria da IA (tag colorida), palavras-chave, "Propostas até"/"Inscrições até", destaque para prazos nos próximos 7 dias, e botão para a página original. Itens reprovados pela IA nunca aparecem.
 - O rodapé lista as fontes ativas lendo `meta.json`; o cabeçalho avisa, por fonte, quando a última coleta foi parcial ("Diário Oficial (13 de 24 consultas falharam)"), a partir de `meta.errosPorFonte`.
 

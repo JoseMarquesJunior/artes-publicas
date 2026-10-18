@@ -11,6 +11,13 @@
 
   const TIPO_ROTULO = { contratacao: 'Contratação', fomento: 'Fomento', premio: 'Prêmio', residencia: 'Residência', chamamento: 'Chamamento', outro: 'Outro' };
   const GRUPO_FOMENTO = new Set(['fomento', 'premio', 'residencia', 'chamamento']);
+  // Peso da categoria na ordenação por relevância: categorias claramente de artes visuais primeiro,
+  // fomento amplo e produção depois, "outro"/sem categoria por último. Empates: mais recente primeiro.
+  const ORDEM_PADRAO = 'relevancia';
+  const PESO_CATEGORIA = {
+    exposicao: 3, curadoria: 3, mural: 3, ilustracao: 3, restauro: 3, design: 3, oficina: 3, premio: 3, residencia: 3,
+    'fomento-geral': 2, producao: 1, outro: 0,
+  };
   const CATEGORIA_ROTULO = {
     curadoria: 'curadoria', oficina: 'oficina', design: 'design', ilustracao: 'ilustração', mural: 'mural', restauro: 'restauro',
     exposicao: 'exposição', premio: 'prêmio', residencia: 'residência', 'fomento-geral': 'fomento geral', producao: 'produção', outro: 'outro',
@@ -76,7 +83,7 @@
       mod: p.get('mod') ?? '',
       abertas: p.get('abertas') === '1',
       duvida: p.get('duvida') === '1',
-      ord: p.get('ord') === 'prazo' ? 'prazo' : 'recentes',
+      ord: ['prazo', 'recentes', 'relevancia'].includes(p.get('ord')) ? p.get('ord') : ORDEM_PADRAO,
     };
   }
 
@@ -90,7 +97,7 @@
     if (f.mod) p.set('mod', f.mod);
     if (f.abertas) p.set('abertas', '1');
     if (f.duvida) p.set('duvida', '1');
-    if (f.ord !== 'recentes') p.set('ord', f.ord);
+    if (f.ord !== ORDEM_PADRAO) p.set('ord', f.ord);
     const qs = p.toString();
     history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
   }
@@ -219,8 +226,12 @@
         if (fa && fb) return a._enc - b._enc;
         return (b._pub ?? 0) - (a._pub ?? 0);
       });
-    } else {
+    } else if (ord === 'recentes') {
       lista.sort((a, b) => (b._pub ?? 0) - (a._pub ?? 0));
+    } else {
+      // relevância: aprovados antes dos em dúvida/não verificados; categoria forte antes de "outro"; depois mais recentes
+      const peso = (r) => (veredito(r) === 'S' ? 10 : 0) + (PESO_CATEGORIA[r.categoriaIA] ?? 0);
+      lista.sort((a, b) => peso(b) - peso(a) || (b._pub ?? 0) - (a._pub ?? 0));
     }
 
     estado.filtrados = lista;
@@ -237,7 +248,7 @@
       ? plural(n, 'oportunidade', 'oportunidades')
       : `${plural(n, 'oportunidade encontrada', 'oportunidades encontradas')} de ${total.toLocaleString('pt-BR')}`;
     const f = estado.filtros;
-    const temFiltro = Boolean(f.tipo || f.q || f.reg || f.mod || f.abertas || f.duvida) || f.uf !== UF_PADRAO || f.ord !== 'recentes';
+    const temFiltro = Boolean(f.tipo || f.q || f.reg || f.mod || f.abertas || f.duvida) || f.uf !== UF_PADRAO || f.ord !== ORDEM_PADRAO;
     el.limpar.hidden = !temFiltro;
   }
 
@@ -410,7 +421,7 @@
       mod: el.modalidade.value,
       abertas: el.abertas.checked,
       duvida: el.duvida.checked,
-      ord: el.ordem.value === 'prazo' ? 'prazo' : 'recentes',
+      ord: ['prazo', 'recentes', 'relevancia'].includes(el.ordem.value) ? el.ordem.value : ORDEM_PADRAO,
     };
     gravarFiltrosNaUrl();
     filtrar();
@@ -445,7 +456,7 @@
       prox.click();
     });
     el.limpar.addEventListener('click', () => {
-      estado.filtros = { tipo: '', q: '', uf: UF_PADRAO, reg: '', mod: '', abertas: false, duvida: false, ord: 'recentes' };
+      estado.filtros = { tipo: '', q: '', uf: UF_PADRAO, reg: '', mod: '', abertas: false, duvida: false, ord: ORDEM_PADRAO };
       aplicarFiltrosNosControles();
       gravarFiltrosNaUrl();
       filtrar();
