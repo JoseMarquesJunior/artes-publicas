@@ -11,10 +11,28 @@
  *   - o cabeçalho API-Metadata traz {"count","page","limit","numPages"};
  *   - algumas instâncias bloqueiam User-Agent de robô (403); envia-se um User-Agent de navegador.
  */
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import {
   log, dormir, hojeUTC, somarDias, fmtISO, requisitarJson, UA_NAVEGADOR, normalizar,
   filtrarPorPalavras, registroUnificado, inferirTipoFomento, paraDataISO, paraDataHoraISO, truncar,
 } from '../util.mjs';
+
+const execFileAsync = promisify(execFile);
+
+/**
+ * Instâncias atrás do desafio JavaScript do Cloudflare (nacional) respondem ao curl de um IP residencial, mas não ao
+ * fetch do Node (impressão digital TLS diferente). Com "viaCurl": true a requisição sai pelo curl do sistema
+ * (presente no Windows 10+, macOS e nos runners do GitHub). Não é dependência npm.
+ */
+async function obterJsonViaCurl(url) {
+  const { stdout } = await execFileAsync('curl', ['-sS', '-L', '--max-time', '90', '-A', UA_NAVEGADOR, '-H', 'Accept: application/json', '-w', '\n%{http_code}', url], { maxBuffer: 50 * 1024 * 1024 });
+  const corte = stdout.lastIndexOf('\n');
+  const status = Number(stdout.slice(corte + 1).trim());
+  const corpo = stdout.slice(0, corte);
+  if (status !== 200) throw new Error(`HTTP ${status} via curl${/Just a moment/.test(corpo) ? ' (desafio Cloudflare)' : ''}`);
+  return { corpo: JSON.parse(corpo), headers: new Map() };
+}
 
 const CAMPOS = [
   'id', 'name', 'shortDescription', 'registrationFrom', 'registrationTo', 'createTimestamp', 'publishTimestamp',
@@ -122,13 +140,20 @@ export async function coletar({ instancia, palavras, diasAtras = DIAS_ATRAS_PADR
       '@page': String(pagina),
     }).toString();
 
-    const { corpo, headers } = await requisitarJson(url, {
-      headers: { 'User-Agent': UA_NAVEGADOR },
-      contexto,
-      rotulo,
-      maxTentativas: 3,
-      espera429Ms: 5000,
-    });
+    let corpo;
+    let headers;
+    if (instancia.viaCurl) {
+      contexto.requisicoes++;
+      ({ corpo, headers } = await obterJsonViaCurl(url.toString()));
+    } else {
+      ({ corpo, headers } = await requisitarJson(url, {
+        headers: { 'User-Agent': UA_NAVEGADOR },
+        contexto,
+        rotulo,
+        maxTentativas: 3,
+        espera429Ms: 5000,
+      }));
+    }
     if (!Array.isArray(corpo)) throw new Error(`resposta inesperada (não é lista): ${JSON.stringify(corpo).slice(0, 120)}`);
 
     try { numPages = JSON.parse(headers.get('api-metadata') ?? 'null')?.numPages ?? numPages; } catch { /* sem metadados */ }
@@ -139,6 +164,11 @@ export async function coletar({ instancia, palavras, diasAtras = DIAS_ATRAS_PADR
       if (item?.id == null) continue;
       if (ehFase(item)) { stats.fases++; continue; }          // fase de outra oportunidade, não é abertura
       if (item.status != null && item.status !== 1) continue; // só publicadas
+      // Instância sem UF fixa (nacional): mantém o que é de MG ou sem estado informado (abrangência nacional); descarta outros estados.
+      if (!instancia.uf) {
+        const ufDono = String(item.owner?.En_Estado ?? '').trim().toUpperCase();
+        if (ufDono && ufDono !== 'MG') { stats.outrosEstados = (stats.outrosEstados ?? 0) + 1; continue; }
+      }
       const registro = projetar(item, instancia, [], coletadoEm);
       const tags = filtrar(registro, palavras);
       if (!tags) continue;

@@ -72,8 +72,8 @@
           "nome": "Belo Horizonte",
           "ibge": "3106200",
           "regiao": "Grande BH",
-          "coberta": true,
-          "observacao": "cadastrada no QD desde 2021-10-08, mas sem diários depois de 2026-03-25"
+          "coberta": false,
+          "observacao": "cadastrada no QD desde 2021-10-08, mas sem diários depois de 2026-03-25; coberta pela fonte dom-bh (API da Prodabel)"
         },
         {
           "nome": "Contagem",
@@ -180,6 +180,60 @@
       "observacao": "API pública da Prodabel (sem token): edições por data → sumário → conteúdo de cada ato. Substitui a cobertura de BH que o Querido Diário perdeu em março de 2026."
     },
     {
+      "fonte": "amm",
+      "tipo": "amm",
+      "ativo": true,
+      "nome": "Diário Oficial dos Municípios Mineiros (AMM)",
+      "base": "https://www.diariomunicipal.com.br/amm-mg",
+      "_ajuda": "Entidades = ids das prefeituras no formulário de busca do SIGPub (select 'entidade' em /amm-mg/pesquisar). Verificado em 2026-10-18 quais das 12 cidades sem Querido Diário publicam na AMM.",
+      "entidades": [
+        {
+          "nome": "Prefeitura de Ribeirão das Neves",
+          "id": 20953,
+          "municipio": "Ribeirão das Neves",
+          "regiao": "Grande BH"
+        },
+        {
+          "nome": "Prefeitura de Vespasiano",
+          "id": 577,
+          "municipio": "Vespasiano",
+          "regiao": "Grande BH"
+        },
+        {
+          "nome": "Prefeitura de Santa Luzia",
+          "id": 77658,
+          "municipio": "Santa Luzia",
+          "regiao": "Grande BH"
+        },
+        {
+          "nome": "Prefeitura de Lagoa Santa",
+          "id": 23570,
+          "municipio": "Lagoa Santa",
+          "regiao": "Grande BH"
+        }
+      ],
+      "naoPublicamNaAMM": [
+        "Nova Lima",
+        "Sabará",
+        "Ibirité",
+        "Brumadinho",
+        "Ouro Preto",
+        "Mariana (só a Câmara)",
+        "Itabirito (só o SAAE)",
+        "Congonhas"
+      ],
+      "consultas": [
+        "\"artes visuais\"",
+        "\"aldir blanc\"",
+        "\"paulo gustavo\"",
+        "\"chamamento público\" cultura",
+        "\"fundo municipal de incentivo à cultura\"",
+        "\"edital\" \"artes\"",
+        "\"credenciamento\" \"artistas\"",
+        "\"prêmio\" cultura"
+      ]
+    },
+    {
       "fonte": "minc",
       "tipo": "html",
       "ativo": true,
@@ -237,14 +291,69 @@
       "exigirAgrupamento": true
     },
     {
+      "fonte": "pbh-fmc",
+      "tipo": "html",
+      "ativo": true,
+      "nome": "Fundação Municipal de Cultura de BH (licitações e editais)",
+      "orgao": "Fundação Municipal de Cultura de Belo Horizonte",
+      "uf": "MG",
+      "municipio": "Belo Horizonte",
+      "listas": [
+        "https://prefeitura.pbh.gov.br/fundacao-municipal-de-cultura/licitacoes-e-editais"
+      ],
+      "padraoItem": "pbh\\.gov\\.br/sites/default/files/.+",
+      "filtroTitulo": "^(edital|chamamento|credenciamento|concurso|pr[êe]mio)",
+      "agruparPor": "(?:edital|chamamento|credenciamento|concurso)\\s*(?:de\\s+)?(?:\\w+\\s+)?(?:fmc|smc)?\\s*n?[ºo°]?\\s*0*(\\d{1,3})\\s*[/_-]\\s*(\\d{2,4})",
+      "exigirAgrupamento": true,
+      "ignorarAnosAnteriores": 0,
+      "detalhe": false,
+      "observacao": "A página só tem editais até 2018; mantida para captar o que a FMC voltar a publicar ali. Os atos atuais da FMC entram pela fonte dom-bh."
+    },
+    {
+      "fonte": "fcs",
+      "tipo": "html",
+      "ativo": true,
+      "nome": "Fundação Clóvis Salgado (editais)",
+      "orgao": "Fundação Clóvis Salgado",
+      "uf": "MG",
+      "municipio": "Belo Horizonte",
+      "listas": [
+        "https://fcs.mg.gov.br/editais/"
+      ],
+      "padraoItem": "fcs\\.mg\\.gov\\.br/(wp-content/uploads/.+|premio-[^/]+/?)$",
+      "filtroTitulo": "^(edital|chamamento|pr[êe]mio|premia)",
+      "agruparPor": "(?:edital|chamamento|pr[êe]mio)\\s*(?:de\\s+\\w+\\s+)?(?:p[úu]blico\\s*)?(?:fec)?\\s*[–-]?\\s*n?[ºo°]?\\s*0*(\\d{1,3})\\s*[/_-]\\s*(\\d{2,4})",
+      "ignorarAnosAnteriores": 0,
+      "detalhe": false
+    },
+    {
+      "fonte": "iepha",
+      "tipo": "html",
+      "ativo": true,
+      "nome": "IEPHA-MG (editais)",
+      "orgao": "Instituto Estadual do Patrimônio Histórico e Artístico de Minas Gerais",
+      "uf": "MG",
+      "municipio": null,
+      "listas": [
+        "https://www.mg.gov.br/iepha/pagina/editais"
+      ],
+      "padraoItem": "mg\\.gov\\.br/sites/default/files/iepha/.+",
+      "filtroTitulo": "^(edital|chamamento|credenciamento|concurso|pr[êe]mio)",
+      "agruparPor": "n?[ºo°]?\\s*0*(\\d{1,3})\\s*[/._-]\\s*(\\d{4})",
+      "ignorarAnosAnteriores": 0,
+      "detalhe": false
+    },
+    {
       "fonte": "mapas:nacional",
       "tipo": "mapas",
-      "ativo": false,
+      "ativo": true,
       "nome": "Mapa da Cultura (nacional)",
-      "base": "https://mapas.cultura.gov.br",
+      "base": "https://mapa.cultura.gov.br",
       "uf": null,
       "municipio": null,
-      "observacao": "Desligada em 2026-10-17: a API responde 403 com desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador. Religue se o bloqueio cair."
+      "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
+      "viaCurl": true,
+      "bloqueadoNoCI": true
     }
   ]
 }

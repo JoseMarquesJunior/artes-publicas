@@ -72,9 +72,12 @@
 
   /** Títulos inteiramente em caixa alta viram caixa de sentença; siglas conhecidas e tokens com dígitos ficam como estão. */
   function caixaDeSentenca(texto) {
-    const t = String(texto ?? '');
+    const original = String(texto ?? '');
+    // prefixo entre colchetes ("[Portal de Compras Públicas] - ") não conta para decidir se o título está em caixa alta
+    const prefixo = /^\s*\[[^\]]*\]\s*-?\s*/.exec(original)?.[0] ?? '';
+    const t = original.slice(prefixo.length);
     const letras = t.replace(/[^\p{L}]/gu, '');
-    if (letras.length < 12 || letras !== letras.toUpperCase()) return t;
+    if (letras.length < 12 || letras !== letras.toUpperCase()) return original;
     let s = t.toLowerCase();
     s = s.replace(/(^\s*|[.!?:]\s+)(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
     s = s.replace(/\p{L}[\p{L}\p{N}]*/gu, (w) => {
@@ -82,7 +85,7 @@
       if (SIGLAS.has(maiusc) || (/\p{N}/u.test(w) && w.length <= 8) || (w.length >= 2 && w.length <= 5 && !/[aeiouyáéíóúãõâêôà]/i.test(w))) return maiusc;
       return w;
     });
-    return s;
+    return prefixo + s;
   }
 
   function nomeFonte(r) {

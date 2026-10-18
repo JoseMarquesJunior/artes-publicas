@@ -1,0 +1,68 @@
+name: Atualizar fontes bloqueadas no CI (runner próprio)
+
+# Roda num self-hosted runner (seu computador, IP residencial) as fontes que bloqueiam IPs de datacenter:
+# as que têm "bloqueadoNoCI": true em scripts/fontes.json. O workflow principal continua nos runners do GitHub.
+# Ver README → "Runner próprio (self-hosted)".
+
+on:
+  schedule:
+    - cron: "30 7 * * *" # 07:30 UTC (04:30 em Brasília), depois do principal (06:00 UTC)
+  workflow_dispatch:
+    inputs:
+      dias:
+        description: "Quantos dias para trás buscar (padrão 2)"
+        required: false
+        default: "2"
+
+permissions:
+  contents: write
+
+# Mesmo grupo do workflow principal: nunca rodam ao mesmo tempo (evita conflito de commit em docs/data).
+concurrency:
+  group: atualizar-dados
+  cancel-in-progress: false
+
+jobs:
+  atualizar-local:
+    # Nunca em pull_request: num repositório público, PRs de terceiros não devem executar código no seu computador.
+    if: github.event_name != 'pull_request'
+    runs-on: self-hosted
+    timeout-minutes: 120
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Preparar Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fontes bloqueadas no CI (lidas de scripts/fontes.json)
+        id: fontes
+        shell: bash
+        run: |
+          LISTA=$(node -e 'const c=require("./scripts/fontes.json");console.log(c.fontes.filter(f=>f.ativo!==false&&f.bloqueadoNoCI).map(f=>f.fonte).join(","))')
+          echo "lista=$LISTA" >> "$GITHUB_OUTPUT"
+          echo "Fontes: $LISTA"
+
+      - name: Coletar e classificar
+        if: steps.fontes.outputs.lista != ''
+        shell: bash
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/fetch.mjs --dias ${{ inputs.dias || 2 }} --fontes "${{ steps.fontes.outputs.lista }}"
+
+      - name: Commitar dados se houve mudança
+        if: steps.fontes.outputs.lista != ''
+        shell: bash
+        run: |
+          if git diff --quiet -- docs/data; then
+            echo "Nenhuma mudança em docs/data; nada a commitar."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A docs/data
+          git commit -m "dados: atualização pelo runner próprio $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git pull --rebase origin main || true
+          git push

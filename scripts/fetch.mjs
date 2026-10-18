@@ -21,6 +21,7 @@ import * as mapas from './fontes/mapas.mjs';
 import * as queridoDiario from './fontes/querido-diario.mjs';
 import * as paginas from './fontes/paginas.mjs';
 import * as domBh from './fontes/dom-bh.mjs';
+import * as amm from './fontes/amm.mjs';
 import { classificar, extrair, categorizar, completarPrazos } from './classificar.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
@@ -39,11 +40,11 @@ const RETENCAO_DIAS = 365;        // registros mais antigos saem da base
 const DESCARTAR_N_DIAS = 30;      // reprovados pela IA saem depois de N dias
 const DEDUP_SIMILARIDADE = 0.5;   // Jaccard mínimo entre títulos para considerar duplicata
 
-const ADAPTADORES = { pncp, mapas, 'querido-diario': queridoDiario, html: paginas, 'dom-bh': domBh };
+const ADAPTADORES = { pncp, mapas, 'querido-diario': queridoDiario, html: paginas, 'dom-bh': domBh, amm };
 /** Fontes "textuais": a IA extrai tudo do texto, e trechos/links distintos do mesmo edital podem se fundir entre si. */
-const FONTES_TEXTUAIS = new Set(['querido-diario', 'html', 'dom-bh']);
+const FONTES_TEXTUAIS = new Set(['querido-diario', 'html', 'dom-bh', 'amm']);
 /** Diários oficiais: trechos "N" saem da base e vão para o arquivo de descartados; itens já vistos não são recoletados. */
-const TIPOS_DIARIO = new Set(['querido-diario', 'dom-bh']);
+const TIPOS_DIARIO = new Set(['querido-diario', 'dom-bh', 'amm']);
 
 const USO = `Uso: node scripts/fetch.mjs [--dias N] [--ate AAAA-MM-DD] [--intervalo MS] [--paralelo N] [--fontes a,b] [--so-ia] [--so-reprocessar] [--reclassificar]
   --dias N         PNCP: quantos dias para trás buscar a partir de --ate (padrão 2)
@@ -337,8 +338,9 @@ async function main() {
     ...descartadosQd.filter((d) => (d.fonte ?? 'querido-diario') === fonte).map((d) => d.idNaFonte),
   ]);
 
-  // Algumas instâncias bloqueiam IPs de datacenter (GitHub Actions). No CI elas são puladas; numa máquina comum, coletadas.
-  const noCI = process.env.GITHUB_ACTIONS === 'true';
+  // Algumas instâncias bloqueiam IPs de datacenter. Nos runners hospedados pelo GitHub elas são puladas;
+  // num self-hosted runner (RUNNER_ENVIRONMENT = "self-hosted") ou numa máquina comum, coletadas.
+  const noCI = process.env.GITHUB_ACTIONS === 'true' && process.env.RUNNER_ENVIRONMENT !== 'self-hosted';
   const ativas = (config.fontes ?? []).filter((f) => f.ativo !== false && (!args.fontes || args.fontes.includes(f.fonte)));
   const puladas = ativas.filter((f) => noCI && f.bloqueadoNoCI);
   const fontes = ativas.filter((f) => !puladas.includes(f));

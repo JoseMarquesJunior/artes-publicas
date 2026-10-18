@@ -137,6 +137,7 @@ export async function coletar({ instancia, palavras, intervaloMs = INTERVALO_MS 
           }
         }
         if (instancia.exigirAgrupamento && chave === href) continue; // link genérico ("Edital", "Errata") sem número de edital
+        if (!ano) { const m = /\b(20\d{2})\b/.exec(texto); if (m) ano = Number(m[1]); } // ano solto no título ("Edital FCS 01/2023", "... 2020")
         if (instancia.ignorarAnosAnteriores != null && ano && ano < new Date().getUTCFullYear() - instancia.ignorarAnosAnteriores) continue;
         const existente = itens.get(chave);
         if (existente) {
