@@ -149,6 +149,7 @@ function mesclar(existentes, coletados, palavras, hoje, duplicadosConhecidos) {
   const dataRef = (r) => r.publicadoEm ?? r.coletadoEm ?? '';
   const mapa = new Map();
   const removidos = { antigos: 0, foraDoFiltro: 0, reprovadosAntigos: 0, duplicadosConhecidos: 0 };
+  const antigosColetados = []; // páginas antigas (publicadas há mais de RETENCAO_DIAS) que não devem ser baixadas de novo
 
   for (const r of existentes) {
     if (!r?.id) continue;
@@ -162,7 +163,7 @@ function mesclar(existentes, coletados, palavras, hoje, duplicadosConhecidos) {
   const novosPorFonte = {};
   let atualizados = 0;
   for (const r of coletados) {
-    if (dataRef(r) < limite) { removidos.antigos++; continue; }
+    if (dataRef(r) < limite) { removidos.antigos++; antigosColetados.push(r); continue; }
     if (duplicadosConhecidos[r.id] && (mapa.has(duplicadosConhecidos[r.id]) || coletados.some((c) => c.id === duplicadosConhecidos[r.id]))) {
       removidos.duplicadosConhecidos++;
       continue;
@@ -191,7 +192,7 @@ function mesclar(existentes, coletados, palavras, hoje, duplicadosConhecidos) {
     mapa.set(r.id, novo);
   }
 
-  return { lista: [...mapa.values()], novosPorFonte, atualizados, removidos };
+  return { lista: [...mapa.values()], novosPorFonte, atualizados, removidos, antigosColetados };
 }
 
 // ---------------------------------------------------------------- vereditos manuais e segundo portão
@@ -441,6 +442,8 @@ async function main() {
   // Trechos de diário marcados "N" saem da base e vão para o arquivo de descartados (só fonte + id + data).
   const descartadosAgora = mesclado.lista.filter((r) => ehDiario(r) && r.ia === 'N');
   for (const r of descartadosAgora) descartadosQd.push({ fonte: r.fonte, idNaFonte: r.idNaFonte, data: r.publicadoEm ?? r.coletadoEm?.slice(0, 10) ?? null });
+  // Páginas de instituições publicadas há mais de um ano: registradas como descartadas (com a data de hoje, para não expirarem já) e nunca mais baixadas.
+  for (const r of mesclado.antigosColetados.filter(ehDiario)) descartadosQd.push({ fonte: r.fonte, idNaFonte: r.idNaFonte, data: fmtISO(hoje), antigo: true });
   // Exemplos do que o extrator descartou nas páginas de instituições (título/resumo que a IA deu ao trecho = motivo), para conferência.
   const descartadosInstituicoes = descartadosAgora.filter((r) => (tipoPorFonte.get(r.fonte) ?? r.fonte) === 'paginas').map((r) => ({ fonte: r.fonte, titulo: r.titulo, motivo: r.resumo ?? null, link: r.link }));
   mesclado.lista = mesclado.lista.filter((r) => !(ehDiario(r) && r.ia === 'N'));

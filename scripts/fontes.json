@@ -484,11 +484,13 @@
       "uf": null,
       "municipio": null,
       "listas": [
-        "https://mis-sp.org.br/selecao-de-projetos/"
+        "https://mis-sp.org.br/selecao-de-projetos/",
+        "https://mis-sp.org.br/"
       ],
       "padraoItem": "mis-sp\\.org\\.br/evento/[^/]+/?$",
       "detalhe": true,
-      "observacao": "Convocatórias do MIS (Nova Fotografia, MIS em Cena...); abrangência nacional, a IA marca o estado quando o edital restringe."
+      "observacao": "Convocatórias do MIS (Nova Fotografia, MIS em Cena...). A página 'seleção de projetos' nem sempre lista todas; a home também é lida, com filtro por título. Abrangência nacional, a IA marca o estado quando o edital restringe.",
+      "filtroTitulo": "convocat|edital|selecao|inscri|chamada"
     },
     {
       "fonte": "html:pivo",
