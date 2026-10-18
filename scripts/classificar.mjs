@@ -42,7 +42,7 @@ Para cada item, responda à mesma pergunta: uma profissional formada em artes vi
 
 Regras:
 - S = sim. Editais de cultura amplos (todas as linguagens artísticas, multilinguagem) contam como S.
-- N = não. Editais exclusivos de música, audiovisual, literatura, dança ou teatro são N. Editais restritos a residentes de outro estado são N. Itens em que a palavra-chave aparece em outro sentido são N (ex.: "exposição a agentes químicos", "acervo bibliográfico", "design de software", "restauração de pavimento", "serigrafia industrial para uniformes", "manutenção do ar-condicionado do museu", show de cantor).
+- N = não. Editais exclusivos de música, audiovisual, literatura, dança ou teatro são N. REGRA FORTE: contratação de show, apresentação artística musical, cantor, cantora, banda, dupla, DJ, orquestra ou coral é SEMPRE N, mesmo que o texto diga "apresentação artística" ou "evento cultural" (ex.: "contratação da cantora X para apresentação artística", "show artístico da banda Y para a festa da cidade", "credenciamento de bandas e DJs"). Editais restritos a residentes de outro estado são N. Itens em que a palavra-chave aparece em outro sentido são N (ex.: "exposição a agentes químicos", "acervo bibliográfico", "design de software", "restauração de pavimento", "serigrafia industrial para uniformes", "manutenção do ar-condicionado do museu").
 - D = dúvida, quando o texto é vago demais para decidir.
 
 Dê também uma categoria curta por item, uma destas palavras: curadoria, oficina, design, ilustracao, mural, restauro, exposicao, premio, residencia, fomento-geral, producao, outro. Para N, use "".

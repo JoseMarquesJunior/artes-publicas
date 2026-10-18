@@ -112,7 +112,8 @@ Depois da IA, registros de fontes **diferentes** com `ia != N` são comparados: 
 Abra [`scripts/keywords.json`](scripts/keywords.json) e edite as duas listas. Cada item é uma palavra ou expressão entre aspas.
 
 - **`incluir`**: o item vira candidato se o texto contiver pelo menos uma destas palavras. Como a IA elimina falsos positivos, a lista pode ter termos genéricos (`arte`, `cultural`, `artista`).
-- **`excluir`**: o item é descartado antes da IA se contiver qualquer uma destas (`software`, `medicamento`, `pavimentação`). Inclui termos musicais (`show`, `banda`, `cantor`, `atração musical`, `orquestra`...) para cortar as centenas de contratações de atrações musicais por dia; o preço é que um edital misto que cite "banda" no objeto também cai. Para páginas de editais e diários oficiais só `excluir` se aplica; `incluir` não é exigido.
+- **`excluir`**: o item é descartado antes da IA se contiver qualquer uma destas (`software`, `medicamento`, `pavimentação`).
+- **`excluirFraco`** + **`genericos`**: termos musicais (`show`, `banda`, `cantor`, `atração musical`, `orquestra`...) vetam o item só quando as palavras de `incluir` que bateram são todas genéricas (`arte`, `cultura`, `cultural`...). Assim a contratação de um cantor para um "evento cultural" cai antes da IA (centenas por dia), mas um festival com shows **e** exposição ou oficina de grafite passa. Para páginas de editais e diários oficiais só os vetos se aplicam; `incluir` não é exigido.
 
 Regras de comparação: sem distinção de maiúsculas e acentos; a palavra precisa começar no início de uma palavra do texto e pode continuar por até 3 letras (`curador` encontra `curadores`, não `procurador`; `arte` encontra `artes`, não `artesanato`); plurais em `-ções`, `-ais` e `-ões` são reconhecidos; expressões com espaço precisam aparecer inteiras; hífen e espaço são equivalentes. A lista é reaplicada a toda a base a cada execução.
 

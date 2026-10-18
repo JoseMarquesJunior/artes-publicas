@@ -120,12 +120,19 @@ function compilarPalavras(lista, nome) {
 
 export async function carregarPalavras(caminho) {
   const bruto = JSON.parse(await readFile(caminho, 'utf8'));
-  return { incluir: compilarPalavras(bruto.incluir, 'incluir'), excluir: compilarPalavras(bruto.excluir, 'excluir') };
+  return {
+    incluir: compilarPalavras(bruto.incluir, 'incluir'),
+    excluir: compilarPalavras(bruto.excluir, 'excluir'),
+    excluirFraco: compilarPalavras(bruto.excluirFraco ?? [], 'excluirFraco'),
+    genericos: new Set((bruto.genericos ?? []).map((g) => normalizar(g))),
+  };
 }
 
 /**
- * Devolve as tags que bateram em "incluir", ou null se o texto não deve entrar
- * (nenhuma tag, ou alguma palavra de "excluir" presente).
+ * Devolve as tags que bateram em "incluir", ou null se o texto não deve entrar:
+ * - nenhuma tag, ou alguma palavra de "excluir" presente (veto duro);
+ * - alguma palavra de "excluirFraco" presente E todas as tags são "genericos" (veto fraco: um show de cantor
+ *   num "evento cultural" cai; um festival com shows e "exposição" passa).
  * `extras` são tags adicionais que já qualificam o texto (ex.: área "Artes Visuais" informada pela fonte).
  */
 export function filtrarPorPalavras(texto, palavras, extras = []) {
@@ -134,7 +141,12 @@ export function filtrarPorPalavras(texto, palavras, extras = []) {
   if (palavras.excluir.some((p) => p.regex.test(t))) return null;
   const tags = palavras.incluir.filter((p) => p.regex.test(t)).map((p) => p.original);
   for (const e of extras) if (!tags.includes(e)) tags.push(e);
-  return tags.length ? tags : null;
+  if (tags.length === 0) return null;
+  if (palavras.excluirFraco?.length && palavras.excluirFraco.some((p) => p.regex.test(t))) {
+    const temForte = tags.some((tag) => !palavras.genericos.has(normalizar(tag)));
+    if (!temForte) return null;
+  }
+  return tags;
 }
 
 // ---------------------------------------------------------------- HTTP

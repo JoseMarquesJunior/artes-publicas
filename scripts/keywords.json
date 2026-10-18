@@ -5,7 +5,7 @@
     "A palavra precisa começar no início de uma palavra do texto e pode continuar por até 3 letras: 'curador' pega 'curadores' e 'curadoria', mas não 'procurador'; 'arte' pega 'artes', mas não 'artesanato'.",
     "Plurais em -ções, -ais e -ões são reconhecidos automaticamente (exposição/exposições, mural/murais).",
     "'excluir' corta o óbvio antes de gastar tokens com a IA. Depois de salvar, a próxima atualização reaplica a lista a toda a base.",
-    "Termos musicais em 'excluir' (show, banda, cantor...) cortam contratações de atrações musicais antes da IA; um edital misto que cite 'banda' no objeto também é cortado — é o preço de não gastar tokens com centenas de shows por dia."
+    "'excluirFraco' (show, banda, cantor...) só veta quando as palavras de 'incluir' que bateram são todas 'genericos' (arte, cultura...). Um edital de festival com 'shows' e 'exposição' passa; a contratação de um cantor para evento cultural é cortada antes da IA."
   ],
   "incluir": [
     "artes visuais",
@@ -78,7 +78,9 @@
     "exposição a agentes",
     "exposição ocupacional",
     "agentes nocivos",
-    "insalubridade",
+    "insalubridade"
+  ],
+  "excluirFraco": [
     "show",
     "banda",
     "cantor",
@@ -92,5 +94,17 @@
     "festival de música",
     "orquestra",
     "coral"
+  ],
+  "genericos": [
+    "arte",
+    "artista",
+    "artística",
+    "artístico",
+    "cultural",
+    "cultura",
+    "criativa",
+    "patrimônio histórico",
+    "projeto cultural",
+    "produção cultural"
   ]
 }
