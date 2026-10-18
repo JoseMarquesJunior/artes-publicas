@@ -5,47 +5,246 @@
     "Antes de adicionar, confirme que {base}/api/opportunity/find responde JSON (algumas instâncias bloqueiam robôs; a nacional usa desafio JavaScript do Cloudflare e não responde a scripts)."
   ],
   "fontes": [
-    { "fonte": "pncp", "tipo": "pncp", "ativo": true, "nome": "PNCP" },
-    { "fonte": "mapas:bh", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural BH", "base": "https://mapaculturalbh.pbh.gov.br", "uf": "MG", "municipio": "Belo Horizonte",
-      "bloqueadoNoCI": true, "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum." },
-    { "fonte": "mapas:lagoa-santa", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Lagoa Santa", "base": "https://mapacultural.lagoasanta.mg.gov.br", "uf": "MG", "municipio": "Lagoa Santa",
-      "bloqueadoNoCI": true, "observacao": "Desafio JavaScript do Cloudflare para IPs de datacenter (GitHub Actions). Só é coletada quando o fetch.mjs roda numa máquina comum." },
-    { "fonte": "mapas:nova-lima", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Nova Lima", "base": "https://mapacultural.novalima.mg.gov.br", "uf": "MG", "municipio": "Nova Lima" },
-    { "fonte": "mapas:santa-luzia", "tipo": "mapas", "ativo": true, "nome": "Mapa Cultural Santa Luzia", "base": "https://mapacultural.santaluzia.mg.gov.br", "uf": "MG", "municipio": "Santa Luzia" },
-    { "fonte": "mapas:ribeirao-das-neves", "tipo": "mapas", "ativo": true, "nome": "Mapa da Cultura Nevense", "base": "https://mapaculturaneves.com.br", "uf": "MG", "municipio": "Ribeirão das Neves" },
     {
-      "fonte": "querido-diario", "tipo": "querido-diario", "ativo": true, "nome": "Diário Oficial (Querido Diário)",
+      "fonte": "pncp",
+      "tipo": "pncp",
+      "ativo": true,
+      "nome": "PNCP"
+    },
+    {
+      "fonte": "mapas:bh",
+      "tipo": "mapas",
+      "ativo": true,
+      "nome": "Mapa Cultural BH",
+      "base": "https://mapaculturalbh.pbh.gov.br",
+      "uf": "MG",
+      "municipio": "Belo Horizonte",
+      "bloqueadoNoCI": true,
+      "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum."
+    },
+    {
+      "fonte": "mapas:lagoa-santa",
+      "tipo": "mapas",
+      "ativo": true,
+      "nome": "Mapa Cultural Lagoa Santa",
+      "base": "https://mapacultural.lagoasanta.mg.gov.br",
+      "uf": "MG",
+      "municipio": "Lagoa Santa",
+      "bloqueadoNoCI": true,
+      "observacao": "Desafio JavaScript do Cloudflare para IPs de datacenter (GitHub Actions). Só é coletada quando o fetch.mjs roda numa máquina comum."
+    },
+    {
+      "fonte": "mapas:nova-lima",
+      "tipo": "mapas",
+      "ativo": true,
+      "nome": "Mapa Cultural Nova Lima",
+      "base": "https://mapacultural.novalima.mg.gov.br",
+      "uf": "MG",
+      "municipio": "Nova Lima"
+    },
+    {
+      "fonte": "mapas:santa-luzia",
+      "tipo": "mapas",
+      "ativo": true,
+      "nome": "Mapa Cultural Santa Luzia",
+      "base": "https://mapacultural.santaluzia.mg.gov.br",
+      "uf": "MG",
+      "municipio": "Santa Luzia"
+    },
+    {
+      "fonte": "mapas:ribeirao-das-neves",
+      "tipo": "mapas",
+      "ativo": true,
+      "nome": "Mapa da Cultura Nevense",
+      "base": "https://mapaculturaneves.com.br",
+      "uf": "MG",
+      "municipio": "Ribeirão das Neves"
+    },
+    {
+      "fonte": "querido-diario",
+      "tipo": "querido-diario",
+      "ativo": true,
+      "nome": "Diário Oficial (Querido Diário)",
       "base": "https://api.queridodiario.org.br",
-      "_ajuda": "coberta=false: o Querido Diário não coleta o diário dessa cidade (verificado em 2026-10-17 em /cities/{ibge} e /gazettes). Belo Horizonte está cadastrada, mas o último diário coletado é de 2026-03-25.",
+      "_ajuda": "coberta=false: o Querido Diário não coleta o diário dessa cidade (verificado em 2026-10-17 em /cities/{ibge} e /gazettes). Belo Horizonte está cadastrada, mas o último diário coletado é de 2026-03-25. Consultas: frases entre aspas são exatas; palavras soltas casam qualquer uma delas (muito abrangente).",
       "territorios": [
-        { "nome": "Belo Horizonte",     "ibge": "3106200", "regiao": "Grande BH", "coberta": true,  "observacao": "cadastrada no QD desde 2021-10-08, mas sem diários depois de 2026-03-25" },
-        { "nome": "Contagem",           "ibge": "3118601", "regiao": "Grande BH", "coberta": true },
-        { "nome": "Betim",              "ibge": "3106705", "regiao": "Grande BH", "coberta": true },
-        { "nome": "Nova Lima",          "ibge": "3144805", "regiao": "Grande BH", "coberta": false },
-        { "nome": "Sabará",             "ibge": "3156700", "regiao": "Grande BH", "coberta": false },
-        { "nome": "Santa Luzia",        "ibge": "3157807", "regiao": "Grande BH", "coberta": false },
-        { "nome": "Ribeirão das Neves", "ibge": "3154606", "regiao": "Grande BH", "coberta": false },
-        { "nome": "Ibirité",            "ibge": "3129806", "regiao": "Grande BH", "coberta": false },
-        { "nome": "Vespasiano",         "ibge": "3171204", "regiao": "Grande BH", "coberta": false },
-        { "nome": "Lagoa Santa",        "ibge": "3137601", "regiao": "Grande BH", "coberta": false },
-        { "nome": "Brumadinho",         "ibge": "3109006", "regiao": "Grande BH", "coberta": false },
-        { "nome": "Ouro Preto",         "ibge": "3146107", "regiao": "Inconfidentes", "coberta": false },
-        { "nome": "Mariana",            "ibge": "3140001", "regiao": "Inconfidentes", "coberta": false },
-        { "nome": "Itabirito",          "ibge": "3131901", "regiao": "Inconfidentes", "coberta": false },
-        { "nome": "Congonhas",          "ibge": "3118007", "regiao": "Inconfidentes", "coberta": false }
+        {
+          "nome": "Belo Horizonte",
+          "ibge": "3106200",
+          "regiao": "Grande BH",
+          "coberta": true,
+          "observacao": "cadastrada no QD desde 2021-10-08, mas sem diários depois de 2026-03-25"
+        },
+        {
+          "nome": "Contagem",
+          "ibge": "3118601",
+          "regiao": "Grande BH",
+          "coberta": true
+        },
+        {
+          "nome": "Betim",
+          "ibge": "3106705",
+          "regiao": "Grande BH",
+          "coberta": true
+        },
+        {
+          "nome": "Nova Lima",
+          "ibge": "3144805",
+          "regiao": "Grande BH",
+          "coberta": false
+        },
+        {
+          "nome": "Sabará",
+          "ibge": "3156700",
+          "regiao": "Grande BH",
+          "coberta": false
+        },
+        {
+          "nome": "Santa Luzia",
+          "ibge": "3157807",
+          "regiao": "Grande BH",
+          "coberta": false
+        },
+        {
+          "nome": "Ribeirão das Neves",
+          "ibge": "3154606",
+          "regiao": "Grande BH",
+          "coberta": false
+        },
+        {
+          "nome": "Ibirité",
+          "ibge": "3129806",
+          "regiao": "Grande BH",
+          "coberta": false
+        },
+        {
+          "nome": "Vespasiano",
+          "ibge": "3171204",
+          "regiao": "Grande BH",
+          "coberta": false
+        },
+        {
+          "nome": "Lagoa Santa",
+          "ibge": "3137601",
+          "regiao": "Grande BH",
+          "coberta": false
+        },
+        {
+          "nome": "Brumadinho",
+          "ibge": "3109006",
+          "regiao": "Grande BH",
+          "coberta": false
+        },
+        {
+          "nome": "Ouro Preto",
+          "ibge": "3146107",
+          "regiao": "Inconfidentes",
+          "coberta": false
+        },
+        {
+          "nome": "Mariana",
+          "ibge": "3140001",
+          "regiao": "Inconfidentes",
+          "coberta": false
+        },
+        {
+          "nome": "Itabirito",
+          "ibge": "3131901",
+          "regiao": "Inconfidentes",
+          "coberta": false
+        },
+        {
+          "nome": "Congonhas",
+          "ibge": "3118007",
+          "regiao": "Inconfidentes",
+          "coberta": false
+        }
       ],
       "consultas": [
-        "edital artes visuais",
-        "edital fomento cultura",
-        "chamamento público cultura",
-        "prêmio artes",
-        "credenciamento artistas",
-        "lei paulo gustavo",
-        "política nacional aldir blanc",
-        "exposição artes"
+        "\"artes visuais\"",
+        "\"aldir blanc\"",
+        "\"paulo gustavo\"",
+        "\"chamamento público\" cultura",
+        "\"fundo municipal de incentivo à cultura\"",
+        "\"edital\" \"artes\"",
+        "\"credenciamento\" \"artistas\"",
+        "\"prêmio\" cultura"
       ]
     },
-    { "fonte": "mapas:nacional", "tipo": "mapas", "ativo": false, "nome": "Mapa da Cultura (nacional)", "base": "https://mapas.cultura.gov.br", "uf": null, "municipio": null,
-      "observacao": "Desligada em 2026-10-17: a API responde 403 com desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador. Religue se o bloqueio cair." }
+    {
+      "fonte": "dom-bh",
+      "tipo": "dom-bh",
+      "ativo": true,
+      "nome": "Diário Oficial de Belo Horizonte",
+      "base": "https://api-dom.pbh.gov.br/api/v1",
+      "observacao": "API pública da Prodabel (sem token): edições por data → sumário → conteúdo de cada ato. Substitui a cobertura de BH que o Querido Diário perdeu em março de 2026."
+    },
+    {
+      "fonte": "minc",
+      "tipo": "html",
+      "ativo": true,
+      "nome": "Ministério da Cultura (editais)",
+      "orgao": "Ministério da Cultura",
+      "uf": null,
+      "municipio": null,
+      "listas": [
+        "https://www.gov.br/cultura/pt-br/assuntos/editais/inscricoes-abertas",
+        "https://www.gov.br/cultura/pt-br/assuntos/editais/inscricoes-em-andamento"
+      ],
+      "padraoItem": "^https://www\\.gov\\.br/cultura/pt-br/assuntos/editais/inscricoes-(abertas|em-andamento)/[^/]+/.+",
+      "blocoInicio": "id=\"content-core\"",
+      "blocoFim": "id=\"viewlet-below-content\"",
+      "detalhe": true,
+      "observacao": "Editais federais do MinC, inclusive os ligados à Lei Rouanet (a Rouanet em si é um mecanismo de incentivo, não um canal de editais)."
+    },
+    {
+      "fonte": "funarte",
+      "tipo": "html",
+      "ativo": true,
+      "nome": "Funarte (editais abertos)",
+      "orgao": "Funarte",
+      "uf": null,
+      "municipio": null,
+      "listas": [
+        "https://www.gov.br/funarte/pt-br/editais/editais-abertos"
+      ],
+      "padraoItem": "^https://www\\.gov\\.br/funarte/pt-br/editais/editais-abertos/[^/]+/?$",
+      "blocoInicio": "id=\"content-core\"",
+      "blocoFim": "id=\"viewlet-below-content\"",
+      "detalhe": true
+    },
+    {
+      "fonte": "secult-mg",
+      "tipo": "html",
+      "ativo": true,
+      "nome": "Secult-MG (FEC, PNAB e prêmios)",
+      "orgao": "Secretaria de Estado de Cultura e Turismo de Minas Gerais",
+      "uf": "MG",
+      "municipio": null,
+      "listas": [
+        "https://www.secult.mg.gov.br/editais/fundo-estadual-de-cultura-fec/editais-fec",
+        "https://www.secult.mg.gov.br/editais/editais-pnab/editais-pnab"
+      ],
+      "padraoItem": "secult\\.mg\\.gov\\.br/(download/|images/).*",
+      "blocoInicio": "class=\"item-page",
+      "blocoFim": "class=\"article-footer",
+      "filtroTitulo": "^(edital|chamamento|pr[êe]mio|premia)",
+      "agruparPor": "(?:edital|pr[êe]mio|premiac[aã]o)\\s*(fec|pnab|lpg)?\\s*n?[ºo°]?\\s*0*(\\d{1,3})\\s*[/_-]\\s*(\\d{2,4})",
+      "detalhe": false,
+      "observacao": "Os editais são PDFs sem página própria; o registro usa o título do link (que costuma trazer 'prazo prorrogado até'). Retificações do mesmo edital viram links extras.",
+      "ignorarAnosAnteriores": 0,
+      "_ajuda": "ignorarAnosAnteriores: 0 = só editais do ano corrente (o número do edital traz o ano); a página lista tudo desde 2020.",
+      "exigirAgrupamento": true
+    },
+    {
+      "fonte": "mapas:nacional",
+      "tipo": "mapas",
+      "ativo": false,
+      "nome": "Mapa da Cultura (nacional)",
+      "base": "https://mapas.cultura.gov.br",
+      "uf": null,
+      "municipio": null,
+      "observacao": "Desligada em 2026-10-17: a API responde 403 com desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador. Religue se o bloqueio cair."
+    }
   ]
 }

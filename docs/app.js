@@ -150,9 +150,19 @@
     partes.push(`${plural(aprovadas, 'oportunidade confirmada', 'oportunidades confirmadas')} nos últimos 12 meses`);
     if (typeof meta.totalNovos === 'number' && meta.totalNovos > 0) partes.push(`${plural(meta.totalNovos, 'nova candidata', 'novas candidatas')} na última coleta`);
     el.atualizado.textContent = partes.join(' · ');
-    if (Array.isArray(meta.erros) && meta.erros.length) {
+    const porFonte = meta.errosPorFonte && typeof meta.errosPorFonte === 'object' ? Object.entries(meta.errosPorFonte) : [];
+    if (porFonte.length) {
+      const nomes = new Map((meta.fontes ?? []).map((f) => [f.fonte, f.nome]));
+      const trechos = porFonte.map(([fonte, e]) => {
+        const nome = nomes.get(fonte) ?? fonte;
+        if (e.completa) return `${nome} (fora do ar)`;
+        return e.total ? `${nome} (${e.falhas} de ${e.total} consultas falharam)` : `${nome} (coleta parcial)`;
+      });
       el.atualizado.append(' ');
-      el.atualizado.append(h('span', 'aviso-inline', `(a última coleta falhou em ${plural(meta.erros.length, 'consulta', 'consultas')}; alguns editais podem estar faltando)`));
+      el.atualizado.append(h('span', 'aviso-inline', `Na última coleta: ${trechos.join('; ')}. O que falhou é tentado de novo no dia seguinte.`));
+    } else if (Array.isArray(meta.erros) && meta.erros.length) {
+      el.atualizado.append(' ');
+      el.atualizado.append(h('span', 'aviso-inline', 'A última coleta teve falhas parciais; o que falhou é tentado de novo no dia seguinte.'));
     }
   }
 
@@ -288,7 +298,7 @@
     card.append(topo);
 
     // título (+ texto completo ou resumo, com "ver mais"). No Diário Oficial o título vem da IA e o resumo é o destaque.
-    const diario = r.fonte === 'querido-diario';
+    const diario = r.fonte === 'querido-diario' || r.fonte === 'dom-bh' || /^html:|^minc$|^funarte$|^secult/.test(r.fonte); // fontes em que a IA extraiu o conteúdo
     const completo = r.detalhes?.objetoCompleto && r.detalhes.objetoCompleto.length > (r.titulo ?? '').length - 1 ? r.detalhes.objetoCompleto : null;
     const titulo = h('h2', 'titulo', completo ?? r.titulo ?? '(sem título)');
     card.append(titulo);
@@ -331,7 +341,12 @@
     // ações
     const acoes = h('div', 'acoes');
     if (ehUrlHttp(r.link)) {
-      const a = h('a', 'botao', r.fonte === 'pncp' ? 'Ver no PNCP' : r.fonte.startsWith('mapas') ? 'Ver no Mapa Cultural' : r.fonte === 'querido-diario' ? 'Ver no Diário Oficial (PDF)' : 'Ver edital');
+      const rotuloBotao = r.fonte === 'pncp' ? 'Ver no PNCP'
+        : r.fonte.startsWith('mapas') ? 'Ver no Mapa Cultural'
+          : r.fonte === 'querido-diario' ? 'Ver no Diário Oficial (PDF)'
+            : r.fonte === 'dom-bh' ? 'Ver no Diário Oficial'
+              : /\.pdf(\?|$)|download=/i.test(r.link) ? 'Abrir edital (PDF)' : 'Ver edital';
+      const a = h('a', 'botao', rotuloBotao);
       a.href = r.link;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
@@ -354,7 +369,9 @@
     try {
       const host = new URL(url).hostname.replace(/^www\./, '');
       if (/\.txt$/i.test(url)) return 'Texto do diário (.txt)';
+      if (/visualizacao\/edicao/.test(url)) return 'Edição completa';
       if (host === 'pncp.gov.br') return 'Também no PNCP';
+      if (/download=|\.pdf(\?|$)/i.test(url)) return 'Retificação / anexo (PDF)';
       if (/mapacultur|mapas\.cultura/.test(host)) return 'Também no Mapa Cultural';
       return `Também em ${host}`;
     } catch {

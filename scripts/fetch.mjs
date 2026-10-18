@@ -19,7 +19,9 @@ import { log, hojeUTC, somarDias, fmtISO, lerDataISO, descreverErro, carregarPal
 import * as pncp from './fontes/pncp.mjs';
 import * as mapas from './fontes/mapas.mjs';
 import * as queridoDiario from './fontes/querido-diario.mjs';
-import { classificar, extrair, categorizar } from './classificar.mjs';
+import * as paginas from './fontes/paginas.mjs';
+import * as domBh from './fontes/dom-bh.mjs';
+import { classificar, extrair, categorizar, completarPrazos } from './classificar.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -36,7 +38,11 @@ const RETENCAO_DIAS = 365;        // registros mais antigos saem da base
 const DESCARTAR_N_DIAS = 30;      // reprovados pela IA saem depois de N dias
 const DEDUP_SIMILARIDADE = 0.5;   // Jaccard mínimo entre títulos para considerar duplicata
 
-const ADAPTADORES = { pncp, mapas, 'querido-diario': queridoDiario };
+const ADAPTADORES = { pncp, mapas, 'querido-diario': queridoDiario, html: paginas, 'dom-bh': domBh };
+/** Fontes "textuais": a IA extrai tudo do texto, e trechos/links distintos do mesmo edital podem se fundir entre si. */
+const FONTES_TEXTUAIS = new Set(['querido-diario', 'html', 'dom-bh']);
+/** Diários oficiais: trechos "N" saem da base e vão para o arquivo de descartados; itens já vistos não são recoletados. */
+const TIPOS_DIARIO = new Set(['querido-diario', 'dom-bh']);
 
 const USO = `Uso: node scripts/fetch.mjs [--dias N] [--ate AAAA-MM-DD] [--intervalo MS] [--paralelo N] [--fontes a,b] [--so-ia]
   --dias N         PNCP: quantos dias para trás buscar a partir de --ate (padrão 2)
@@ -96,10 +102,16 @@ async function carregarExistentes() {
 }
 
 /** Reaplica o filtro de palavras-chave de acordo com a fonte do registro. */
+let tipoPorFonte = new Map(); // fonte → tipo (preenchido em main a partir de fontes.json)
+function adaptadorDe(registro) {
+  const tipo = tipoPorFonte.get(registro.fonte) ?? (registro.fonte.startsWith('mapas') ? 'mapas' : registro.fonte);
+  return ADAPTADORES[tipo] ?? null;
+}
 function refiltrar(registro, palavras) {
-  const adaptador = registro.fonte.startsWith('mapas') ? mapas : registro.fonte === 'pncp' ? pncp : registro.fonte === 'querido-diario' ? queridoDiario : null;
+  const adaptador = adaptadorDe(registro);
   return adaptador ? adaptador.filtrar(registro, palavras) : registro.tags ?? [];
 }
+const ehTextual = (r) => FONTES_TEXTUAIS.has(tipoPorFonte.get(r.fonte) ?? r.fonte);
 
 /** Região (Grande BH / Inconfidentes) a partir do município, usando a lista de territórios do Querido Diário. */
 function mapaDeRegioes(config) {
@@ -149,13 +161,20 @@ function mesclar(existentes, coletados, palavras, hoje, duplicadosConhecidos) {
     const a = atual.detalhes?.atualizadoNaFonte;
     const b = r.detalhes?.atualizadoNaFonte;
     if (a && b && b < a) continue; // o existente é mais novo
+    const jaAvaliado = ['S', 'N', 'D'].includes(atual.ia);
     const novo = {
       ...r,
-      ia: ['S', 'N', 'D'].includes(atual.ia) ? atual.ia : r.ia,
+      ia: jaAvaliado ? atual.ia : r.ia,
       categoriaIA: atual.categoriaIA ?? r.categoriaIA ?? null,
       linksExtras: [...new Set([...(atual.linksExtras ?? []), ...(r.linksExtras ?? [])])],
       coletadoEm: atual.coletadoEm ?? r.coletadoEm,
     };
+    if (jaAvaliado && atual.detalhes?.textoBruto === undefined && novo.detalhes?.textoBruto !== undefined) {
+      // Fonte textual recoletada: a IA já extraiu antes; mantém o que ela preencheu e não guarda texto bruto de novo.
+      novo.detalhes = { ...novo.detalhes, prazoBuscado: atual.detalhes?.prazoBuscado ?? false };
+      delete novo.detalhes.textoBruto;
+      for (const campo of ['titulo', 'tipo', 'resumo', 'orgao', 'encerramento', 'abertura', 'valor']) if (atual[campo] != null) novo[campo] = atual[campo];
+    }
     if (JSON.stringify(atual) !== JSON.stringify(novo)) atualizados++;
     mapa.set(r.id, novo);
   }
@@ -189,7 +208,7 @@ function deduplicar(lista, duplicadosConhecidos) {
     for (let j = i + 1; j < candidatos.length; j++) {
       const b = candidatos[j];
       if (removidos.has(b.id)) continue;
-      const ambosDiario = a.fonte === 'querido-diario' && b.fonte === 'querido-diario';
+      const ambosDiario = a.fonte === b.fonte && ehTextual(a);
       if (a.fonte === b.fonte && !ambosDiario) continue;
       const ib = info.get(b.id);
       if (ia.enc && ib.enc && ia.enc !== ib.enc) continue;
@@ -238,14 +257,16 @@ async function main() {
 
   const palavras = await carregarPalavras(ARQ_PALAVRAS);
   const config = JSON.parse(await readFile(ARQ_FONTES, 'utf8'));
+  tipoPorFonte = new Map((config.fontes ?? []).map((f) => [f.fonte, f.tipo]));
   const { lista: existentes, migrados } = await carregarExistentes();
   const duplicadosConhecidos = await lerJson(ARQ_DUPLICADOS, {});
   const descartadosQd = await lerJson(ARQ_DESCARTADOS_QD, []);
   const regioes = mapaDeRegioes(config);
-  // Trechos de diário já na base ou já descartados pela IA não voltam para a fila.
-  const qdProcessados = new Set([
-    ...existentes.filter((r) => r.fonte === 'querido-diario').map((r) => r.idNaFonte),
-    ...descartadosQd.map((d) => d.idNaFonte),
+  // Trechos de diário já na base ou já descartados pela IA não voltam para a fila (por fonte).
+  const ehDiario = (r) => TIPOS_DIARIO.has(tipoPorFonte.get(r.fonte) ?? r.fonte);
+  const processadosPorFonte = (fonte) => new Set([
+    ...existentes.filter((r) => r.fonte === fonte).map((r) => r.idNaFonte),
+    ...descartadosQd.filter((d) => (d.fonte ?? 'querido-diario') === fonte).map((d) => d.idNaFonte),
   ]);
 
   // Algumas instâncias bloqueiam IPs de datacenter (GitHub Actions). No CI elas são puladas; numa máquina comum, coletadas.
@@ -268,9 +289,9 @@ async function main() {
       if (!adaptador) throw new Error(`tipo de fonte desconhecido: ${fonte.tipo}`);
       const resultado = fonte.tipo === 'pncp'
         ? await adaptador.coletar({ dias: args.dias, ate: args.ate, intervalo: args.intervalo, paralelo: args.paralelo, palavras })
-        : fonte.tipo === 'querido-diario'
-          ? await adaptador.coletar({ instancia: fonte, dias: args.dias, jaProcessados: qdProcessados })
-          : await adaptador.coletar({ instancia: fonte, palavras });
+        : TIPOS_DIARIO.has(fonte.tipo)
+          ? await adaptador.coletar({ instancia: fonte, dias: args.dias, palavras, jaProcessados: processadosPorFonte(fonte.fonte) })
+          : await adaptador.coletar({ instancia: fonte, palavras }); // mapas e html
       coletados.push(...resultado.registros);
       Object.assign(stat, resultado.stats, { candidatos: resultado.registros.length });
       if (resultado.stats.erros?.length) erros.push(...resultado.stats.erros.map((e) => ({ fonte: fonte.fonte, mensagem: `${e.janela}: ${e.mensagem}` })));
@@ -292,10 +313,11 @@ async function main() {
   const ia = await classificar(mesclado.lista);
   const extracao = await extrair(mesclado.lista);
   const categorizacao = await categorizar(mesclado.lista);
-  // Trechos de diário marcados "N" saem da base e vão para o arquivo de descartados (só id + data).
-  const descartadosAgora = mesclado.lista.filter((r) => r.fonte === 'querido-diario' && r.ia === 'N');
-  for (const r of descartadosAgora) descartadosQd.push({ idNaFonte: r.idNaFonte, data: r.publicadoEm ?? r.coletadoEm?.slice(0, 10) ?? null });
-  mesclado.lista = mesclado.lista.filter((r) => !(r.fonte === 'querido-diario' && r.ia === 'N'));
+  const prazos = await completarPrazos(mesclado.lista);
+  // Trechos de diário marcados "N" saem da base e vão para o arquivo de descartados (só fonte + id + data).
+  const descartadosAgora = mesclado.lista.filter((r) => ehDiario(r) && r.ia === 'N');
+  for (const r of descartadosAgora) descartadosQd.push({ fonte: r.fonte, idNaFonte: r.idNaFonte, data: r.publicadoEm ?? r.coletadoEm?.slice(0, 10) ?? null });
+  mesclado.lista = mesclado.lista.filter((r) => !(ehDiario(r) && r.ia === 'N'));
   atribuirRegiao(mesclado.lista, regioes);
   const dedup = deduplicar(mesclado.lista, duplicadosConhecidos);
   const lista = dedup.lista.sort((a, b) => (b.publicadoEm ?? b.coletadoEm ?? '').localeCompare(a.publicadoEm ?? a.coletadoEm ?? '') || a.id.localeCompare(b.id));
@@ -331,13 +353,19 @@ async function main() {
     base: { aprovados: porVeredito.S, reprovados: porVeredito.N, duvidas: porVeredito.D, pendentes: porVeredito.pendente },
     porTipo,
     fontes: fontesMeta,
-    ia: { ...ia, candidatosNestaExecucao: coletados.length, extracao, categorizacao },
+    ia: { ...ia, candidatosNestaExecucao: coletados.length, extracao, categorizacao, prazos },
     queridoDiario: { descartadosNestaExecucao: descartadosAgora.length, descartadosTotal: descartadosQd.length },
     dedup: { fundidosNestaExecucao: dedup.fundidos, duplicadosConhecidos: Object.keys(duplicadosConhecidos).length },
     periodoPncp: statsFontes.find((s) => s.fonte === 'pncp')?.periodo ?? null,
     retencaoDias: RETENCAO_DIAS,
     duracaoSegundos,
     erros,
+    // Resumo por fonte para a página: {fonte: {falhas, total}} — total = consultas/janelas tentadas, quando conhecido.
+    errosPorFonte: Object.fromEntries(statsFontes.filter((s) => erros.some((e) => e.fonte === s.fonte)).map((s) => [s.fonte, {
+      falhas: erros.filter((e) => e.fonte === s.fonte).length,
+      total: s.tipo === 'querido-diario' ? (s.territorios?.length ?? 0) * (config.fontes.find((f) => f.fonte === s.fonte)?.consultas?.length ?? 0) : (s.tipo === 'pncp' ? s.modalidades?.length ?? null : null),
+      completa: Boolean(s.erro),
+    }])),
   };
 
   await mkdir(PASTA_DADOS, { recursive: true });
@@ -370,6 +398,7 @@ async function main() {
   } else if (!extracao.ativo && extracao.pendentes) {
     console.log(`  IA extrator: desligado (sem chave) · ${extracao.pendentes} trechos de diário pendentes`);
   }
+  if (prazos.tentados) console.log(`  IA prazos: ${prazos.encontrados} de ${prazos.tentados} itens sem prazo ganharam data (${prazos.semTexto} sem trecho localizável, ${prazos.falhas} falhas) · US$ ${prazos.custoUsd.toFixed(4)}`);
   if (categorizacao.categorizados || categorizacao.lotesFalhos) {
     console.log(`  IA categorizador: ${categorizacao.categorizados} itens antigos ganharam categoria · ${categorizacao.pendentes} sem categoria · custo estimado US$ ${categorizacao.custoUsd.toFixed(4)}`);
   }

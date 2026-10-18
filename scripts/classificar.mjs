@@ -138,7 +138,7 @@ const EXTRATOR_TOKENS_POR_ITEM = 300;    // título + resumo de 200 caracteres +
 const EXTRATOR_MARGEM_TOKENS = 200;
 const TIPOS_EXTRATOR = ['contratacao', 'fomento', 'premio', 'residencia', 'chamamento', 'outro'];
 
-const PROMPT_EXTRATOR = `Você recebe trechos numerados de diários oficiais de municípios de Minas Gerais (Grande Belo Horizonte). Cada trecho é um fragmento de uma edição do diário que casou com buscas por edital, cultura, artes, fomento, prêmio, Lei Paulo Gustavo ou Política Nacional Aldir Blanc. Um trecho pode começar ou terminar no meio de um ato, e pode misturar atos sem relação entre si.
+const PROMPT_EXTRATOR = `Você recebe textos numerados sobre oportunidades públicas no Brasil: trechos de diários oficiais de municípios de Minas Gerais (Grande Belo Horizonte) ou páginas de editais de órgãos de cultura (Ministério da Cultura, Funarte, Secretaria de Cultura de Minas Gerais). Um trecho de diário pode começar ou terminar no meio de um ato, e pode misturar atos sem relação entre si; uma página de edital traz o nome do edital e, às vezes, a descrição e os prazos.
 
 Para cada trecho, foque apenas no que diz respeito a edital, chamamento público, prêmio, credenciamento ou contratação na área de cultura e artes visuais, e responda:
 - relevante: "S" se o trecho anuncia (ou prorroga o prazo de) uma oportunidade em que uma profissional formada em artes visuais (criação artística, curadoria, exposições, oficinas de arte, ilustração, design gráfico, murais, cenografia, restauro, arte-educação, mediação cultural, produção cultural) pode se inscrever, concorrer ou ser contratada; editais de cultura amplos (todas as linguagens, multilinguagem, pontos de cultura, patrimônio) contam como "S". "N" se for só menção de passagem (nomeação de comissão, homologação ou resultado, lista de habilitados, extrato de contrato ou termo já assinado, retificação sem conteúdo novo, convocação de aprovados, concurso público para cargos, ata de reunião). REGRA FORTE: oportunidade exclusiva de música, audiovisual, literatura, dança ou teatro é "N" mesmo que seja um edital aberto com prazo e valor (ex.: festival de música, edital de bandas, mostra de cinema, concurso literário). "D" se houver indício de edital aberto mas o trecho não permitir decidir se artes visuais cabem.
@@ -153,7 +153,8 @@ Para cada trecho, foque apenas no que diz respeito a edital, chamamento público
 Responda apenas com um JSON em uma única linha, mapeando o número de cada trecho a um objeto com essas oito chaves, por exemplo {"1":{"relevante":"S","titulo":"Edital PNAB 02/2026 - Multilinguagem","tipo":"fomento","resumo":"...","orgao":"Secretaria Municipal de Cultura de Contagem","encerramento":"2026-11-10","valor":500000,"categoria":"fomento-geral"},"2":{"relevante":"N","titulo":"Homologação de resultado","tipo":"outro","resumo":"...","orgao":null,"encerramento":null,"valor":null,"categoria":"outro"}}. Inclua todos os números. Sem texto fora do JSON.`;
 
 function descreverTrecho(r, i) {
-  const cab = `${i + 1}. [${r.detalhes?.fonteNome ?? 'Diário Oficial'} · ${r.publicadoEm ?? ''}${r.detalhes?.edicao ? ` · edição ${r.detalhes.edicao}` : ''}]`;
+  const local = r.uf ? `${r.municipio ? `${r.municipio}/` : ''}${r.uf}` : 'abrangência nacional';
+  const cab = `${i + 1}. [${r.detalhes?.fonteNome ?? r.fonte} · ${local} · ${r.publicadoEm ?? ''}${r.detalhes?.edicao ? ` · edição ${r.detalhes.edicao}` : ''}]`;
   return `${cab}\n${String(r.detalhes?.textoBruto ?? '').trim()}`;
 }
 
@@ -228,15 +229,16 @@ export async function extrair(lista) {
     processados: 0, relevantes: 0, descartados: 0, duvidas: 0, pendentes: 0,
     lotes: 0, lotesFalhos: 0, requisicoes: 0, tokensEntrada: 0, tokensSaida: 0, custoUsd: 0,
   };
-  const fila = lista.filter((r) => r.fonte === 'querido-diario' && !['S', 'N', 'D'].includes(r.ia) && r.detalhes?.textoBruto);
+  // Qualquer fonte que entregue detalhes.textoBruto passa pelo extrator (Diário Oficial, páginas de editais).
+  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia) && r.detalhes?.textoBruto);
   if (!chave) {
     stats.pendentes = fila.length;
-    if (fila.length) log(`IA extrator: ANTHROPIC_API_KEY não definida; ${fila.length} trechos de diário ficam pendentes (com texto bruto guardado).`);
+    if (fila.length) log(`IA extrator: ANTHROPIC_API_KEY não definida; ${fila.length} textos ficam pendentes (com texto bruto guardado).`);
     return stats;
   }
   if (fila.length === 0) return stats;
 
-  log(`IA extrator: ${fila.length} trechos de diário oficial, em lotes de ${EXTRATOR_LOTE}.`);
+  log(`IA extrator: ${fila.length} textos (diários e páginas de editais), em lotes de ${EXTRATOR_LOTE}.`);
   for (let i = 0; i < fila.length; i += EXTRATOR_LOTE) {
     const lote = fila.slice(i, i + EXTRATOR_LOTE);
     stats.lotes++;
@@ -279,6 +281,88 @@ export async function extrair(lista) {
     if (i + EXTRATOR_LOTE < fila.length) await dormir(IA_INTERVALO_MS);
   }
   stats.custoUsd = Number(((stats.tokensEntrada * IA_PRECO_ENTRADA_USD_POR_MTOK + stats.tokensSaida * IA_PRECO_SAIDA_USD_POR_MTOK) / 1e6).toFixed(4));
+  return stats;
+}
+
+// ---------------------------------------------------------------- busca de prazo no texto integral
+
+const PRAZOS_MAX_POR_EXECUCAO = 40;
+const PRAZOS_JANELA = 6000; // caracteres de texto enviados ao modelo por item
+const PROMPT_PRAZO = `Você recebe o título de uma oportunidade pública (edital, chamamento, prêmio ou contratação) e um trecho do texto integral onde ela foi publicada. Encontre, APENAS se estiver escrito no texto, o prazo final de inscrição ou de envio de propostas dessa oportunidade específica, a data de início das inscrições e o valor total em reais.
+
+Responda apenas com um JSON em uma linha: {"encerramento":"AAAA-MM-DD" ou null,"abertura":"AAAA-MM-DD" ou null,"valor":número ou null}. Converta datas brasileiras (dd/mm/aaaa) para AAAA-MM-DD. Se houver prazo prorrogado, use a data mais recente. Nunca invente: na dúvida, null.`;
+
+async function baixarTexto(url) {
+  const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36' }, signal: AbortSignal.timeout(90_000) });
+  if (!res.ok) throw new ErroHttp(res.status, url, '', null);
+  const bruto = await res.text();
+  const ehHtml = /<html|<body|<div/i.test(bruto.slice(0, 2000));
+  return ehHtml ? bruto.replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ') : bruto.replace(/\s+/g, ' ');
+}
+
+/** Janela do texto ao redor do primeiro trecho que lembra o título (número do edital ou palavras do título). */
+function janelaRelevante(texto, titulo) {
+  const t = normalizar(texto);
+  const candidatos = [];
+  const numero = /(\d{1,4})\s*\/\s*(\d{4})/.exec(titulo);
+  if (numero) candidatos.push(`${numero[1]}/${numero[2]}`, `${numero[1].padStart(3, '0')}/${numero[2]}`);
+  const palavras = normalizar(titulo).split(' ').filter((p) => p.length >= 5).slice(0, 4);
+  if (palavras.length >= 2) candidatos.push(palavras.slice(0, 2).join(' '));
+  candidatos.push(...palavras);
+  let pos = -1;
+  for (const c of candidatos) { pos = t.indexOf(normalizar(c)); if (pos >= 0) break; }
+  if (pos < 0) return texto.length <= PRAZOS_JANELA ? texto : null;
+  const ini = Math.max(0, pos - Math.round(PRAZOS_JANELA * 0.3));
+  return texto.slice(ini, ini + PRAZOS_JANELA);
+}
+
+/**
+ * Para itens aprovados/dúvida sem prazo e com texto integral disponível (detalhes.textoUrl), procura o prazo
+ * no texto completo. Tenta uma vez por item (detalhes.prazoBuscado). Estatísticas em meta.json (ia.prazos).
+ */
+export async function completarPrazos(lista) {
+  const chave = process.env.ANTHROPIC_API_KEY;
+  const stats = { ativo: Boolean(chave), tentados: 0, encontrados: 0, semTexto: 0, falhas: 0, requisicoes: 0, tokensEntrada: 0, tokensSaida: 0, custoUsd: 0 };
+  const fila = lista.filter((r) => (r.ia === 'S' || r.ia === 'D') && !r.encerramento && r.detalhes?.textoUrl && !r.detalhes?.prazoBuscado).slice(0, PRAZOS_MAX_POR_EXECUCAO);
+  if (!chave || fila.length === 0) return stats;
+  log(`IA prazos: ${fila.length} itens sem prazo com texto integral disponível.`);
+  const cache = new Map();
+  for (const r of fila) {
+    stats.tentados++;
+    r.detalhes.prazoBuscado = true;
+    try {
+      let texto = cache.get(r.detalhes.textoUrl);
+      if (!texto) { texto = await baixarTexto(r.detalhes.textoUrl); cache.set(r.detalhes.textoUrl, texto); }
+      const janela = janelaRelevante(texto, r.titulo);
+      if (!janela) { stats.semTexto++; continue; }
+      stats.requisicoes++;
+      const res = await fetch(IA_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-api-key': chave, 'anthropic-version': IA_VERSAO },
+        body: JSON.stringify({
+          model: IA_MODELO, max_tokens: 120, system: PROMPT_PRAZO, thinking: { type: 'disabled' }, output_config: { effort: 'low' },
+          messages: [{ role: 'user', content: `Título: ${r.titulo}\nÓrgão: ${r.orgao ?? 'não informado'}\nPublicado em: ${r.publicadoEm ?? '?'}\n\nTexto:\n${janela}` }],
+        }),
+        signal: AbortSignal.timeout(IA_TIMEOUT_MS),
+      });
+      if (!res.ok) throw new ErroHttp(res.status, IA_URL, await res.text().catch(() => ''), res.headers.get('retry-after'));
+      const resposta = await res.json();
+      stats.tokensEntrada += resposta.usage?.input_tokens ?? 0;
+      stats.tokensSaida += resposta.usage?.output_tokens ?? 0;
+      const json = extrairJsonTolerante((resposta.content ?? []).filter((b) => b.type === 'text').map((b) => b.text).join(''));
+      const enc = dataISOouNull(json?.encerramento);
+      if (enc) { r.encerramento = enc; stats.encontrados++; }
+      const ab = dataISOouNull(json?.abertura);
+      if (ab && !r.abertura) r.abertura = ab;
+      if (typeof json?.valor === 'number' && json.valor > 0 && !r.valor) r.valor = json.valor;
+      await dormir(IA_INTERVALO_MS);
+    } catch (erro) {
+      stats.falhas++;
+      log(`  IA prazos: ${r.titulo.slice(0, 60)}… falhou (${descreverErro(erro)})`);
+    }
+  }
+  stats.custoUsd = Number(((stats.tokensEntrada * IA_PRECO_ENTRADA_USD_POR_MTOK + stats.tokensSaida * IA_PRECO_SAIDA_USD_POR_MTOK) / 1e6).toFixed(4));
+  log(`IA prazos: ${stats.encontrados} prazos encontrados em ${stats.tentados} tentativas (${stats.semTexto} sem trecho localizável, ${stats.falhas} falhas) · US$ ${stats.custoUsd}`);
   return stats;
 }
 
@@ -360,7 +444,7 @@ export async function classificar(lista) {
     tokensEntrada: 0, tokensSaida: 0, custoUsd: 0,
     porTipo: {},
   };
-  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia) && r.fonte !== 'querido-diario');
+  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia) && !r.detalhes?.textoBruto);
 
   if (!chave) {
     for (const r of fila) r.ia = 'pendente';

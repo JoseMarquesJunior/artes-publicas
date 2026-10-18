@@ -4,7 +4,8 @@
     "Um edital é candidato se o objeto contiver alguma palavra de 'incluir' e nenhuma de 'excluir'; depois a IA (claude-haiku-5-5) confirma ou descarta.",
     "A palavra precisa começar no início de uma palavra do texto e pode continuar por até 3 letras: 'curador' pega 'curadores' e 'curadoria', mas não 'procurador'; 'arte' pega 'artes', mas não 'artesanato'.",
     "Plurais em -ções, -ais e -ões são reconhecidos automaticamente (exposição/exposições, mural/murais).",
-    "'excluir' corta o óbvio antes de gastar tokens com a IA. Depois de salvar, a próxima atualização reaplica a lista a toda a base."
+    "'excluir' corta o óbvio antes de gastar tokens com a IA. Depois de salvar, a próxima atualização reaplica a lista a toda a base.",
+    "Termos musicais em 'excluir' (show, banda, cantor...) cortam contratações de atrações musicais antes da IA; um edital misto que cite 'banda' no objeto também é cortado — é o preço de não gastar tokens com centenas de shows por dia."
   ],
   "incluir": [
     "artes visuais",
@@ -77,6 +78,19 @@
     "exposição a agentes",
     "exposição ocupacional",
     "agentes nocivos",
-    "insalubridade"
+    "insalubridade",
+    "show",
+    "banda",
+    "cantor",
+    "cantora",
+    "atração musical",
+    "apresentação musical",
+    "dupla sertaneja",
+    "trio elétrico",
+    "grupo musical",
+    "evento musical",
+    "festival de música",
+    "orquestra",
+    "coral"
   ]
 }

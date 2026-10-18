@@ -87,8 +87,9 @@ export async function coletar({ instancia, dias = 2, jaProcessados = new Set() }
       let total = null;
       try {
         while (true) {
+          // A API cai com frequência (503/520/timeout); espera longa entre tentativas: 15 s, 30 s, 60 s.
           const { corpo } = await requisitarJson(montarUrl(base, { ibge: territorio.ibge, consulta, desde, ate, offset }), {
-            contexto, rotulo: `[querido-diario ${territorio.nome}] `, maxTentativas: 3, espera429Ms: 10_000,
+            contexto, rotulo: `[querido-diario ${territorio.nome}] `, maxTentativas: 4, espera429Ms: 15_000, esperaErroMs: 15_000, timeoutMs: 90_000,
           });
           const lista = Array.isArray(corpo?.gazettes) ? corpo.gazettes : [];
           total = corpo?.total_gazettes ?? total ?? 0;
@@ -154,6 +155,7 @@ export async function coletar({ instancia, dias = 2, jaProcessados = new Set() }
         ibge: d.ibge,
         edicao: d.edicao,
         edicaoExtra: d.extra,
+        textoUrl: d.txtUrl, // texto integral da edição; usado para procurar o prazo quando o trecho não o traz
         textoBruto: texto, // removido pelo extrator depois de processado
       },
     });
