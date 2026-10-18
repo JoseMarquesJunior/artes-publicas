@@ -1,69 +1,69 @@
 {
-  "atualizadoEm": "2026-10-18T14:53:30.244Z",
-  "total": 4288,
-  "totalNovos": 0,
-  "totalAtualizados": 0,
+  "atualizadoEm": "2026-10-18T15:14:52.425Z",
+  "total": 4292,
+  "totalNovos": 4,
+  "totalAtualizados": 241,
   "removidos": {
     "antigos": 0,
     "foraDoFiltro": 0,
     "reprovadosAntigos": 0,
-    "duplicadosConhecidos": 0
+    "duplicadosConhecidos": 2
   },
   "migrados": 0,
   "base": {
-    "aprovados": 724,
-    "reprovados": 2458,
-    "duvidas": 1106,
+    "aprovados": 285,
+    "reprovados": 3596,
+    "duvidas": 411,
     "pendentes": 0
   },
   "porAcionavel": {
-    "aberta": 561,
+    "aberta": 563,
     "fluxo-continuo": 4,
     "encerrada": 948,
-    "radar": 2775,
-    "prazoDesconhecido": 13
+    "radar": 2777,
+    "prazoDesconhecido": 15
   },
   "porAcionavelAprovados": {
-    "aberta": 91,
+    "aberta": 30,
     "fluxo-continuo": 2,
-    "abertasMG": 22,
-    "encerrada": 134,
-    "radar": 497
+    "abertasMG": 9,
+    "encerrada": 44,
+    "radar": 209
   },
   "porTipo": {
     "outro": {
-      "total": 4,
+      "total": 6,
       "S": 0,
-      "N": 3,
+      "N": 5,
       "D": 1,
       "pendente": 0
     },
     "contratacao": {
       "total": 4258,
-      "S": 713,
-      "N": 2453,
-      "D": 1092,
+      "S": 279,
+      "N": 3587,
+      "D": 392,
       "pendente": 0
     },
     "fomento": {
       "total": 17,
-      "S": 5,
-      "N": 2,
-      "D": 10,
+      "S": 4,
+      "N": 4,
+      "D": 9,
       "pendente": 0
     },
     "chamamento": {
-      "total": 6,
-      "S": 5,
+      "total": 7,
+      "S": 1,
       "N": 0,
-      "D": 1,
+      "D": 6,
       "pendente": 0
     },
     "premio": {
-      "total": 2,
+      "total": 3,
       "S": 1,
       "N": 0,
-      "D": 1,
+      "D": 2,
       "pendente": 0
     },
     "residencia": {
@@ -83,8 +83,62 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 5804,
+      "candidatos": 221,
+      "requisicoes": 120,
+      "erro": null,
+      "bloqueios429": 1,
+      "periodo": {
+        "de": "2026-10-16",
+        "ate": "2026-10-18",
+        "dias": 2
+      },
+      "modalidades": [
+        {
+          "codigo": 3,
+          "nome": "Concurso",
+          "lidos": 0,
+          "candidatos": 0,
+          "paginas": 0,
+          "falhas": 0
+        },
+        {
+          "codigo": 8,
+          "nome": "Dispensa de licitação",
+          "lidos": 3070,
+          "candidatos": 93,
+          "paginas": 62,
+          "falhas": 0
+        },
+        {
+          "codigo": 9,
+          "nome": "Inexigibilidade",
+          "lidos": 1028,
+          "candidatos": 85,
+          "paginas": 21,
+          "falhas": 0
+        },
+        {
+          "codigo": 12,
+          "nome": "Credenciamento",
+          "lidos": 75,
+          "candidatos": 6,
+          "paginas": 2,
+          "falhas": 0
+        },
+        {
+          "codigo": 6,
+          "nome": "Pregão eletrônico",
+          "lidos": 1631,
+          "candidatos": 37,
+          "paginas": 33,
+          "falhas": 0
+        }
+      ],
+      "erros": [],
+      "novos": 0,
       "naBase": 4256,
-      "aprovadosNaBase": 713
+      "aprovadosNaBase": 279
     },
     {
       "fonte": "mapas:bh",
@@ -95,7 +149,7 @@
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
       "naBase": 1,
-      "aprovadosNaBase": 1
+      "aprovadosNaBase": 0
     },
     {
       "fonte": "mapas:lagoa-santa",
@@ -116,8 +170,15 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 2,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 2,
-      "aprovadosNaBase": 0
+      "aprovadosNaBase": 1
     },
     {
       "fonte": "mapas:santa-luzia",
@@ -127,6 +188,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 7,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 7,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -138,6 +206,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 1,
+      "candidatos": 1,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 0
     },
@@ -150,7 +225,7 @@
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
       "naBase": 11,
-      "aprovadosNaBase": 6
+      "aprovadosNaBase": 2
     },
     {
       "fonte": "dom-bh",
@@ -158,6 +233,26 @@
       "tipo": "dom-bh",
       "ativo": true,
       "observacao": "API pública da Prodabel (sem token): edições por data → sumário → conteúdo de cada ato. Substitui a cobertura de BH que o Querido Diário perdeu em março de 2026.",
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
+      "lidos": 164,
+      "candidatos": 0,
+      "requisicoes": 5,
+      "erro": null,
+      "edicoes": 2,
+      "atos": 164,
+      "pulados": 2,
+      "erros": [],
+      "novos": 0,
+      "naBase": 0,
+      "aprovadosNaBase": 0
+    },
+    {
+      "fonte": "amm",
+      "nome": "Diário Oficial dos Municípios Mineiros (AMM)",
+      "tipo": "amm",
+      "ativo": true,
+      "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
       "naBase": 0,
@@ -171,8 +266,14 @@
       "observacao": "Editais federais do MinC, inclusive os ligados à Lei Rouanet (a Rouanet em si é um mecanismo de incentivo, não um canal de editais).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 2,
-      "aprovadosNaBase": 2
+      "lidos": 3,
+      "candidatos": 3,
+      "requisicoes": 5,
+      "erro": null,
+      "erros": [],
+      "novos": 1,
+      "naBase": 3,
+      "aprovadosNaBase": 1
     },
     {
       "fonte": "funarte",
@@ -182,6 +283,17 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 3,
+      "candidatos": 3,
+      "requisicoes": 6,
+      "erro": null,
+      "erros": [
+        {
+          "janela": "https://www.gov.br/funarte/pt-br/editais/editais-abertos/2a-edicao-edital-de-selecao-cultura-viva-fomento-a-rede-de-pontoes-cultura-viva",
+          "mensagem": "HTTP 403"
+        }
+      ],
+      "novos": 0,
       "naBase": 3,
       "aprovadosNaBase": 0
     },
@@ -193,16 +305,73 @@
       "observacao": "Os editais são PDFs sem página própria; o registro usa o título do link (que costuma trazer 'prazo prorrogado até'). Retificações do mesmo edital viram links extras.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 154,
+      "candidatos": 14,
+      "requisicoes": 2,
+      "erro": null,
+      "erros": [],
+      "novos": 0,
       "naBase": 12,
       "aprovadosNaBase": 2
+    },
+    {
+      "fonte": "pbh-fmc",
+      "nome": "Fundação Municipal de Cultura de BH (licitações e editais)",
+      "tipo": "html",
+      "ativo": true,
+      "observacao": "A página só tem editais até 2018; mantida para captar o que a FMC voltar a publicar ali. Os atos atuais da FMC entram pela fonte dom-bh.",
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
+      "lidos": 33,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "erros": [],
+      "novos": 0,
+      "naBase": 0,
+      "aprovadosNaBase": 0
+    },
+    {
+      "fonte": "fcs",
+      "nome": "Fundação Clóvis Salgado (editais)",
+      "tipo": "html",
+      "ativo": true,
+      "observacao": null,
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
+      "lidos": 25,
+      "candidatos": 3,
+      "requisicoes": 1,
+      "erro": null,
+      "erros": [],
+      "novos": 3,
+      "naBase": 3,
+      "aprovadosNaBase": 0
+    },
+    {
+      "fonte": "iepha",
+      "nome": "IEPHA-MG (editais)",
+      "tipo": "html",
+      "ativo": true,
+      "observacao": null,
+      "bloqueadoNoCI": false,
+      "puladaNestaExecucao": false,
+      "lidos": 2,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "erros": [],
+      "novos": 0,
+      "naBase": 0,
+      "aprovadosNaBase": 0
     },
     {
       "fonte": "mapas:nacional",
       "nome": "Mapa da Cultura (nacional)",
       "tipo": "mapas",
-      "ativo": false,
-      "observacao": "Desligada em 2026-10-17: a API responde 403 com desafio JavaScript do Cloudflare para qualquer cliente que não seja navegador. Religue se o bloqueio cair.",
-      "bloqueadoNoCI": false,
+      "ativo": true,
+      "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
+      "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
       "naBase": 0,
       "aprovadosNaBase": 0
@@ -210,49 +379,80 @@
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": false,
-    "classificados": 0,
-    "aprovados": 0,
-    "reprovados": 0,
-    "duvidas": 0,
+    "ativo": true,
+    "classificados": 1830,
+    "aprovados": 296,
+    "reprovados": 1136,
+    "duvidas": 398,
     "pendentes": 0,
-    "lotes": 0,
+    "lotes": 61,
     "lotesFalhos": 0,
-    "requisicoes": 0,
-    "tokensEntrada": 0,
-    "tokensSaida": 0,
-    "custoUsd": 0,
-    "porTipo": {},
-    "candidatosNestaExecucao": 0,
+    "requisicoes": 61,
+    "tokensEntrada": 343659,
+    "tokensSaida": 16876,
+    "custoUsd": 0.0428,
+    "porTipo": {
+      "contratacao": {
+        "S": 290,
+        "N": 1134,
+        "D": 381
+      },
+      "chamamento": {
+        "S": 1,
+        "N": 0,
+        "D": 5
+      },
+      "fomento": {
+        "S": 4,
+        "N": 2,
+        "D": 9
+      },
+      "premio": {
+        "S": 1,
+        "N": 0,
+        "D": 1
+      },
+      "outro": {
+        "S": 0,
+        "N": 0,
+        "D": 1
+      },
+      "residencia": {
+        "S": 0,
+        "N": 0,
+        "D": 1
+      }
+    },
+    "candidatosNestaExecucao": 247,
     "extracao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": false,
-      "processados": 0,
+      "ativo": true,
+      "processados": 4,
       "relevantes": 0,
-      "descartados": 0,
-      "duvidas": 0,
+      "descartados": 2,
+      "duvidas": 2,
       "pendentes": 0,
-      "lotes": 0,
+      "lotes": 1,
       "lotesFalhos": 0,
-      "requisicoes": 0,
-      "tokensEntrada": 0,
-      "tokensSaida": 0,
-      "custoUsd": 0
+      "requisicoes": 1,
+      "tokensEntrada": 2655,
+      "tokensSaida": 663,
+      "custoUsd": 0.0006
     },
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": false,
-      "categorizados": 0,
+      "ativo": true,
+      "categorizados": 63,
       "pendentes": 0,
-      "lotes": 0,
+      "lotes": 3,
       "lotesFalhos": 0,
-      "requisicoes": 0,
-      "tokensEntrada": 0,
-      "tokensSaida": 0,
-      "custoUsd": 0
+      "requisicoes": 3,
+      "tokensEntrada": 7034,
+      "tokensSaida": 411,
+      "custoUsd": 0.0009
     },
     "prazos": {
-      "ativo": false,
+      "ativo": true,
       "tentados": 0,
       "encontrados": 0,
       "semTexto": 0,
@@ -262,9 +462,9 @@
       "tokensSaida": 0,
       "custoUsd": 0
     },
-    "rebaixadosPortao": 540,
+    "rebaixadosPortao": 11,
     "revisadosAplicados": 0,
-    "reclassificacao": false
+    "reclassificacao": true
   },
   "queridoDiario": {
     "descartadosNestaExecucao": 0,
@@ -274,9 +474,24 @@
     "fundidosNestaExecucao": 0,
     "duplicadosConhecidos": 8
   },
-  "periodoPncp": null,
+  "periodoPncp": {
+    "de": "2026-10-16",
+    "ate": "2026-10-18",
+    "dias": 2
+  },
   "retencaoDias": 365,
-  "duracaoSegundos": 1,
-  "erros": [],
-  "errosPorFonte": {}
+  "duracaoSegundos": 514,
+  "erros": [
+    {
+      "fonte": "funarte",
+      "mensagem": "https://www.gov.br/funarte/pt-br/editais/editais-abertos/2a-edicao-edital-de-selecao-cultura-viva-fomento-a-rede-de-pontoes-cultura-viva: HTTP 403"
+    }
+  ],
+  "errosPorFonte": {
+    "funarte": {
+      "falhas": 1,
+      "total": null,
+      "completa": false
+    }
+  }
 }
