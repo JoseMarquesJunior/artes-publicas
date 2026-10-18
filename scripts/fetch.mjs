@@ -40,9 +40,14 @@ const RETENCAO_DIAS = 365;        // registros mais antigos saem da base
 const DESCARTAR_N_DIAS = 30;      // reprovados pela IA saem depois de N dias
 const DEDUP_SIMILARIDADE = 0.5;   // Jaccard mínimo entre títulos para considerar duplicata
 
-const ADAPTADORES = { pncp, mapas, 'querido-diario': queridoDiario, html: paginas, 'dom-bh': domBh, amm };
+const ADAPTADORES = { pncp, mapas, 'querido-diario': queridoDiario, html: paginas, paginas, 'dom-bh': domBh, amm };
 /** Fontes "textuais": a IA extrai tudo do texto, e trechos/links distintos do mesmo edital podem se fundir entre si. */
-const FONTES_TEXTUAIS = new Set(['querido-diario', 'html', 'dom-bh', 'amm']);
+const FONTES_TEXTUAIS = new Set(['querido-diario', 'html', 'paginas', 'dom-bh', 'amm']);
+// Fontes cujos itens "N" saem da base e vão para o arquivo de descartados (para não voltarem à IA).
+const TIPOS_DESCARTAVEIS = new Set(['querido-diario', 'dom-bh', 'amm', 'paginas']);
+// Custo estimado por item no extrator (≈ 1.000 tokens de entrada + 340 de saída no Haiku) e teto por rodada das instituições.
+const CUSTO_ESTIMADO_POR_ITEM_USD = 0.0006;
+const TETO_INSTITUICOES_USD = 0.20;
 /** Diários oficiais: trechos "N" saem da base e vão para o arquivo de descartados; itens já vistos não são recoletados. */
 const TIPOS_DIARIO = new Set(['querido-diario', 'dom-bh', 'amm']);
 
@@ -255,7 +260,8 @@ function derivarAcionavel(r, hojeISO) {
 // ---------------------------------------------------------------- deduplicação entre fontes
 
 const camposPreenchidos = (r) => Object.values(r).filter((v) => v !== null && v !== undefined && v !== '' && !(Array.isArray(v) && v.length === 0)).length;
-const PRIORIDADE_FONTE = (r) => (r.fonte === 'pncp' || r.fonte.startsWith('mapas') ? 1 : 0); // dados estruturados vencem (Fase B: querido-diario = 0)
+// Dados estruturados vencem o diário (querido-diario = 0); a página da própria instituição vence tudo (link direto ao edital).
+const PRIORIDADE_FONTE = (r) => ((tipoPorFonte.get(r.fonte) ?? r.fonte) === 'paginas' ? 2 : r.fonte === 'pncp' || r.fonte.startsWith('mapas') ? 1 : 0);
 
 /**
  * Funde registros de FONTES DIFERENTES que parecem ser o mesmo edital: títulos similares (Jaccard >= DEDUP_SIMILARIDADE)
@@ -334,7 +340,7 @@ async function main() {
   const revisados = Object.fromEntries(Object.entries(await lerJson(ARQ_REVISADOS, {})).filter(([k]) => !k.startsWith('_')));
   const regioes = mapaDeRegioes(config);
   // Trechos de diário já na base ou já descartados pela IA não voltam para a fila (por fonte).
-  const ehDiario = (r) => TIPOS_DIARIO.has(tipoPorFonte.get(r.fonte) ?? r.fonte);
+  const ehDiario = (r) => TIPOS_DESCARTAVEIS.has(tipoPorFonte.get(r.fonte) ?? r.fonte);
   const processadosPorFonte = (fonte) => new Set([
     ...existentes.filter((r) => r.fonte === fonte).map((r) => r.idNaFonte),
     ...descartadosQd.filter((d) => (d.fonte ?? 'querido-diario') === fonte).map((d) => d.idNaFonte),
@@ -365,7 +371,7 @@ async function main() {
         ? await adaptador.coletar({ dias: args.dias, ate: args.ate, intervalo: args.intervalo, paralelo: args.paralelo, palavras })
         : TIPOS_DIARIO.has(fonte.tipo)
           ? await adaptador.coletar({ instancia: fonte, dias: args.dias, palavras, jaProcessados: processadosPorFonte(fonte.fonte) })
-          : await adaptador.coletar({ instancia: fonte, palavras }); // mapas e html
+          : await adaptador.coletar({ instancia: fonte, palavras, jaProcessados: processadosPorFonte(fonte.fonte) }); // mapas, html e paginas
       coletados.push(...resultado.registros);
       Object.assign(stat, resultado.stats, { candidatos: resultado.registros.length });
       if (resultado.stats.erros?.length) erros.push(...resultado.stats.erros.map((e) => ({ fonte: fonte.fonte, mensagem: `${e.janela}: ${e.mensagem}` })));
@@ -397,8 +403,36 @@ async function main() {
     }
     log(`Reclassificação: ${n} itens S/D voltam à fila da IA (veredito anterior guardado em iaAnterior).`);
   }
+  // Teto de custo das instituições (tipo paginas): se os itens novos passarem de TETO_INSTITUICOES_USD, corta por fonte e avisa.
+  const avisos = [];
+  const pendentesInstituicoes = mesclado.lista.filter((r) => (tipoPorFonte.get(r.fonte) ?? r.fonte) === 'paginas' && r.detalhes?.textoBruto !== undefined && !['S', 'N', 'D'].includes(r.ia));
+  const custoPrevistoInstituicoesUsd = Number((pendentesInstituicoes.length * CUSTO_ESTIMADO_POR_ITEM_USD).toFixed(4));
+  if (custoPrevistoInstituicoesUsd > TETO_INSTITUICOES_USD) {
+    const fontesInst = [...new Set(pendentesInstituicoes.map((r) => r.fonte))];
+    const porFonteMax = Math.max(1, Math.floor(TETO_INSTITUICOES_USD / CUSTO_ESTIMADO_POR_ITEM_USD / fontesInst.length));
+    const contagem = {};
+    const cortados = new Set();
+    for (const r of pendentesInstituicoes) { contagem[r.fonte] = (contagem[r.fonte] ?? 0) + 1; if (contagem[r.fonte] > porFonteMax) cortados.add(r.id); }
+    mesclado.lista = mesclado.lista.filter((r) => !cortados.has(r.id));
+    const aviso = `Instituições: ${pendentesInstituicoes.length} páginas novas (≈ US$ ${custoPrevistoInstituicoesUsd}) passam do teto de US$ ${TETO_INSTITUICOES_USD}; ${cortados.size} ficaram para a próxima rodada (máx. ${porFonteMax} por fonte). Reduza maxLinks em fontes.json se isso se repetir.`;
+    avisos.push(aviso);
+    log(`AVISO: ${aviso}`);
+  }
+  const pendentesPorFonte = {};
+  for (const r of mesclado.lista) if (ehTextual(r) && r.detalhes?.textoBruto !== undefined && !['S', 'N', 'D'].includes(r.ia)) (pendentesPorFonte[r.fonte] ??= new Set()).add(r.id);
+
   const ia = await classificar(mesclado.lista);
   const extracao = await extrair(mesclado.lista);
+  // Por fonte textual: quantos foram extraídos nesta rodada, quantos a IA considerou relevantes e o custo rateado.
+  for (const s of statsFontes) {
+    const ids = pendentesPorFonte[s.fonte];
+    if (!ids) continue;
+    const itens = mesclado.lista.filter((r) => ids.has(r.id));
+    s.extraidos = itens.filter((r) => ['S', 'N', 'D'].includes(r.ia)).length;
+    s.relevantes = itens.filter((r) => r.ia === 'S').length;
+    s.duvidas = itens.filter((r) => r.ia === 'D').length;
+    s.custoUsd = extracao.processados ? Number((extracao.custoUsd * s.extraidos / extracao.processados).toFixed(4)) : 0;
+  }
   const categorizacao = await categorizar(mesclado.lista);
   const participacao = await completarParticipacao(mesclado.lista);
   const prazos = await completarPrazos(mesclado.lista);
@@ -407,6 +441,8 @@ async function main() {
   // Trechos de diário marcados "N" saem da base e vão para o arquivo de descartados (só fonte + id + data).
   const descartadosAgora = mesclado.lista.filter((r) => ehDiario(r) && r.ia === 'N');
   for (const r of descartadosAgora) descartadosQd.push({ fonte: r.fonte, idNaFonte: r.idNaFonte, data: r.publicadoEm ?? r.coletadoEm?.slice(0, 10) ?? null });
+  // Exemplos do que o extrator descartou nas páginas de instituições (título/resumo que a IA deu ao trecho = motivo), para conferência.
+  const descartadosInstituicoes = descartadosAgora.filter((r) => (tipoPorFonte.get(r.fonte) ?? r.fonte) === 'paginas').map((r) => ({ fonte: r.fonte, titulo: r.titulo, motivo: r.resumo ?? null, link: r.link }));
   mesclado.lista = mesclado.lista.filter((r) => !(ehDiario(r) && r.ia === 'N'));
   atribuirRegiao(mesclado.lista, regioes);
   const dedup = deduplicar(mesclado.lista, duplicadosConhecidos);
@@ -446,7 +482,7 @@ async function main() {
   const duracaoSegundos = Math.round((Date.now() - inicioExecucao) / 1000);
   const totalNovos = Object.values(mesclado.novosPorFonte).reduce((s, n) => s + n, 0);
   const fontesMeta = (config.fontes ?? []).map((f) => ({
-    fonte: f.fonte, nome: f.nome ?? f.fonte, tipo: f.tipo, ativo: f.ativo !== false, observacao: f.observacao ?? null,
+    fonte: f.fonte, nome: f.nome ?? f.fonte, tipo: f.tipo, grupo: f.grupo ?? (f.tipo === 'paginas' ? 'instituicoes' : 'orgaos-publicos'), ativo: f.ativo !== false, observacao: f.observacao ?? null,
     bloqueadoNoCI: Boolean(f.bloqueadoNoCI), puladaNestaExecucao: puladas.includes(f),
     ...(statsFontes.find((s) => s.fonte === f.fonte) ?? {}),
     naBase: porFonte[f.fonte]?.total ?? 0, aprovadosNaBase: porFonte[f.fonte]?.S ?? 0,
@@ -471,6 +507,8 @@ async function main() {
     periodoPncp: statsFontes.find((s) => s.fonte === 'pncp')?.periodo ?? null,
     retencaoDias: RETENCAO_DIAS,
     duracaoSegundos,
+    instituicoes: { pendentesNestaExecucao: pendentesInstituicoes.length, custoPrevistoUsd: custoPrevistoInstituicoesUsd, tetoUsd: TETO_INSTITUICOES_USD, descartadosNestaExecucao: descartadosInstituicoes.length, descartadosExemplos: descartadosInstituicoes.slice(0, 12) },
+    avisos,
     erros,
     // Resumo por fonte para a página: {fonte: {falhas, total}} — total = consultas/janelas tentadas, quando conhecido.
     errosPorFonte: Object.fromEntries(statsFontes.filter((s) => erros.some((e) => e.fonte === s.fonte)).map((s) => [s.fonte, {
@@ -497,6 +535,16 @@ async function main() {
   for (const s of statsFontes) {
     console.log(`    ${s.fonte.padEnd(26)} ${String(s.lidos).padStart(7)} lidos ${String(s.candidatos).padStart(6)} candidatos ${String(s.novos ?? 0).padStart(5)} novos ${String(s.requisicoes ?? 0).padStart(5)} req${s.erro ? `  ERRO: ${s.erro}` : ''}`);
   }
+  const instituicoes = statsFontes.filter((s) => s.tipo === 'paginas');
+  if (instituicoes.length) {
+    console.log('  Instituições (páginas lidas · links seguidos · extraídos → relevantes · custo):');
+    for (const s of instituicoes) {
+      const status = s.erro ? `FALHOU: ${s.erro}` : s.erros?.length ? `parcial (${s.erros.length} erro(s))` : 'ok';
+      console.log(`    ${s.fonte.padEnd(26)} ${String(s.paginasLidas ?? 0).padStart(3)} pág. ${String(s.linksSeguidos ?? 0).padStart(3)} links ${String(s.extraidos ?? 0).padStart(3)} extraídos → ${String(s.relevantes ?? 0).padStart(3)} relevantes${s.duvidas ? ` (${s.duvidas} em dúvida)` : ''} · US$ ${(s.custoUsd ?? 0).toFixed(4)} · ${status}`);
+    }
+    console.log(`    custo previsto das instituições nesta rodada: US$ ${custoPrevistoInstituicoesUsd} (teto US$ ${TETO_INSTITUICOES_USD})`);
+  }
+  for (const a of avisos) console.log(`  AVISO: ${a}`);
   if (ia.ativo) {
     console.log(`  IA (${ia.modelo}): ${ia.classificados} classificados → ${ia.aprovados} S · ${ia.reprovados} N · ${ia.duvidas} D · ${ia.pendentes} pendentes${ia.lotesFalhos ? ` · ${ia.lotesFalhos} lote(s) com falha` : ''}`);
     for (const [tipo, t] of Object.entries(ia.porTipo)) console.log(`    ${tipo.padEnd(14)} S ${t.S} · N ${t.N} · D ${t.D}`);

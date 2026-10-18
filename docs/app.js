@@ -250,8 +250,16 @@
   function mostrarFontes(meta) {
     const ativas = Array.isArray(meta?.fontes) ? meta.fontes.filter((f) => f.ativo) : [];
     if (!ativas.length) return;
-    const nomes = ativas.map((f) => (f.tipo === 'pncp' ? `${f.nome} (contratações de serviço)` : f.bloqueadoNoCI ? `${f.nome} (atualização manual)` : f.nome));
-    el.fontesAviso.textContent = `Fontes ativas: ${nomes.join(', ')}. Editais publicados em outros canais ainda não aparecem aqui.`;
+    const rotuloFonte = (f) => (f.tipo === 'pncp' ? `${f.nome} (contratações de serviço)` : f.bloqueadoNoCI ? `${f.nome} (atualização manual)` : f.nome);
+    const GRUPOS = [['orgaos-publicos', 'Órgãos públicos'], ['instituicoes', 'Instituições'], ['residencias', 'Residências']];
+    const grupoDe = (f) => (GRUPOS.some(([g]) => g === f.grupo) ? f.grupo : 'orgaos-publicos');
+    el.fontesAviso.textContent = 'Fontes ativas. ';
+    for (const [grupo, rotulo] of GRUPOS) {
+      const nomes = ativas.filter((f) => grupoDe(f) === grupo).map(rotuloFonte);
+      if (!nomes.length) continue;
+      el.fontesAviso.append(h('strong', null, `${rotulo}: `), `${nomes.join(', ')}. `);
+    }
+    el.fontesAviso.append('Editais publicados em outros canais ainda não aparecem aqui.');
     const inativas = (meta.fontes ?? []).filter((f) => !f.ativo && f.observacao);
     if (inativas.length) {
       el.fontesAviso.append(' ');
@@ -471,7 +479,7 @@
     card.append(topo);
 
     // título (+ texto completo ou resumo); "ver mais" abre o texto inteiro e os detalhes (amparo legal etc.)
-    const extraido = r.fonte === 'querido-diario' || r.fonte === 'dom-bh' || /^(minc|funarte|secult)/.test(r.fonte);
+    const extraido = r.fonte === 'querido-diario' || r.fonte === 'dom-bh' || r.fonte === 'amm' || /^(minc|funarte|secult|html:)/.test(r.fonte);
     const completo = r.detalhes?.objetoCompleto && r.detalhes.objetoCompleto.length > (r.titulo ?? '').length - 1 ? r.detalhes.objetoCompleto : null;
     const titulo = h('h2', 'titulo', caixaDeSentenca(completo ?? r.titulo ?? '(sem título)'));
     card.append(titulo);
@@ -554,7 +562,7 @@
         : r.fonte.startsWith('mapas') ? 'Ver no Mapa Cultural'
           : r.fonte === 'querido-diario' ? 'Ver no Diário Oficial (PDF)'
             : r.fonte === 'dom-bh' ? 'Ver no Diário Oficial'
-              : /\.pdf(\?|$)|download=/i.test(r.link) ? 'Abrir edital (PDF)' : 'Ver edital';
+              : /\.pdf(\?|$)|download=/i.test(r.link) ? 'Abrir edital (PDF)' : r.fonte.startsWith('html:') ? 'Ver na instituição' : 'Ver edital';
       const a = h('a', 'botao', rotuloBotao);
       a.href = r.link;
       a.target = '_blank';

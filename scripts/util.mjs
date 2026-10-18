@@ -158,6 +158,8 @@ export function filtrarPorPalavras(texto, palavras, extras = []) {
 
 // ---------------------------------------------------------------- HTTP
 
+/** User-Agent que identifica o projeto; usado nos sites de instituições e no diário da AMM. */
+export const UA_PROJETO = 'artes-publicas/1.0 (+https://github.com/JoseMarquesJunior/artes-publicas)';
 export const UA_NAVEGADOR = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 
 export class ErroHttp extends Error {

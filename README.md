@@ -42,6 +42,47 @@ scripts/fontes/querido-diario.mjs ─┘
 
 As fontes `minc`, `funarte` e `secult-mg` usam o adaptador genérico [`scripts/fontes/paginas.mjs`](scripts/fontes/paginas.mjs) (tipo `html` em `fontes.json`), configurado por regex de links, bloco da página e agrupamento. Para adicionar outra página de editais, copie um bloco e ajuste `listas`, `padraoItem` e, se houver página própria por edital, `detalhe: true`. A Lei Rouanet em si não publica editais (é um mecanismo de incentivo); o que existe de federal aparece nas páginas do MinC e da Funarte.
 
+### Instituições culturais e residências (tipo `paginas`)
+
+Fontes `html:<slug>` em `fontes.json`, com o mesmo adaptador genérico, mas no modo "instituição": User-Agent identificando o projeto, 1 requisição por segundo, só links que ainda não estão na base (nem em `_descartados-qd.json`), no máximo `maxLinks` (20) links novos por fonte por rodada, e teto de custo de **US$ 0,20 por rodada** para o conjunto (`TETO_INSTITUICOES_USD` em `fetch.mjs`: passando disso, o excedente fica para a rodada seguinte e `meta.avisos` registra). Cada página de edital vai ao **extrator por IA**, que preenche título, resumo, prazo, valor, categoria e **participação** (obrigatória); o `link` é a página do edital na instituição, `uf` fica `null` quando a abrangência é nacional e, na deduplicação, o registro da instituição vence o do diário ou do PNCP. `paginaUnica: true` é para programas com página fixa (residências): a própria página vira o registro, e um novo registro só nasce quando o texto muda. Itens "N" saem da base e vão para `_descartados-qd.json`, como os do diário. Estatísticas por fonte em `meta.fontes[]`: `paginasLidas`, `linksSeguidos`, `extraidos`, `relevantes`, `duvidas`, `custoUsd` (rateado).
+
+Levantamento feito em 2026-10-18 (cada site foi aberto; URLs não foram chutadas):
+
+| Fonte | Página lida | Abrangência | Situação |
+| --- | --- | --- | --- |
+| `html:cc-ufmg` | [Centro Cultural UFMG — chamadas](https://www.ufmg.br/centrocultural/category/editais/) | MG (aceita propostas de qualquer lugar) | ativa; chamadas anuais de galerias, residência e eventos (set–nov) |
+| `html:sesi-cultura-mg` | [SESI Cultura MG — notícias](https://www.fiemg.com.br/sesi-cultura/noticias/) | MG | ativa; não há página de editais, as seleções das Galerias SESI saem como notícia |
+| `html:bolsa-pampulha` | [Bolsa Pampulha (FMC/MAP)](https://prefeitura.pbh.gov.br/fundacao-municipal-de-cultura/museus/bolsa-pampulha) | nacional (residência em BH) | ativa; página única com o edital vigente |
+| `html:guignard` | [Escola Guignard — notícias](https://www.uemg.br/institucional-guignard/noticias) | MG | ativa; sem página de editais (os "comunicados" são eleições internas) |
+| `html:inima` | [Museu Inimá de Paula — notícias](https://museuinimadepaula.org.br/noticias/) | MG | ativa; raramente publica chamadas (concurso de desenho infantil) |
+| `html:sesc-mg` | [Sesc em Minas — notícias](https://sescmg.com.br/noticias/) | MG | ativa; sem página de editais; filtro por título e a IA descarta o resto |
+| `html:jaca` | [JA.CA — residências](https://www.jaca.center/categoria/residencias/) | nacional (Nova Lima/MG) | ativa |
+| `html:mis-sp` | [MIS-SP — seleção de projetos](https://mis-sp.org.br/selecao-de-projetos/) | nacional | ativa (Nova Fotografia, MIS em Cena) |
+| `html:pivo` | [Pivô — notícias](https://pivo.org.br/noticias/) | nacional | ativa; chamadas de residência (Pivô Boulevard, Pivô Pesquisa) |
+| `html:tomie-ohtake` | [Instituto Tomie Ohtake — Residência Juntó](https://www.institutotomieohtake.org.br/residencia-junto/) | nacional | ativa; página única (o site não tem seção de editais) |
+| `html:paco-das-artes` | [Paço das Artes — Temporada de Projetos](https://pacodasartes.org.br/temporada-de-projetos/) | nacional | ativa; página única da convocatória anual |
+| `html:capacete` | [Capacete — residência de longa duração](https://capacete.org/residencias/residencia-de-longa-duracao/) | nacional/internacional | ativa; página única (o domínio capacete.net morreu; é capacete.org) |
+| `html:mar` | [Museu de Arte do Rio — notícias](https://museudeartedorio.org.br/midia/noticias/) | nacional | ativa; filtro ignora "selecionados", "resultado" |
+| `html:res-artis` | [Res Artis — open calls](https://resartis.org/open-calls/) | internacional | ativa; lista mundial em inglês (título original, resumo em português), 20 chamadas novas por rodada |
+| Secult-MG (salões e prêmios) | já coberta por `secult-mg` | MG | os prêmios (ex.: Prêmio Coreto) saem na mesma lista de editais FEC; não há página separada de salões |
+| Funarte, Fundação Clóvis Salgado | já cobertas (`funarte`, `fcs`) | nacional / MG | — |
+| Casa Fiat de Cultura | [casafiatdecultura.com.br](https://casafiatdecultura.com.br/) | — | **não adicionada**: o site só tem programação e ateliês abertos, sem editais |
+| Sesc São Paulo | [sescsp.org.br](https://www.sescsp.org.br/) | — | **não adicionada**: não há seção de editais artísticos (só licitações e vagas); as chamadas saem em páginas avulsas |
+| Itaú Cultural | [itaucultural.org.br/rumos](https://www.itaucultural.org.br/rumos) | — | **não adicionada**: o site é uma aplicação JavaScript (conteúdo em JSON embutido); o Rumos abre a cada ciclo |
+| Fundação Iberê Camargo | [iberecamargo.org.br](https://iberecamargo.org.br/) | — | **não adicionada**: sem seção de editais; a última Bolsa Iberê/CMPC publicada é de 2023 |
+| Fundação Bienal de São Paulo | [bienal.org.br](https://bienal.org.br/) | — | **não adicionada**: não faz chamadas abertas a artistas |
+| Instituto Moreira Salles | [ims.com.br](https://ims.com.br/) | — | **não adicionada**: as bolsas (ZUM/IMS) saem em notícias avulsas; sem seção de editais (qualquer rota /editais volta para a home) |
+| Prêmio PIPA | [premiopipa.com](https://www.premiopipa.com/) | — | **não adicionada**: não tem inscrição (artistas são indicados por comitê) |
+| Salão de Arte de Ribeirão Preto (MARP) | ribeiraopreto.sp.gov.br | — | **não adicionada**: o portal da prefeitura devolve 404 para todas as rotas de cultura em 2026-10-18 |
+| Salão Anapolino de Arte | anapolis.go.gov.br | — | **não adicionada**: só notícias esparsas; a busca do site não lista resultados em HTML |
+| Sítio Roberto Burle Marx | sitioburlemarx.museus.gov.br | — | **não adicionada**: o domínio não resolve; sem programa de residência localizado |
+| Casa Tomada | casatomada.com.br | — | **não adicionada**: site com proteção anti-robô (conteúdo só via JavaScript) |
+| TransArtists | transartists.org | — | **não adicionada**: desafio JavaScript do Cloudflare mesmo de IP residencial |
+
+### Como sugerir uma instituição
+
+Abra uma [issue no repositório](https://github.com/JoseMarquesJunior/artes-publicas/issues/new) com o **nome da instituição** e a **URL da página onde ela publica editais ou chamadas** (não a home). Se a página listar links para cada edital, entra como fonte `paginas` com `padraoItem`; se for uma página fixa de programa, entra com `paginaUnica: true`. Sites que só funcionam com JavaScript ou que bloqueiam robôs (Cloudflare) não podem ser lidos sem dependências e ficam de fora.
+
 ### Querido Diário: cobertura e funcionamento
 
 Dos 15 municípios de interesse (Grande BH e Inconfidentes), em 2026-10-17 o Querido Diário só coleta regularmente **Contagem** e **Betim** (último diário no dia anterior). **Belo Horizonte** está cadastrada desde 2021, mas o raspador deles parou em **25/03/2026**; como a fonte `dom-bh` cobre BH direto da API da Prodabel, BH ficou `coberta: false` no Querido Diário para não gastar requisições. As outras 12 cidades não têm diário coletado lá (`coberta: false`; os códigos IBGE foram todos validados na API do IBGE).
@@ -197,4 +238,5 @@ O GitHub Pages só serve arquivos; quem coleta é o GitHub Actions, e é o IP do
 
 - O filtro inicial é por palavras-chave; a IA corrige a maior parte dos falsos positivos, mas revise sempre o edital original.
 - O Mapa da Cultura nacional não pode ser lido por scripts (Cloudflare). Editais federais e de estados sem Mapa Cultural ainda não aparecem.
+- Instituições sem página de editais (Casa Fiat, Sesc SP, Itaú Cultural, Iberê Camargo, Bienal, IMS) e sites bloqueados (TransArtists, Casa Tomada) não entram; ver a tabela em "Instituições culturais e residências".
 - A base guarda 365 dias (`RETENCAO_DIAS` em `scripts/fetch.mjs`); reprovados pela IA saem após 30 dias.

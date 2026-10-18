@@ -11,13 +11,13 @@
  * Cada matéria selecionada vira um registro bruto com detalhes.textoBruto; a IA extrai (modo extrator).
  * Respeito ao site: 1 requisição por segundo e User-Agent identificando o projeto.
  */
-import { log, dormir, hojeUTC, somarDias, fmtISO, normalizar, registroUnificado, inferirTipoFomento, truncar, descreverErro } from '../util.mjs';
+import { log, dormir, hojeUTC, somarDias, fmtISO, normalizar, registroUnificado, inferirTipoFomento, truncar, descreverErro, UA_PROJETO } from '../util.mjs';
 
 export const INTERVALO_MS = 1000;
 const LIMITE_TEXTO = 3000;
 const MAX_PAGINAS = 5;
 const MAX_MATERIAS_POR_EXECUCAO = 150;
-const UA = 'artes-publicas/1.0 (+https://github.com/JoseMarquesJunior/artes-publicas)';
+const UA = UA_PROJETO;
 const TITULO_IGNORAR = /^(portaria|decreto|lei |mensagem de veto|extrato|ata |nomea|exonera|designa|homolog|resultado|errata|convoca|aviso de licita|termo de)/;
 
 export function filtrar(registro, palavras) {

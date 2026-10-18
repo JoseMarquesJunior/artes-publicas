@@ -354,6 +354,237 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "viaCurl": true,
       "bloqueadoNoCI": true
+    },
+    {
+      "fonte": "html:cc-ufmg",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "instituicoes",
+      "nome": "Centro Cultural UFMG (chamadas públicas)",
+      "orgao": "Centro Cultural UFMG",
+      "uf": "MG",
+      "municipio": "Belo Horizonte",
+      "listas": [
+        "https://www.ufmg.br/centrocultural/category/editais/"
+      ],
+      "padraoItem": "^https://www\\.ufmg\\.br/centrocultural/[^/]+/?$",
+      "padraoExcluir": "/(category|tag|page|wp-content|author|feed|editais|contato|sobre|o-centro|educativo|galerias|programacao|agenda)/?$",
+      "detalhe": true,
+      "observacao": "Chamadas anuais para exposições nas galerias, residência artística e eventos (inscrições em setembro–novembro). A página fixa https://www.ufmg.br/centrocultural/editais/ só tem PDFs.",
+      "blocoInicio": "cmsmasters_archive_item",
+      "blocoFim": "<aside|<footer|widgettitle"
+    },
+    {
+      "fonte": "html:sesi-cultura-mg",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "instituicoes",
+      "nome": "SESI Cultura MG (seleções e chamamentos)",
+      "orgao": "SESI Cultura MG (FIEMG)",
+      "uf": "MG",
+      "municipio": null,
+      "listas": [
+        "https://www.fiemg.com.br/sesi-cultura/noticias/"
+      ],
+      "padraoItem": "fiemg\\.com\\.br/sesi-cultura/noticias/[^/]+/?$",
+      "filtroTitulo": "edital|chamamento|chamada|selecao|convocat|inscri",
+      "detalhe": true,
+      "observacao": "Não há página de editais; as seleções para as Galerias de Arte SESI (BH, Uberaba, Ouro Preto) saem como notícia."
+    },
+    {
+      "fonte": "html:bolsa-pampulha",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "residencias",
+      "nome": "Bolsa Pampulha (Museu de Arte da Pampulha)",
+      "orgao": "Museu de Arte da Pampulha / Fundação Municipal de Cultura de Belo Horizonte",
+      "uf": "MG",
+      "municipio": "Belo Horizonte",
+      "listas": [
+        "https://prefeitura.pbh.gov.br/fundacao-municipal-de-cultura/museus/bolsa-pampulha"
+      ],
+      "paginaUnica": true,
+      "observacao": "Programa de residência do MAP; página fixa com o edital vigente em PDF. O registro é refeito quando o texto da página muda."
+    },
+    {
+      "fonte": "html:guignard",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "instituicoes",
+      "nome": "Escola Guignard / UEMG (notícias)",
+      "orgao": "Escola Guignard (UEMG)",
+      "uf": "MG",
+      "municipio": "Belo Horizonte",
+      "listas": [
+        "https://www.uemg.br/institucional-guignard/noticias"
+      ],
+      "padraoItem": "uemg\\.br/institucional-guignard/noticias/\\d+-",
+      "filtroTitulo": "edital|chamad|inscri|selecao|convocat|concurso|salao|residencia",
+      "detalhe": true,
+      "observacao": "Sem página de editais; só notícias. Os editais internos (eleições, bolsas) ficam em 'comunicados' e não entram."
+    },
+    {
+      "fonte": "html:inima",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "instituicoes",
+      "nome": "Museu Inimá de Paula (notícias)",
+      "orgao": "Museu Inimá de Paula",
+      "uf": "MG",
+      "municipio": "Belo Horizonte",
+      "listas": [
+        "https://museuinimadepaula.org.br/noticias/"
+      ],
+      "padraoItem": "^https://museuinimadepaula\\.org\\.br/[^/]+/?$",
+      "padraoExcluir": "/(wp-|categor|feed|page|author|noticias|exposicoes|eventos|contato|amigos|arte-educacao|consulta|institucional|o-artista)",
+      "filtroTitulo": "edital|concurso|chamad|inscri|selecao|convocat|salao",
+      "detalhe": true
+    },
+    {
+      "fonte": "html:sesc-mg",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "instituicoes",
+      "nome": "Sesc em Minas (notícias)",
+      "orgao": "Sesc em Minas",
+      "uf": "MG",
+      "municipio": null,
+      "listas": [
+        "https://sescmg.com.br/noticias/"
+      ],
+      "padraoItem": "sescmg\\.com\\.br/noticias/[^/]+/?$",
+      "filtroTitulo": "edital|chamamento|chamada|selecao|convocat|inscri|artes visuais|artistas",
+      "detalhe": true,
+      "observacao": "Sem página de editais; as chamadas aparecem como notícia (a maioria das notícias é de outros temas e a IA descarta)."
+    },
+    {
+      "fonte": "html:jaca",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "residencias",
+      "nome": "JA.CA Centro de Arte e Tecnologia (residências)",
+      "orgao": "JA.CA",
+      "uf": "MG",
+      "municipio": "Nova Lima",
+      "listas": [
+        "https://www.jaca.center/categoria/residencias/"
+      ],
+      "padraoItem": "^https://www\\.jaca\\.center/[^/]+/?$",
+      "padraoExcluir": "/(categoria|contato|sobre|publi|wp-|feed|page)",
+      "filtroTitulo": "edital|chamad|convocat|inscri|residencia|ciclo|bolsa",
+      "detalhe": true
+    },
+    {
+      "fonte": "html:mis-sp",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "instituicoes",
+      "nome": "MIS-SP (seleção de projetos)",
+      "orgao": "Museu da Imagem e do Som de São Paulo",
+      "uf": null,
+      "municipio": null,
+      "listas": [
+        "https://mis-sp.org.br/selecao-de-projetos/"
+      ],
+      "padraoItem": "mis-sp\\.org\\.br/evento/[^/]+/?$",
+      "detalhe": true,
+      "observacao": "Convocatórias do MIS (Nova Fotografia, MIS em Cena...); abrangência nacional, a IA marca o estado quando o edital restringe."
+    },
+    {
+      "fonte": "html:pivo",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "residencias",
+      "nome": "Pivô (chamadas e residências)",
+      "orgao": "Pivô Arte e Pesquisa",
+      "uf": null,
+      "municipio": null,
+      "listas": [
+        "https://pivo.org.br/noticias/"
+      ],
+      "padraoItem": "pivo\\.org\\.br/noticias/[^/]+/?$",
+      "filtroTitulo": "chamada|convocat|edital|inscri|open call|selecao",
+      "detalhe": true
+    },
+    {
+      "fonte": "html:tomie-ohtake",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "residencias",
+      "nome": "Instituto Tomie Ohtake (Residência Juntó)",
+      "orgao": "Instituto Tomie Ohtake",
+      "uf": null,
+      "municipio": null,
+      "listas": [
+        "https://www.institutotomieohtake.org.br/residencia-junto/"
+      ],
+      "paginaUnica": true,
+      "observacao": "Página fixa do programa de residência; não há seção de editais no site."
+    },
+    {
+      "fonte": "html:paco-das-artes",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "instituicoes",
+      "nome": "Paço das Artes (Temporada de Projetos)",
+      "orgao": "Paço das Artes",
+      "uf": null,
+      "municipio": null,
+      "listas": [
+        "https://pacodasartes.org.br/temporada-de-projetos/"
+      ],
+      "paginaUnica": true,
+      "observacao": "Página fixa do programa; a convocatória anual aparece ali quando aberta."
+    },
+    {
+      "fonte": "html:capacete",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "residencias",
+      "nome": "Capacete (residência de longa duração)",
+      "orgao": "Capacete",
+      "uf": null,
+      "municipio": null,
+      "listas": [
+        "https://capacete.org/residencias/residencia-de-longa-duracao/"
+      ],
+      "paginaUnica": true,
+      "observacao": "O domínio antigo capacete.net não resolve mais; o site é capacete.org."
+    },
+    {
+      "fonte": "html:mar",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "instituicoes",
+      "nome": "Museu de Arte do Rio (chamadas)",
+      "orgao": "Museu de Arte do Rio",
+      "uf": null,
+      "municipio": null,
+      "listas": [
+        "https://museudeartedorio.org.br/midia/noticias/"
+      ],
+      "padraoItem": "museudeartedorio\\.org\\.br/noticias/[^/]+/?$",
+      "filtroTitulo": "^(?!.*(selecionad|resultado|lista de|confira)).*(edital|chamada|convocat|inscri|selecao)",
+      "detalhe": true
+    },
+    {
+      "fonte": "html:res-artis",
+      "tipo": "paginas",
+      "ativo": true,
+      "grupo": "residencias",
+      "nome": "Res Artis (open calls de residências)",
+      "orgao": null,
+      "uf": null,
+      "municipio": null,
+      "abrangencia": "internacional",
+      "listas": [
+        "https://resartis.org/open-calls/"
+      ],
+      "padraoItem": "^https://resartis\\.org/open-call/[^/]+/?$",
+      "detalhe": true,
+      "maxLinks": 20,
+      "observacao": "Lista mundial de chamadas de residências, em inglês; a IA mantém o título original e resume em português. Só 20 chamadas novas por rodada."
     }
-  ]
+  ],
+  "_ajudaPaginas": "tipo \"paginas\" = instituições culturais (mesmo adaptador scripts/fontes/paginas.mjs do tipo \"html\"): User-Agent do projeto, 1 req/s, só links novos, máx. maxLinks (20) por rodada, itens \"N\" vão para _descartados-qd.json. grupo: orgaos-publicos | instituicoes | residencias (rodapé da página). paginaUnica: a própria URL é o edital. Fontes sem página de editais (Casa Fiat, Sesc SP, Itaú Cultural, Iberê Camargo, Bienal SP, IMS) ou bloqueadas (TransArtists, Casa Tomada, Sítio Burle Marx) estão documentadas no README."
 }
