@@ -11,6 +11,7 @@
   const VISAO_PADRAO = 'abertas';
   const ORDEM_PADRAO = { abertas: 'prazo', radar: 'recentes' };
   const CHAVE_VISAO = 'artes-publicas:visao';
+  const REPO = 'JoseMarquesJunior/artes-publicas'; // para o link "Classificação errada?"
 
   const TIPO_ROTULO = { contratacao: 'Contratação', fomento: 'Fomento', premio: 'Prêmio', residencia: 'Residência', chamamento: 'Chamamento', outro: 'Outro' };
   const GRUPO_FOMENTO = new Set(['fomento', 'premio', 'residencia', 'chamamento']);
@@ -512,6 +513,14 @@
       a.rel = 'noopener noreferrer';
       acoes.append(a);
     }
+    const reportar = h('a', 'link-reportar', 'Classificação errada?');
+    const registro = `${r.id} · ${(r.titulo ?? '').slice(0, 90)} · ${r.link}`;
+    const params = new URLSearchParams({ template: 'classificacao.yml', title: `[classificação] ${(r.titulo ?? '').slice(0, 70)}`, registro });
+    reportar.href = `https://github.com/${REPO}/issues/new?${params.toString()}`;
+    reportar.target = '_blank';
+    reportar.rel = 'noopener noreferrer';
+    reportar.title = 'Abre uma issue no GitHub com o id e o título já preenchidos';
+    acoes.append(reportar);
     acoes.append(h('span', 'controle', r.idNaFonte));
     card.append(acoes);
 

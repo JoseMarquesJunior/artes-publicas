@@ -103,6 +103,20 @@ Cada item novo que passou pelas palavras-chave vai, em lotes de 30, ao `claude-h
 - **Parâmetros.** O Haiku 5.5 rejeita `temperature` fora do padrão (HTTP 400); a chamada usa `thinking: disabled` e `effort: low`, o mais barato e estável para rotulagem.
 - **Erros.** 429/5xx têm retry com backoff (3 tentativas); lote que falha de vez, resposta sem JSON ou com números faltando deixam os itens pendentes para a próxima execução.
 
+### Segundo portão por categoria
+
+Depois da IA, todo item aprovado (S) em categoria `producao` ou `outro` cujo texto (título + objeto + resumo) não contém nenhum termo da lista `fortes` de `keywords.json` (artes visuais, exposição, mural, grafite, ilustração, restauro, acervo, museu, design gráfico, diagramação…) é rebaixado para D e marcado `rebaixadoPorPortao: true`. `meta.json` registra `ia.rebaixadosPortao`.
+
+### Reclassificar a base
+
+`node scripts/fetch.mjs --reclassificar` (ou o input `reclassificar` no workflow) reenvia à IA todos os itens S e D, exceto os revisados manualmente; o veredito anterior fica em `iaAnterior` e `categoriaAnterior` para comparação. Use depois de mudar o prompt. Custa centavos (lotes de 30).
+
+### Vereditos manuais (`scripts/revisados.json`)
+
+Formato: `{ "<id>": { "ia": "S"|"N", "categoriaIA": "exposicao", "obs": "texto livre" } }`. O coletor aplica esse arquivo por cima da IA em toda execução, e os itens listados nunca voltam ao modelo (nem na reclassificação).
+
+Fluxo de revisão: cada card tem o link "Classificação errada?", que abre uma issue no GitHub pelo template [`classificacao.yml`](.github/ISSUE_TEMPLATE/classificacao.yml) com id, título e link já preenchidos; quem abre escolhe "deveria ser S/N", a categoria e uma observação. Para transferir a issue para o arquivo: copie o id do campo "Registro" (os 12 caracteres antes do primeiro "·"), adicione uma entrada em `scripts/revisados.json` com `ia`, `categoriaIA` e `obs` (pode citar o número da issue), commite e feche a issue. Na próxima execução o veredito manual passa a valer.
+
 ## Deduplicação entre fontes
 
 Depois da IA, registros de fontes **diferentes** com `ia != N` são comparados: títulos com similaridade de Jaccard ≥ 0,5 sobre palavras **e** (mesmo órgão normalizado **ou** mesma data de encerramento); encerramentos diferentes, ambos informados, impedem a fusão. Vence a fonte estruturada (PNCP e Mapas Culturais sobre Diário Oficial, cujo título vem da IA) e, em empate, o registro com mais campos preenchidos; o link do perdedor vai para `linksExtras` (no card: "Também em …"). A regra é mais estrita que "mesmo órgão" sozinho porque uma prefeitura publica dezenas de dispensas sem data de encerramento, e isso fundiria contratos distintos. `meta.json` registra `dedup.fundidosNestaExecucao`.
@@ -140,6 +154,8 @@ python -m http.server 8080 --directory docs
 
 ## Página
 
+- Duas visões, acima dos filtros: **Abertas agora** (padrão; itens com `acionavel` aberta ou fluxo contínuo, ordenados por prazo mais próximo, com os de prazo desconhecido no fim e um ⚠) e **Radar de mercado** (`?visao=radar`; contratações já decididas e editais encerrados, ordenados por data, com um painel de síntese: dez órgãos que mais contratam, distribuição por categoria, mediana e faixa de valores). A última visão escolhida fica em `localStorage`.
+- O campo `acionavel` é calculado pelo coletor (`aberta`, `fluxo-continuo`, `encerrada`, `radar`; `prazoDesconhecido: true` para editais de inscrição sem prazo identificado) e a página recalcula aberta × encerrada pela data atual. `node scripts/fetch.mjs --so-reprocessar` recalcula só os campos derivados.
 - Abas **Todas | Contratações | Fomento e prêmios** (fomento + prêmio + residência + chamamento), refletidas na URL (`?tipo=fomento`).
 - UF **MG** pré-selecionada; opções **Todas** e **Nacional** (itens com `uf` nula valem para qualquer UF). Filtro de **Região** (Grande BH | Inconfidentes | Outras), derivado do município (campo `regiao`, preenchido pelo coletor a partir da lista de territórios de `fontes.json`).
 - Cards do Diário Oficial mostram "Diário Oficial de {município}" no selo, o resumo extraído em destaque (o título vem da IA), botão "Ver no Diário Oficial (PDF)" e, quando a IA não achou o prazo no trecho, "⚠ prazo não identificado".

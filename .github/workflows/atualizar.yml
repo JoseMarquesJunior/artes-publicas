@@ -17,6 +17,11 @@ on:
         description: "Só estas fontes, separadas por vírgula (ex.: querido-diario,mapas:nova-lima). Vazio = todas as ativas."
         required: false
         default: ""
+      reclassificar:
+        description: "Reenviar à IA todos os itens S e D (custa centavos; use após mudar o prompt)."
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: write
@@ -43,7 +48,7 @@ jobs:
         # A chave da Anthropic vem de um segredo do repositório; sem ela a coleta roda e marca os itens como "pendente".
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/fetch.mjs --dias ${{ inputs.dias || 2 }} ${{ inputs.ate && format('--ate {0}', inputs.ate) || '' }} ${{ inputs.fontes && format('--fontes {0}', inputs.fontes) || '' }}
+        run: node scripts/fetch.mjs --dias ${{ inputs.dias || 2 }} ${{ inputs.ate && format('--ate {0}', inputs.ate) || '' }} ${{ inputs.fontes && format('--fontes {0}', inputs.fontes) || '' }} ${{ inputs.reclassificar == true && '--reclassificar' || '' }}
 
       - name: Commitar dados se houve mudança
         run: |

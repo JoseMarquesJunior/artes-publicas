@@ -1,19 +1,19 @@
 {
-  "atualizadoEm": "2026-10-18T14:49:11.418Z",
+  "atualizadoEm": "2026-10-18T14:53:30.244Z",
   "total": 4288,
   "totalNovos": 0,
   "totalAtualizados": 0,
   "removidos": {
     "antigos": 0,
-    "foraDoFiltro": 85,
-    "reprovadosAntigos": 1,
+    "foraDoFiltro": 0,
+    "reprovadosAntigos": 0,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
   "base": {
-    "aprovados": 1264,
+    "aprovados": 724,
     "reprovados": 2458,
-    "duvidas": 566,
+    "duvidas": 1106,
     "pendentes": 0
   },
   "porAcionavel": {
@@ -24,11 +24,11 @@
     "prazoDesconhecido": 13
   },
   "porAcionavelAprovados": {
-    "aberta": 120,
+    "aberta": 91,
     "fluxo-continuo": 2,
-    "abertasMG": 30,
-    "encerrada": 181,
-    "radar": 961
+    "abertasMG": 22,
+    "encerrada": 134,
+    "radar": 497
   },
   "porTipo": {
     "outro": {
@@ -40,9 +40,9 @@
     },
     "contratacao": {
       "total": 4258,
-      "S": 1253,
+      "S": 713,
       "N": 2453,
-      "D": 552,
+      "D": 1092,
       "pendente": 0
     },
     "fomento": {
@@ -84,7 +84,7 @@
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
       "naBase": 4256,
-      "aprovadosNaBase": 1253
+      "aprovadosNaBase": 713
     },
     {
       "fonte": "mapas:bh",
@@ -261,7 +261,10 @@
       "tokensEntrada": 0,
       "tokensSaida": 0,
       "custoUsd": 0
-    }
+    },
+    "rebaixadosPortao": 540,
+    "revisadosAplicados": 0,
+    "reclassificacao": false
   },
   "queridoDiario": {
     "descartadosNestaExecucao": 0,

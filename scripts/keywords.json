@@ -5,7 +5,8 @@
     "A palavra precisa começar no início de uma palavra do texto e pode continuar por até 3 letras: 'curador' pega 'curadores' e 'curadoria', mas não 'procurador'; 'arte' pega 'artes', mas não 'artesanato'.",
     "Plurais em -ções, -ais e -ões são reconhecidos automaticamente (exposição/exposições, mural/murais).",
     "'excluir' corta o óbvio antes de gastar tokens com a IA. Depois de salvar, a próxima atualização reaplica a lista a toda a base.",
-    "'excluirFraco' (show, banda, cantor...) só veta quando as palavras de 'incluir' que bateram são todas 'genericos' (arte, cultura...). Um edital de festival com 'shows' e 'exposição' passa; a contratação de um cantor para evento cultural é cortada antes da IA."
+    "'excluirFraco' (show, banda, cantor...) só veta quando as palavras de 'incluir' que bateram são todas 'genericos' (arte, cultura...). Um edital de festival com 'shows' e 'exposição' passa; a contratação de um cantor para evento cultural é cortada antes da IA.",
+    "'fortes': termos inequívocos de artes visuais. Item aprovado pela IA em categoria 'producao' ou 'outro' sem nenhum termo forte no texto é rebaixado para D (segundo portão)."
   ],
   "incluir": [
     "artes visuais",
@@ -110,5 +111,34 @@
     "patrimônio histórico",
     "projeto cultural",
     "produção cultural"
+  ],
+  "fortes": [
+    "artes visuais",
+    "artes plásticas",
+    "artista plástico",
+    "artista visual",
+    "exposição",
+    "mostra",
+    "curadoria",
+    "mural",
+    "grafite",
+    "ilustração",
+    "escultura",
+    "gravura",
+    "pintura",
+    "desenho",
+    "fotografia artística",
+    "cerâmica",
+    "restauro",
+    "acervo",
+    "museu",
+    "galeria",
+    "arte-educação",
+    "mediação",
+    "design gráfico",
+    "identidade visual",
+    "diagramação",
+    "cenografia",
+    "quadrinhos"
   ]
 }

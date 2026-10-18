@@ -546,6 +546,13 @@ a:hover { text-decoration-thickness: 2px; }
   gap: 10px 16px;
   margin-top: 14px;
 }
+.link-reportar {
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+.link-reportar:hover { color: var(--accent); }
 .controle {
   margin-left: auto;
   font-size: 0.76rem;

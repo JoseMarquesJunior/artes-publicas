@@ -15,7 +15,7 @@ import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { log, hojeUTC, somarDias, fmtISO, lerDataISO, descreverErro, carregarPalavras, normalizar, palavrasDe, jaccard } from './util.mjs';
+import { log, hojeUTC, somarDias, fmtISO, lerDataISO, descreverErro, carregarPalavras, normalizar, palavrasDe, jaccard, temTermoForte } from './util.mjs';
 import * as pncp from './fontes/pncp.mjs';
 import * as mapas from './fontes/mapas.mjs';
 import * as queridoDiario from './fontes/querido-diario.mjs';
@@ -33,6 +33,7 @@ const ARQ_DUPLICADOS = path.join(PASTA_DADOS, '_duplicados.json'); // {idPerdedo
 const ARQ_DESCARTADOS_QD = path.join(PASTA_DADOS, '_descartados-qd.json'); // trechos de diário que a IA marcou "N": [{idNaFonte, data}]
 const ARQ_PALAVRAS = path.join(AQUI, 'keywords.json');
 const ARQ_FONTES = path.join(AQUI, 'fontes.json');
+const ARQ_REVISADOS = path.join(AQUI, 'revisados.json'); // vereditos manuais: {id: {ia, categoriaIA, obs}}
 
 const RETENCAO_DIAS = 365;        // registros mais antigos saem da base
 const DESCARTAR_N_DIAS = 30;      // reprovados pela IA saem depois de N dias
@@ -44,7 +45,7 @@ const FONTES_TEXTUAIS = new Set(['querido-diario', 'html', 'dom-bh']);
 /** Diários oficiais: trechos "N" saem da base e vão para o arquivo de descartados; itens já vistos não são recoletados. */
 const TIPOS_DIARIO = new Set(['querido-diario', 'dom-bh']);
 
-const USO = `Uso: node scripts/fetch.mjs [--dias N] [--ate AAAA-MM-DD] [--intervalo MS] [--paralelo N] [--fontes a,b] [--so-ia] [--so-reprocessar]
+const USO = `Uso: node scripts/fetch.mjs [--dias N] [--ate AAAA-MM-DD] [--intervalo MS] [--paralelo N] [--fontes a,b] [--so-ia] [--so-reprocessar] [--reclassificar]
   --dias N         PNCP: quantos dias para trás buscar a partir de --ate (padrão 2)
   --ate AAAA-MM-DD PNCP: data final do período (padrão: hoje). Útil para dividir a carga inicial em partes
   --intervalo MS   PNCP: espera mínima entre requisições (padrão ${pncp.INTERVALO_PADRAO_MS}; a API bloqueia com menos)
@@ -52,6 +53,7 @@ const USO = `Uso: node scripts/fetch.mjs [--dias N] [--ate AAAA-MM-DD] [--interv
   --fontes a,b     roda só estas fontes (nomes de scripts/fontes.json)
   --so-ia          não consulta nenhuma fonte; só classifica com IA os itens pendentes da base
   --so-reprocessar não consulta fontes nem IA; só recalcula os campos derivados (acionavel, regiao, dedup) sobre a base
+  --reclassificar  reenvia à IA todos os itens S e D da base (não os N nem os revisados); guarda o veredito anterior em iaAnterior
 
 Classificação por IA: exige a variável de ambiente ANTHROPIC_API_KEY. Sem ela, os itens novos ficam "pendente".`;
 
@@ -65,6 +67,7 @@ function lerArgumentos(argv) {
     if (chave === '--help' || chave === '-h') { console.log(USO); process.exit(0); }
     if (chave === '--so-ia') { args.soIa = true; continue; }
     if (chave === '--so-reprocessar') { args.soIa = true; args.soReprocessar = true; continue; }
+    if (chave === '--reclassificar') { args.reclassificar = true; continue; }
     const nome = chave.startsWith('--') ? chave.slice(2) : '';
     if (!(nome in minimos) && nome !== 'ate' && nome !== 'fontes') throw new Error(`Argumento desconhecido: ${argv[i]}\n${USO}`);
     if (valor === undefined) valor = argv[++i];
@@ -184,6 +187,40 @@ function mesclar(existentes, coletados, palavras, hoje, duplicadosConhecidos) {
   return { lista: [...mapa.values()], novosPorFonte, atualizados, removidos };
 }
 
+// ---------------------------------------------------------------- vereditos manuais e segundo portão
+
+/** Aplica scripts/revisados.json por cima da IA e marca o item para nunca voltar ao modelo. */
+function aplicarRevisados(lista, revisados) {
+  let aplicados = 0;
+  for (const r of lista) {
+    const rev = revisados[r.id];
+    if (!rev || typeof rev !== 'object') continue;
+    if (rev.ia === 'S' || rev.ia === 'N' || rev.ia === 'D') r.ia = rev.ia;
+    if (rev.categoriaIA !== undefined) r.categoriaIA = rev.categoriaIA || null;
+    r.revisado = true;
+    aplicados++;
+  }
+  return aplicados;
+}
+
+/**
+ * Segundo portão: item aprovado pela IA em categoria "producao" ou "outro" cujo texto não tem nenhum termo
+ * inequívoco de artes visuais ("fortes" em keywords.json) vira D. Itens revisados manualmente não são tocados.
+ */
+function portaoPorCategoria(lista, palavras) {
+  let rebaixados = 0;
+  for (const r of lista) {
+    if (r.revisado || r.ia !== 'S') continue;
+    if (!(r.categoriaIA === 'producao' || r.categoriaIA === 'outro' || !r.categoriaIA)) continue;
+    const texto = [r.titulo, r.detalhes?.objetoCompleto, r.resumo].filter(Boolean).join(' ');
+    if (temTermoForte(texto, palavras)) continue;
+    r.ia = 'D';
+    r.rebaixadoPorPortao = true;
+    rebaixados++;
+  }
+  return rebaixados;
+}
+
 // ---------------------------------------------------------------- campos derivados
 
 const TIPOS_INSCRICAO = new Set(['fomento', 'premio', 'chamamento', 'residencia']);
@@ -291,6 +328,7 @@ async function main() {
   const { lista: existentes, migrados } = await carregarExistentes();
   const duplicadosConhecidos = await lerJson(ARQ_DUPLICADOS, {});
   const descartadosQd = await lerJson(ARQ_DESCARTADOS_QD, []);
+  const revisados = Object.fromEntries(Object.entries(await lerJson(ARQ_REVISADOS, {})).filter(([k]) => !k.startsWith('_')));
   const regioes = mapaDeRegioes(config);
   // Trechos de diário já na base ou já descartados pela IA não voltam para a fila (por fonte).
   const ehDiario = (r) => TIPOS_DIARIO.has(tipoPorFonte.get(r.fonte) ?? r.fonte);
@@ -342,10 +380,25 @@ async function main() {
 
   // 2. Mescla, 3. IA (classificador para PNCP/Mapas; extrator para Diário Oficial), 4. deduplicação, 5. ordenação
   const mesclado = mesclar(existentes, coletados, palavras, hoje, duplicadosConhecidos);
+  const revisadosAplicados = aplicarRevisados(mesclado.lista, revisados); // antes da IA: revisados nunca vão ao modelo
+  if (args.reclassificar) {
+    let n = 0;
+    for (const r of mesclado.lista) {
+      if (r.revisado || !(r.ia === 'S' || r.ia === 'D') || r.detalhes?.textoBruto !== undefined) continue;
+      r.iaAnterior = r.ia;
+      r.categoriaAnterior = r.categoriaIA ?? null;
+      r.ia = 'pendente';
+      r.categoriaIA = null;
+      n++;
+    }
+    log(`Reclassificação: ${n} itens S/D voltam à fila da IA (veredito anterior guardado em iaAnterior).`);
+  }
   const ia = await classificar(mesclado.lista);
   const extracao = await extrair(mesclado.lista);
   const categorizacao = await categorizar(mesclado.lista);
   const prazos = await completarPrazos(mesclado.lista);
+  const rebaixados = portaoPorCategoria(mesclado.lista, palavras);
+  aplicarRevisados(mesclado.lista, revisados); // de novo, por cima de tudo
   // Trechos de diário marcados "N" saem da base e vão para o arquivo de descartados (só fonte + id + data).
   const descartadosAgora = mesclado.lista.filter((r) => ehDiario(r) && r.ia === 'N');
   for (const r of descartadosAgora) descartadosQd.push({ fonte: r.fonte, idNaFonte: r.idNaFonte, data: r.publicadoEm ?? r.coletadoEm?.slice(0, 10) ?? null });
@@ -399,7 +452,7 @@ async function main() {
     porAcionavelAprovados,
     porTipo,
     fontes: fontesMeta,
-    ia: { ...ia, candidatosNestaExecucao: coletados.length, extracao, categorizacao, prazos },
+    ia: { ...ia, candidatosNestaExecucao: coletados.length, extracao, categorizacao, prazos, rebaixadosPortao: rebaixados, revisadosAplicados, reclassificacao: Boolean(args.reclassificar) },
     queridoDiario: { descartadosNestaExecucao: descartadosAgora.length, descartadosTotal: descartadosQd.length },
     dedup: { fundidosNestaExecucao: dedup.fundidos, duplicadosConhecidos: Object.keys(duplicadosConhecidos).length },
     periodoPncp: statsFontes.find((s) => s.fonte === 'pncp')?.periodo ?? null,
@@ -444,6 +497,7 @@ async function main() {
   } else if (!extracao.ativo && extracao.pendentes) {
     console.log(`  IA extrator: desligado (sem chave) · ${extracao.pendentes} trechos de diário pendentes`);
   }
+  if (rebaixados || revisadosAplicados) console.log(`  Portão por categoria: ${rebaixados} aprovados sem termo forte rebaixados para D · vereditos manuais aplicados: ${revisadosAplicados}`);
   if (prazos.tentados) console.log(`  IA prazos: ${prazos.encontrados} de ${prazos.tentados} itens sem prazo ganharam data (${prazos.semTexto} sem trecho localizável, ${prazos.falhas} falhas) · US$ ${prazos.custoUsd.toFixed(4)}`);
   if (categorizacao.categorizados || categorizacao.lotesFalhos) {
     console.log(`  IA categorizador: ${categorizacao.categorizados} itens antigos ganharam categoria · ${categorizacao.pendentes} sem categoria · custo estimado US$ ${categorizacao.custoUsd.toFixed(4)}`);

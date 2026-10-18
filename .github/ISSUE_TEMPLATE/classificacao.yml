@@ -1,0 +1,44 @@
+name: Classificação errada
+description: Um item apareceu (ou sumiu) por engano no Artes Públicas.
+title: "[classificação] "
+labels: ["classificacao"]
+body:
+  - type: input
+    id: registro
+    attributes:
+      label: Registro
+      description: Preenchido automaticamente pelo link "Classificação errada?" (id · título · link). Não altere.
+    validations:
+      required: true
+  - type: dropdown
+    id: deveria
+    attributes:
+      label: Deveria ser
+      options:
+        - S (é oportunidade em artes visuais)
+        - N (não é)
+    validations:
+      required: true
+  - type: dropdown
+    id: categoria
+    attributes:
+      label: Categoria (se S)
+      options:
+        - exposicao
+        - curadoria
+        - mural
+        - ilustracao
+        - restauro
+        - design
+        - oficina
+        - premio
+        - residencia
+        - fomento-geral
+        - producao
+        - parecerista
+        - outro
+  - type: textarea
+    id: obs
+    attributes:
+      label: Observação
+      description: Por que a classificação está errada? (opcional)

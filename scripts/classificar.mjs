@@ -25,7 +25,7 @@ const IA_TIMEOUT_MS = 60_000;
 const IA_PRECO_ENTRADA_USD_POR_MTOK = 0.10; // claude-haiku-5-5, prompts até 100K tokens
 const IA_PRECO_SAIDA_USD_POR_MTOK = 0.50;
 
-export const CATEGORIAS = ['curadoria', 'oficina', 'design', 'ilustracao', 'mural', 'restauro', 'exposicao', 'premio', 'residencia', 'fomento-geral', 'producao', 'outro'];
+export const CATEGORIAS = ['curadoria', 'oficina', 'design', 'ilustracao', 'mural', 'restauro', 'exposicao', 'premio', 'residencia', 'fomento-geral', 'producao', 'parecerista', 'outro'];
 
 const TIPO_ROTULO = {
   contratacao: 'contratação de serviço',
@@ -38,14 +38,35 @@ const TIPO_ROTULO = {
 
 const PROMPT_SISTEMA = `Você recebe uma lista numerada de oportunidades públicas brasileiras. Cada item é uma contratação de serviço (PNCP) OU um edital de fomento, prêmio, residência ou chamamento público (Mapas Culturais), com tipo, fonte, local, órgão, título e resumo.
 
-Para cada item, responda à mesma pergunta: uma profissional formada em artes visuais, residente na Grande Belo Horizonte (MG), pode se candidatar, concorrer ou ser contratada nisso? Área de atuação: criação artística, curadoria, exposições, oficinas de arte, ilustração, design gráfico, murais, cenografia, restauro e conservação de obras ou acervos artísticos, arte-educação, mediação cultural, produção cultural.
+Para cada item, responda à mesma pergunta: uma profissional formada em ARTES VISUAIS, residente na Grande Belo Horizonte (MG), pode se candidatar, concorrer ou ser contratada nisso? Artes visuais = criação artística (pintura, desenho, gravura, escultura, cerâmica, fotografia artística, quadrinhos, grafite, mural, instalação), curadoria, montagem e produção de exposições, oficinas dessas linguagens, ilustração, design gráfico de criação, cenografia, restauro e conservação de obras e acervos artísticos, arte-educação e mediação cultural.
 
-Regras:
-- S = sim. Editais de cultura amplos (todas as linguagens artísticas, multilinguagem) contam como S.
-- N = não. Editais exclusivos de música, audiovisual, literatura, dança ou teatro são N. REGRA FORTE: contratação de show, apresentação artística musical, cantor, cantora, banda, dupla, DJ, orquestra ou coral é SEMPRE N, mesmo que o texto diga "apresentação artística" ou "evento cultural" (ex.: "contratação da cantora X para apresentação artística", "show artístico da banda Y para a festa da cidade", "credenciamento de bandas e DJs"). Editais restritos a residentes de outro estado são N. Itens em que a palavra-chave aparece em outro sentido são N (ex.: "exposição a agentes químicos", "acervo bibliográfico", "design de software", "restauração de pavimento", "serigrafia industrial para uniformes", "manutenção do ar-condicionado do museu").
-- D = dúvida, quando o texto é vago demais para decidir.
+Regras de decisão:
+- S = sim. Editais de cultura amplos (todas as linguagens, multilinguagem, pontos de cultura) são S.
+- "Produção cultural" só é S quando for produção, montagem ou organização de exposição, mostra, feira de arte, festival de artes visuais, intervenção urbana ou evento cujo conteúdo principal é artes visuais. Produção de evento genérico (festa, festival de música, feira agropecuária, aniversário da cidade, evento esportivo, natal, carnaval) é N.
+- SEMPRE N, mesmo que o texto diga "artístico", "cultural" ou "evento": sonorização, iluminação de palco ou cênica, palco e estrutura, filmagem, gravação, edição de vídeo, transmissão, fotografia de evento, companhia de teatro, grupo de dança, circo, música em qualquer forma (show, banda, cantor, cantora, dupla, DJ, orquestra, maestro, coral, percussão, oficina de instrumento, aquisição de instrumentos musicais), prensagem de discos, impressão gráfica comum (banners, faixas, panfletos, cartazes, camisetas, brindes) sem criação de identidade visual, locação de equipamentos, buffet, decoração de festa, segurança, transporte.
+- "Oficina" só é S se for de desenho, pintura, gravura, escultura, cerâmica, fotografia artística, ilustração, quadrinhos, grafite, arte-educação, mediação ou similares de artes visuais. Oficina de música, dança, teatro, circo, literatura, audiovisual ou artesanato utilitário é N.
+- "Design" só é S se for criação: identidade visual, ilustração, diagramação editorial, projeto gráfico, design de exposição. Impressão, plotagem, sinalização pronta, brindes, uniformes são N.
+- Pareceristas e avaliadores de projetos culturais: S apenas se o edital for de artes visuais ou multilinguagem; categoria "parecerista".
+- Modelo vivo para aulas de arte: S, categoria "outro".
+- Restauro: S só quando for de obra de arte, bem cultural móvel, pintura mural, talha, azulejaria, forro pintado, acervo museológico, ou quando a obra de prédio histórico citar explicitamente elementos artísticos integrados. Restauração de prédio, pavimento, telhado, elétrica, instrumento musical é N.
+- Editais exclusivos de música, audiovisual, literatura, dança ou teatro são N. Editais restritos a residentes de outro estado são N. Palavra-chave em outro sentido é N ("exposição a agentes químicos", "acervo bibliográfico", "design de software", "parque de exposições").
+- D = dúvida, quando o texto é vago demais. Na dúvida real entre S e N, responda D, nunca S.
 
-Dê também uma categoria curta por item, uma destas palavras: curadoria, oficina, design, ilustracao, mural, restauro, exposicao, premio, residencia, fomento-geral, producao, outro. Para N, use "".
+Exemplos reais já rotulados:
+S design — "Prestação de serviço especializado de diagramação para as publicações digitais e impressas do IMAP"
+S design — "Serviços de projeto gráfico, diagramação e editoração eletrônica da Revista ENTRE e da Cartilha de Orientação"
+S mural — "Credenciamento para prestação de serviços de intervenções artísticas – Projeto Arte nas Ruas"
+S restauro — "Obra de restauração da parte civil e dos elementos artísticos e integrados da Igreja Mercês e Misericórdia"
+S oficina — "Serviços educacionais e artísticos para realização de Oficinas de Arte e Cultura integradas às atividades da escola"
+S mural — "Serviço de pintura artística na Sala de Depoimento Especial"
+N — "Confecção de material gráfico lona tipo banner para a Secretaria Municipal de Cultura"
+N — "Contratação do maestro Nilson Galvão para apresentação artística, musical e pedagógica de música erudita"
+N — "Locação, montagem e desmontagem de palco 6 m x 6 m com cobertura para evento cultural"
+N — "Serviços de edição de vídeos para o evento institucional Afropresença, com 12 horas de gravação bruta"
+N — "Aquisição de instrumentos musicais e acessórios nos termos da Política Nacional Aldir Blanc"
+N — "Fornecimento de camisetas com serigrafia destinadas ao programa educacional de resistência às drogas"
+
+Dê também uma categoria curta por item, uma destas palavras: curadoria, oficina, design, ilustracao, mural, restauro, exposicao, premio, residencia, fomento-geral, producao, parecerista, outro. Para N, use "".
 
 Responda apenas com um JSON em uma única linha, mapeando o número de cada item para [letra, categoria], por exemplo {"1":["S","exposicao"],"2":["N",""],"3":["D","fomento-geral"]}. Inclua todos os números. Sem explicações, sem texto fora do JSON.`;
 
@@ -230,7 +251,7 @@ export async function extrair(lista) {
     lotes: 0, lotesFalhos: 0, requisicoes: 0, tokensEntrada: 0, tokensSaida: 0, custoUsd: 0,
   };
   // Qualquer fonte que entregue detalhes.textoBruto passa pelo extrator (Diário Oficial, páginas de editais).
-  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia) && r.detalhes?.textoBruto);
+  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia) && r.detalhes?.textoBruto && !r.revisado);
   if (!chave) {
     stats.pendentes = fila.length;
     if (fila.length) log(`IA extrator: ANTHROPIC_API_KEY não definida; ${fila.length} textos ficam pendentes (com texto bruto guardado).`);
@@ -382,7 +403,7 @@ Responda apenas com um JSON em uma única linha mapeando o número de cada item 
 export async function categorizar(lista) {
   const chave = process.env.ANTHROPIC_API_KEY;
   const stats = { modelo: IA_MODELO, ativo: Boolean(chave), categorizados: 0, pendentes: 0, lotes: 0, lotesFalhos: 0, requisicoes: 0, tokensEntrada: 0, tokensSaida: 0, custoUsd: 0 };
-  const fila = lista.filter((r) => (r.ia === 'S' || r.ia === 'D') && !r.categoriaIA);
+  const fila = lista.filter((r) => (r.ia === 'S' || r.ia === 'D') && !r.categoriaIA && !r.revisado);
   if (!chave || fila.length === 0) { stats.pendentes = fila.length; return stats; }
 
   log(`IA categorizador: ${fila.length} itens aprovados/dúvida sem categoria, em lotes de ${CATEGORIZAR_LOTE}.`);
@@ -444,7 +465,7 @@ export async function classificar(lista) {
     tokensEntrada: 0, tokensSaida: 0, custoUsd: 0,
     porTipo: {},
   };
-  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia) && !r.detalhes?.textoBruto);
+  const fila = lista.filter((r) => !['S', 'N', 'D'].includes(r.ia) && !r.detalhes?.textoBruto && !r.revisado);
 
   if (!chave) {
     for (const r of fila) r.ia = 'pendente';

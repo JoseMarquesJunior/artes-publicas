@@ -1,0 +1,7 @@
+{
+  "_ajuda": [
+    "Vereditos manuais, aplicados por cima da IA em toda execução; itens listados aqui nunca voltam ao modelo.",
+    "Formato: \"<id>\": {\"ia\": \"S\"|\"N\", \"categoriaIA\": \"exposicao\"|..., \"obs\": \"texto livre\"}. O id é o campo 'id' do registro (aparece na issue aberta pelo link 'Classificação errada?').",
+    "Categorias: curadoria, oficina, design, ilustracao, mural, restauro, exposicao, premio, residencia, fomento-geral, producao, parecerista, outro."
+  ]
+}

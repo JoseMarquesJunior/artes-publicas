@@ -125,7 +125,14 @@ export async function carregarPalavras(caminho) {
     excluir: compilarPalavras(bruto.excluir, 'excluir'),
     excluirFraco: compilarPalavras(bruto.excluirFraco ?? [], 'excluirFraco'),
     genericos: new Set((bruto.genericos ?? []).map((g) => normalizar(g))),
+    fortes: compilarPalavras(bruto.fortes ?? [], 'fortes'),
   };
+}
+
+/** true se o texto contém algum termo inequívoco de artes visuais (lista "fortes" do keywords.json). */
+export function temTermoForte(texto, palavras) {
+  const t = normalizar(texto);
+  return palavras.fortes.some((p) => p.regex.test(t));
 }
 
 /**
