@@ -78,7 +78,11 @@
     "exposição a agentes",
     "exposição ocupacional",
     "agentes nocivos",
-    "insalubridade"
+    "insalubridade",
+    "parque de exposições",
+    "exposição agropecuária",
+    "exposição de animais",
+    "feira agropecuária"
   ],
   "excluirFraco": [
     "show",
