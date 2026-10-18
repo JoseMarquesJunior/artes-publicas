@@ -1,27 +1,27 @@
 {
-  "atualizadoEm": "2026-10-17T19:39:38.376Z",
-  "total": 6218,
-  "totalNovos": 0,
-  "totalAtualizados": 0,
+  "atualizadoEm": "2026-10-18T10:47:49.024Z",
+  "total": 5987,
+  "totalNovos": 5,
+  "totalAtualizados": 293,
   "removidos": {
     "antigos": 0,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 0,
+    "reprovadosAntigos": 236,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
   "base": {
     "aprovados": 1735,
-    "reprovados": 3879,
-    "duvidas": 604,
+    "reprovados": 3646,
+    "duvidas": 606,
     "pendentes": 0
   },
   "porTipo": {
     "contratacao": {
-      "total": 6209,
+      "total": 5978,
       "S": 1730,
-      "N": 3878,
-      "D": 601,
+      "N": 3645,
+      "D": 603,
       "pendente": 0
     },
     "chamamento": {
@@ -48,7 +48,61 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 6208,
+      "lidos": 5787,
+      "candidatos": 295,
+      "requisicoes": 120,
+      "erro": null,
+      "bloqueios429": 1,
+      "periodo": {
+        "de": "2026-10-16",
+        "ate": "2026-10-18",
+        "dias": 2
+      },
+      "modalidades": [
+        {
+          "codigo": 3,
+          "nome": "Concurso",
+          "lidos": 0,
+          "candidatos": 0,
+          "paginas": 0,
+          "falhas": 0
+        },
+        {
+          "codigo": 8,
+          "nome": "Dispensa de licitação",
+          "lidos": 3062,
+          "candidatos": 105,
+          "paginas": 62,
+          "falhas": 0
+        },
+        {
+          "codigo": 9,
+          "nome": "Inexigibilidade",
+          "lidos": 1022,
+          "candidatos": 146,
+          "paginas": 21,
+          "falhas": 0
+        },
+        {
+          "codigo": 12,
+          "nome": "Credenciamento",
+          "lidos": 75,
+          "candidatos": 7,
+          "paginas": 2,
+          "falhas": 0
+        },
+        {
+          "codigo": 6,
+          "nome": "Pregão eletrônico",
+          "lidos": 1628,
+          "candidatos": 37,
+          "paginas": 33,
+          "falhas": 0
+        }
+      ],
+      "erros": [],
+      "novos": 5,
+      "naBase": 5977,
       "aprovadosNaBase": 1730
     },
     {
@@ -58,7 +112,7 @@
       "ativo": true,
       "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
-      "puladaNestaExecucao": false,
+      "puladaNestaExecucao": true,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -69,7 +123,7 @@
       "ativo": true,
       "observacao": "Desafio JavaScript do Cloudflare para IPs de datacenter (GitHub Actions). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
-      "puladaNestaExecucao": false,
+      "puladaNestaExecucao": true,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -81,6 +135,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 2,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 2,
       "aprovadosNaBase": 0
     },
@@ -92,6 +153,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 7,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 7,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -103,6 +171,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 1,
+      "candidatos": 1,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 0
     },
@@ -114,14 +189,14 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 62,
+      "lidos": 12,
       "candidatos": 0,
-      "requisicoes": 24,
+      "requisicoes": 56,
       "erro": null,
-      "diarios": 4,
+      "diarios": 2,
       "periodo": {
-        "de": "2026-10-15",
-        "ate": "2026-10-17",
+        "de": "2026-10-16",
+        "ate": "2026-10-18",
         "dias": 2
       },
       "territorios": [
@@ -134,29 +209,29 @@
           "novos": 0,
           "pulados": 0,
           "semTermos": 0,
-          "erros": 0
+          "erros": 6
         },
         {
           "nome": "Contagem",
           "ibge": "3118601",
           "regiao": "Grande BH",
-          "diarios": 2,
-          "trechos": 39,
+          "diarios": 1,
+          "trechos": 6,
           "novos": 0,
-          "pulados": 20,
-          "semTermos": 19,
-          "erros": 0
+          "pulados": 6,
+          "semTermos": 0,
+          "erros": 6
         },
         {
           "nome": "Betim",
           "ibge": "3106705",
           "regiao": "Grande BH",
-          "diarios": 2,
-          "trechos": 23,
+          "diarios": 1,
+          "trechos": 6,
           "novos": 0,
-          "pulados": 4,
-          "semTermos": 19,
-          "erros": 0
+          "pulados": 2,
+          "semTermos": 4,
+          "erros": 1
         }
       ],
       "naoCobertos": [
@@ -173,7 +248,60 @@
         "Itabirito",
         "Congonhas"
       ],
-      "erros": [],
+      "erros": [
+        {
+          "janela": "Belo Horizonte · \"chamamento público cultura\"",
+          "mensagem": "HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3106200&querystring=chamamento+p%C3%BAblico+cultura&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Belo Horizonte · \"prêmio artes\"",
+          "mensagem": "The operation was aborted due to timeout"
+        },
+        {
+          "janela": "Belo Horizonte · \"credenciamento artistas\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106200&querystring=credenciamento+artistas&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Belo Horizonte · \"lei paulo gustavo\"",
+          "mensagem": "The operation was aborted due to timeout"
+        },
+        {
+          "janela": "Belo Horizonte · \"política nacional aldir blanc\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106200&querystring=pol%C3%ADtica+nacional+aldir+blanc&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Belo Horizonte · \"exposição artes\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106200&querystring=exposi%C3%A7%C3%A3o+artes&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Contagem · \"edital artes visuais\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=edital+artes+visuais&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Contagem · \"edital fomento cultura\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=edital+fomento+cultura&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Contagem · \"chamamento público cultura\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=chamamento+p%C3%BAblico+cultura&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Contagem · \"prêmio artes\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=pr%C3%AAmio+artes&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Contagem · \"credenciamento artistas\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=credenciamento+artistas&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Contagem · \"lei paulo gustavo\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=lei+paulo+gustavo&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Betim · \"lei paulo gustavo\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=lei+paulo+gustavo&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        }
+      ],
       "novos": 0,
       "naBase": 6,
       "aprovadosNaBase": 4
@@ -193,19 +321,25 @@
   "ia": {
     "modelo": "claude-haiku-5-5",
     "ativo": true,
-    "classificados": 0,
+    "classificados": 5,
     "aprovados": 0,
-    "reprovados": 0,
-    "duvidas": 0,
+    "reprovados": 3,
+    "duvidas": 2,
     "pendentes": 0,
-    "lotes": 0,
+    "lotes": 1,
     "lotesFalhos": 0,
-    "requisicoes": 0,
-    "tokensEntrada": 0,
-    "tokensSaida": 0,
-    "custoUsd": 0,
-    "porTipo": {},
-    "candidatosNestaExecucao": 0,
+    "requisicoes": 1,
+    "tokensEntrada": 1246,
+    "tokensSaida": 49,
+    "custoUsd": 0.0001,
+    "porTipo": {
+      "contratacao": {
+        "S": 0,
+        "N": 3,
+        "D": 2
+      }
+    },
+    "candidatosNestaExecucao": 298,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": true,
@@ -224,14 +358,14 @@
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
       "ativo": true,
-      "categorizados": 2,
+      "categorizados": 0,
       "pendentes": 0,
-      "lotes": 1,
+      "lotes": 0,
       "lotesFalhos": 0,
-      "requisicoes": 1,
-      "tokensEntrada": 552,
-      "tokensSaida": 23,
-      "custoUsd": 0.0001
+      "requisicoes": 0,
+      "tokensEntrada": 0,
+      "tokensSaida": 0,
+      "custoUsd": 0
     }
   },
   "queridoDiario": {
@@ -239,11 +373,68 @@
     "descartadosTotal": 223
   },
   "dedup": {
-    "fundidosNestaExecucao": 2,
+    "fundidosNestaExecucao": 0,
     "duplicadosConhecidos": 4
   },
-  "periodoPncp": null,
+  "periodoPncp": {
+    "de": "2026-10-16",
+    "ate": "2026-10-18",
+    "dias": 2
+  },
   "retencaoDias": 365,
-  "duracaoSegundos": 47,
-  "erros": []
+  "duracaoSegundos": 999,
+  "erros": [
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Belo Horizonte · \"chamamento público cultura\": HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3106200&querystring=chamamento+p%C3%BAblico+cultura&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Belo Horizonte · \"prêmio artes\": The operation was aborted due to timeout"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Belo Horizonte · \"credenciamento artistas\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106200&querystring=credenciamento+artistas&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Belo Horizonte · \"lei paulo gustavo\": The operation was aborted due to timeout"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Belo Horizonte · \"política nacional aldir blanc\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106200&querystring=pol%C3%ADtica+nacional+aldir+blanc&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Belo Horizonte · \"exposição artes\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106200&querystring=exposi%C3%A7%C3%A3o+artes&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"edital artes visuais\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=edital+artes+visuais&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"edital fomento cultura\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=edital+fomento+cultura&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"chamamento público cultura\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=chamamento+p%C3%BAblico+cultura&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"prêmio artes\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=pr%C3%AAmio+artes&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"credenciamento artistas\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=credenciamento+artistas&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"lei paulo gustavo\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=lei+paulo+gustavo&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Betim · \"lei paulo gustavo\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=lei+paulo+gustavo&published_since=2026-10-16&published_until=2026-10-18&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    }
+  ]
 }
