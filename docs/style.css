@@ -169,6 +169,21 @@ a:hover { text-decoration-thickness: 2px; }
 .painel-tabela th { color: var(--muted); font-weight: 600; font-size: 0.8rem; }
 .painel-tabela td.num, .painel-tabela th:not(:first-child) { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 
+/* ------------------------------------------------------------ participação */
+
+.abas-participacao { margin-top: 22px; }
+.abas-participacao [role="tab"][data-part="enviar-obra"][aria-selected="true"],
+.abas-participacao [role="tab"][data-part="residencia"][aria-selected="true"] { color: var(--accent); }
+
+.pill-part { text-transform: none; letter-spacing: 0; }
+.pill-part-enviar-obra { background: var(--accent); color: var(--accent-text); }
+.pill-part-residencia { background: #2f5d2a; color: #fff; }
+@media (prefers-color-scheme: dark) { .pill-part-residencia { background: #a6d19e; color: #10200e; } }
+.pill-part-inscrever-projeto { background: var(--accent-soft); color: var(--accent-soft-text); }
+.pill-part-prestar-servico, .pill-part-formacao { background: var(--surface-2); color: var(--muted); }
+
+.campo select:disabled { opacity: 0.7; cursor: help; background: var(--surface-2); }
+
 /* ------------------------------------------------------------ card: situação e extras */
 
 .card.cancelado { opacity: 0.55; }

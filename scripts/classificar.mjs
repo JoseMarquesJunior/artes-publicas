@@ -10,14 +10,14 @@
  * O claude-haiku-5-5 rejeita (400) temperature diferente do padrão; para resposta estável e barata
  * usa-se thinking desligado e effort "low".
  */
-import { ErroHttp, descreverErro, dormir, log, normalizar, truncar } from './util.mjs';
+import { ErroHttp, descreverErro, dormir, log, normalizar, truncar, PARTICIPACOES } from './util.mjs';
 
 export const IA_MODELO = 'claude-haiku-5-5';
 const IA_URL = 'https://api.anthropic.com/v1/messages';
 const IA_VERSAO = '2023-06-01';
 const IA_LOTE = 30;
 const IA_TRUNCAR_TEXTO = 600;
-const IA_TOKENS_POR_ITEM = 12;        // ["S","exposicao"] ≈ 9 tokens + folga
+const IA_TOKENS_POR_ITEM = 16;        // ["S","exposicao","enviar-obra"] ≈ 13 tokens + folga
 const IA_MARGEM_TOKENS = 40;
 const IA_MAX_TENTATIVAS = 3;
 const IA_INTERVALO_MS = 200;
@@ -49,8 +49,28 @@ Regras de decisão:
 - Pareceristas e avaliadores de projetos culturais: S apenas se o edital for de artes visuais ou multilinguagem; categoria "parecerista".
 - Modelo vivo para aulas de arte: S, categoria "outro".
 - Restauro: S só quando for de obra de arte, bem cultural móvel, pintura mural, talha, azulejaria, forro pintado, acervo museológico, ou quando a obra de prédio histórico citar explicitamente elementos artísticos integrados. Restauração de prédio, pavimento, telhado, elétrica, instrumento musical é N.
-- Editais exclusivos de música, audiovisual, literatura, dança ou teatro são N. Editais restritos a residentes de outro estado são N. Palavra-chave em outro sentido é N ("exposição a agentes químicos", "acervo bibliográfico", "design de software", "parque de exposições").
+- Editais exclusivos de música, audiovisual, literatura, dança ou teatro são N. Palavra-chave em outro sentido é N ("exposição a agentes químicos", "acervo bibliográfico", "design de software", "parque de exposições").
+- Geografia: editais em que se ENVIA OBRA ou RESIDÊNCIAS artísticas aceitam inscrição de qualquer lugar do Brasil e NUNCA são N por serem de outro estado (só são N se exigirem explicitamente residência em outro estado). Para inscrever-projeto e prestar-servico, restrição explícita a residentes de outro estado é N; se não disser, mantenha.
 - D = dúvida, quando o texto é vago demais. Na dúvida real entre S e N, responda D, nunca S.
+
+Além do veredito e da categoria, diga COMO SE PARTICIPA (independente do tipo e da categoria), uma destas palavras:
+- enviar-obra: o artista inscreve obras prontas ou portfólio para seleção — salão de artes, mostra coletiva, chamada aberta de galeria/museu/centro cultural, concurso de pintura/desenho/fotografia/gravura/escultura, exposição com seleção de artistas, aquisição ou doação de obras para acervo por edital, intervenção urbana com seleção de propostas artísticas, credenciamento de artistas para expor.
+- residencia: residência artística, com ou sem bolsa, mesmo que chamada de "edital de fomento".
+- inscrever-projeto: fomento em que se inscreve um projeto para receber recurso (PNAB, Lei Paulo Gustavo, FEC, fundos municipais, pontos de cultura, Rouanet); prêmio de trajetória ou de projeto.
+- prestar-servico: contratação de serviço (oficina, mural encomendado, curadoria contratada, design, restauro, parecerista, montagem/cenografia/iluminação/produção de exposição, credenciamento para oficinas ou apresentações).
+- formacao: curso, workshop, bolsa de estudo, programa formativo.
+- outro: não se encaixa ou não dá para saber.
+Regras: "exposição" só é enviar-obra quando o edital seleciona artistas ou obras para expor. Prêmio que premia obras inscritas é enviar-obra; que premia trajetória ou projeto é inscrever-projeto. Na dúvida entre enviar-obra e inscrever-projeto, veja o que se entrega na inscrição: imagens/portfólio = enviar-obra; plano/orçamento = inscrever-projeto. Para N, use "".
+
+Exemplos de participação:
+enviar-obra — "Salão de Artes Visuais de Indaiatuba: inscrição de até 3 obras por artista"
+enviar-obra — "Credenciamento de artistas para exposições na Galeria de Arte do Centro Cultural, com envio de portfólio"
+residencia — "Residência artística no Sítio Burle Marx, 2 meses com bolsa"
+residencia — "Edital de fomento: programa de residência para artistas visuais na Casa da Cultura, 6 semanas"
+inscrever-projeto — "Edital PNAB 02/2026: fomento a projetos culturais, inscrição de projeto com plano de trabalho e orçamento"
+inscrever-projeto — "Prêmio de trajetórias culturais: premiação de agentes com histórico comprovado"
+prestar-servico — "Contratação de empresa para montagem e cenografia da exposição do museu"
+prestar-servico — "Credenciamento de oficineiros de desenho e pintura para os centros culturais"
 
 Exemplos reais já rotulados:
 S design — "Prestação de serviço especializado de diagramação para as publicações digitais e impressas do IMAP"
@@ -68,7 +88,7 @@ N — "Fornecimento de camisetas com serigrafia destinadas ao programa educacion
 
 Dê também uma categoria curta por item, uma destas palavras: curadoria, oficina, design, ilustracao, mural, restauro, exposicao, premio, residencia, fomento-geral, producao, parecerista, outro. Para N, use "".
 
-Responda apenas com um JSON em uma única linha, mapeando o número de cada item para [letra, categoria], por exemplo {"1":["S","exposicao"],"2":["N",""],"3":["D","fomento-geral"]}. Inclua todos os números. Sem explicações, sem texto fora do JSON.`;
+Responda apenas com um JSON em uma única linha, mapeando o número de cada item para [letra, categoria, participacao], por exemplo {"1":["S","exposicao","enviar-obra"],"2":["N","",""],"3":["D","fomento-geral","inscrever-projeto"]}. Inclua todos os números. Sem explicações, sem texto fora do JSON.`;
 
 function descreverItem(r, i) {
   const local = [r.municipio, r.uf].filter(Boolean).join('/') || (r.uf === null ? 'abrangência nacional' : 'local não informado');
@@ -108,18 +128,29 @@ function extrairJsonTolerante(texto) {
   return null;
 }
 
-/** Aceita ["S","exposicao"], "S" ou {"veredito":"S","categoria":"x"}. */
+function normalizarParticipacao(valor, veredito) {
+  if (veredito === 'N') return null;
+  let p = normalizar(valor ?? '').replace(/\s+/g, '-');
+  if (p === 'enviar-obras' || p === 'envio-de-obra' || p === 'obra') p = 'enviar-obra';
+  if (p === 'residencia-artistica') p = 'residencia';
+  if (p === 'projeto' || p === 'inscrever-projetos') p = 'inscrever-projeto';
+  if (p === 'servico' || p === 'prestar-servicos' || p === 'contratacao') p = 'prestar-servico';
+  return PARTICIPACOES.includes(p) ? p : 'outro';
+}
+
+/** Aceita ["S","exposicao","enviar-obra"], ["S","exposicao"], "S" ou {"veredito":"S","categoria":"x","participacao":"y"}. */
 function interpretarResposta(valor) {
   let letra = '';
   let categoria = '';
-  if (Array.isArray(valor)) [letra, categoria] = valor;
+  let participacao = '';
+  if (Array.isArray(valor)) [letra, categoria, participacao] = valor;
   else if (typeof valor === 'string') letra = valor;
-  else if (valor && typeof valor === 'object') { letra = valor.veredito ?? valor.v ?? ''; categoria = valor.categoria ?? valor.c ?? ''; }
+  else if (valor && typeof valor === 'object') { letra = valor.veredito ?? valor.v ?? ''; categoria = valor.categoria ?? valor.c ?? ''; participacao = valor.participacao ?? valor.p ?? ''; }
   letra = String(letra ?? '').trim().toUpperCase();
   if (!['S', 'N', 'D'].includes(letra)) return null;
   let cat = normalizar(categoria).replace(/\s+/g, '-');
   if (!CATEGORIAS.includes(cat)) cat = letra === 'N' ? '' : (cat ? 'outro' : '');
-  return { veredito: letra, categoria: letra === 'N' ? null : (cat || null) };
+  return { veredito: letra, categoria: letra === 'N' ? null : (cat || null), participacao: normalizarParticipacao(participacao, letra) };
 }
 
 async function chamarModelo(chave, lote, ia) {
@@ -155,7 +186,7 @@ async function chamarModelo(chave, lote, ia) {
 // ---------------------------------------------------------------- modo extrator (Querido Diário)
 
 const EXTRATOR_LOTE = 8;                 // trechos por requisição (texto longo)
-const EXTRATOR_TOKENS_POR_ITEM = 300;    // título + resumo de 200 caracteres + campos ≈ 200–260 tokens em português
+const EXTRATOR_TOKENS_POR_ITEM = 340;    // título + resumo de 200 caracteres + campos ≈ 220–290 tokens em português
 const EXTRATOR_MARGEM_TOKENS = 200;
 const TIPOS_EXTRATOR = ['contratacao', 'fomento', 'premio', 'residencia', 'chamamento', 'outro'];
 
@@ -169,9 +200,13 @@ Para cada trecho, foque apenas no que diz respeito a edital, chamamento público
 - orgao: órgão responsável, ou null.
 - encerramento: prazo final de inscrição/proposta em formato AAAA-MM-DD (converta datas brasileiras como 23/10/2026); null se o prazo não estiver no trecho. Nunca invente.
 - valor: valor total em reais como número (sem R$, sem pontos de milhar), ou null.
-- categoria: uma destas palavras: curadoria, oficina, design, ilustracao, mural, restauro, exposicao, premio, residencia, fomento-geral, producao, outro.
+- categoria: uma destas palavras: curadoria, oficina, design, ilustracao, mural, restauro, exposicao, premio, residencia, fomento-geral, producao, parecerista, outro.
+- participacao: COMO SE PARTICIPA, uma destas palavras: enviar-obra (o artista inscreve obras prontas ou portfólio: salão, mostra coletiva, chamada aberta de galeria/museu, concurso de pintura/fotografia/gravura, seleção de artistas para expor, aquisição/doação de obras para acervo, credenciamento de artistas para expor), residencia (residência artística, mesmo que chamada de "edital de fomento"), inscrever-projeto (inscreve-se um projeto com plano e orçamento para receber recurso: PNAB, Lei Paulo Gustavo, FEC, fundos municipais; prêmio de trajetória ou projeto), prestar-servico (contratação de serviço: oficina, mural encomendado, curadoria contratada, design, restauro, parecerista, montagem/cenografia/produção de exposição, credenciamento para oficinas ou apresentações), formacao (curso, workshop, bolsa de estudo), outro. "Exposição" só é enviar-obra quando seleciona artistas ou obras para expor; prêmio de obras inscritas é enviar-obra. Na dúvida entre enviar-obra e inscrever-projeto, veja o que se entrega: imagens/portfólio = enviar-obra; plano/orçamento = inscrever-projeto. Para "N", use "".
+- taxa: taxa de inscrição em reais como número, ou null.
+- obrasPorArtista: quantas obras cada artista pode inscrever, como texto curto ("até 3 obras"), ou null.
+Geografia: editais de enviar-obra e residências aceitam inscrição de qualquer lugar do Brasil e nunca são "N" por serem de outro estado.
 
-Responda apenas com um JSON em uma única linha, mapeando o número de cada trecho a um objeto com essas oito chaves, por exemplo {"1":{"relevante":"S","titulo":"Edital PNAB 02/2026 - Multilinguagem","tipo":"fomento","resumo":"...","orgao":"Secretaria Municipal de Cultura de Contagem","encerramento":"2026-11-10","valor":500000,"categoria":"fomento-geral"},"2":{"relevante":"N","titulo":"Homologação de resultado","tipo":"outro","resumo":"...","orgao":null,"encerramento":null,"valor":null,"categoria":"outro"}}. Inclua todos os números. Sem texto fora do JSON.`;
+Responda apenas com um JSON em uma única linha, mapeando o número de cada trecho a um objeto com essas onze chaves, por exemplo {"1":{"relevante":"S","titulo":"Edital PNAB 02/2026 - Multilinguagem","tipo":"fomento","resumo":"...","orgao":"Secretaria Municipal de Cultura de Contagem","encerramento":"2026-11-10","valor":500000,"categoria":"fomento-geral","participacao":"inscrever-projeto","taxa":null,"obrasPorArtista":null},"2":{"relevante":"N","titulo":"Homologação de resultado","tipo":"outro","resumo":"...","orgao":null,"encerramento":null,"valor":null,"categoria":"outro","participacao":"","taxa":null,"obrasPorArtista":null}}. Inclua todos os números. Sem texto fora do JSON.`;
 
 function descreverTrecho(r, i) {
   const local = r.uf ? `${r.municipio ? `${r.municipio}/` : ''}${r.uf}` : 'abrangência nacional';
@@ -196,6 +231,7 @@ function interpretarExtracao(v) {
   let categoria = normalizar(v.categoria ?? '').replace(/\s+/g, '-');
   if (!CATEGORIAS.includes(categoria)) categoria = relevante === 'N' ? null : 'outro';
   const tipo = TIPOS_EXTRATOR.includes(v.tipo) ? v.tipo : 'outro';
+  const taxaNum = typeof v.taxa === 'number' ? v.taxa : Number(String(v.taxa ?? '').replace(/[^\d,.-]/g, '').replace(',', '.'));
   return {
     relevante,
     titulo: truncar(v.titulo ?? '', 160) || null,
@@ -205,6 +241,9 @@ function interpretarExtracao(v) {
     encerramento: dataISOouNull(v.encerramento),
     valor: Number.isFinite(valorNum) && valorNum > 0 ? valorNum : null,
     categoria: relevante === 'N' ? null : categoria,
+    participacao: normalizarParticipacao(v.participacao, relevante),
+    taxa: Number.isFinite(taxaNum) && taxaNum > 0 ? taxaNum : null,
+    obrasPorArtista: typeof v.obrasPorArtista === 'string' && v.obrasPorArtista.trim() ? truncar(v.obrasPorArtista, 60) : null,
   };
 }
 
@@ -286,6 +325,8 @@ export async function extrair(lista) {
       stats.processados++;
       r.ia = ex.relevante;
       r.categoriaIA = ex.categoria;
+      r.participacao = ex.participacao;
+      if (r.detalhes) { r.detalhes.taxa = ex.taxa; r.detalhes.obrasPorArtista = ex.obrasPorArtista; }
       r.tipo = ex.tipo;
       if (ex.titulo) r.titulo = ex.titulo;
       r.resumo = ex.resumo;
@@ -300,6 +341,62 @@ export async function extrair(lista) {
 
     if (stats.lotes % 5 === 0) log(`  IA extrator: ${Math.min(i + EXTRATOR_LOTE, fila.length)}/${fila.length} trechos processados`);
     if (i + EXTRATOR_LOTE < fila.length) await dormir(IA_INTERVALO_MS);
+  }
+  stats.custoUsd = Number(((stats.tokensEntrada * IA_PRECO_ENTRADA_USD_POR_MTOK + stats.tokensSaida * IA_PRECO_SAIDA_USD_POR_MTOK) / 1e6).toFixed(4));
+  return stats;
+}
+
+// ---------------------------------------------------------------- participação para itens já avaliados sem o campo
+
+const PROMPT_PARTICIPACAO = `Você recebe uma lista numerada de oportunidades já consideradas relevantes para uma artista visual. Para cada item, diga COMO SE PARTICIPA, uma destas palavras:
+- enviar-obra: inscrição de obras prontas ou portfólio (salão, mostra coletiva, chamada de galeria/museu, concurso de pintura/fotografia/gravura, seleção de artistas para expor, aquisição/doação de obras para acervo, credenciamento de artistas para expor).
+- residencia: residência artística, mesmo que chamada de "edital de fomento".
+- inscrever-projeto: inscreve-se um projeto com plano e orçamento para receber recurso (PNAB, Lei Paulo Gustavo, FEC, fundos municipais, pontos de cultura); prêmio de trajetória ou projeto.
+- prestar-servico: contratação de serviço (oficina, mural encomendado, curadoria contratada, design, restauro, parecerista, montagem/cenografia/produção de exposição, credenciamento para oficinas ou apresentações).
+- formacao: curso, workshop, bolsa de estudo, programa formativo.
+- outro: não se encaixa ou não dá para saber.
+"Exposição" só é enviar-obra quando seleciona artistas ou obras para expor; montagem/cenografia/produção é prestar-servico. Prêmio de obras inscritas é enviar-obra; de trajetória/projeto é inscrever-projeto.
+
+Responda apenas com um JSON em uma única linha mapeando o número de cada item à palavra, por exemplo {"1":"enviar-obra","2":"prestar-servico"}. Inclua todos os números. Sem texto fora do JSON.`;
+
+/** Preenche `participacao` nos itens S/D que ainda não têm (avaliados antes de o campo existir, ou extraídos de texto já descartado). */
+export async function completarParticipacao(lista) {
+  const chave = process.env.ANTHROPIC_API_KEY;
+  const stats = { ativo: Boolean(chave), preenchidos: 0, pendentes: 0, lotes: 0, lotesFalhos: 0, requisicoes: 0, tokensEntrada: 0, tokensSaida: 0, custoUsd: 0 };
+  const fila = lista.filter((r) => (r.ia === 'S' || r.ia === 'D') && !r.participacao && !r.revisado);
+  if (!chave || fila.length === 0) { stats.pendentes = fila.length; return stats; }
+  log(`IA participação: ${fila.length} itens aprovados/dúvida sem "como participar", em lotes de ${CATEGORIZAR_LOTE}.`);
+  for (let i = 0; i < fila.length; i += CATEGORIZAR_LOTE) {
+    const lote = fila.slice(i, i + CATEGORIZAR_LOTE);
+    stats.lotes++;
+    let respostas = null;
+    try {
+      stats.requisicoes++;
+      const res = await fetch(IA_URL, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'x-api-key': chave, 'anthropic-version': IA_VERSAO },
+        body: JSON.stringify({
+          model: IA_MODELO, max_tokens: lote.length * 10 + IA_MARGEM_TOKENS, system: PROMPT_PARTICIPACAO,
+          thinking: { type: 'disabled' }, output_config: { effort: 'low' },
+          messages: [{ role: 'user', content: lote.map(descreverItem).join('\n') }],
+        }),
+        signal: AbortSignal.timeout(IA_TIMEOUT_MS),
+      });
+      if (!res.ok) throw new ErroHttp(res.status, IA_URL, await res.text().catch(() => ''), res.headers.get('retry-after'));
+      const resposta = await res.json();
+      stats.tokensEntrada += resposta.usage?.input_tokens ?? 0;
+      stats.tokensSaida += resposta.usage?.output_tokens ?? 0;
+      respostas = extrairJsonTolerante((resposta.content ?? []).filter((b) => b.type === 'text').map((b) => b.text).join(''));
+    } catch (erro) {
+      stats.lotesFalhos++;
+      log(`  IA participação: lote ${stats.lotes} falhou (${descreverErro(erro)})`);
+      if (erro instanceof ErroHttp && erro.status === 429) await dormir(erro.retryAfterMs ?? 10_000);
+    }
+    lote.forEach((r, idx) => {
+      const p = respostas ? normalizarParticipacao(respostas[String(idx + 1)], r.ia) : null;
+      if (p) { r.participacao = p; stats.preenchidos++; } else stats.pendentes++;
+    });
+    if (i + CATEGORIZAR_LOTE < fila.length) await dormir(IA_INTERVALO_MS);
   }
   stats.custoUsd = Number(((stats.tokensEntrada * IA_PRECO_ENTRADA_USD_POR_MTOK + stats.tokensSaida * IA_PRECO_SAIDA_USD_POR_MTOK) / 1e6).toFixed(4));
   return stats;
@@ -505,6 +602,7 @@ export async function classificar(lista) {
       if (resultado) {
         r.ia = resultado.veredito;
         r.categoriaIA = resultado.categoria;
+        r.participacao = resultado.participacao;
         ia.classificados++;
         if (r.ia === 'S') ia.aprovados++;
         else if (r.ia === 'N') ia.reprovados++;

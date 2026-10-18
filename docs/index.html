@@ -13,13 +13,22 @@
   <header class="topo">
     <div class="conteudo">
       <h1>Artes Públicas</h1>
-      <p class="subtitulo">Contratações e editais de fomento em artes visuais, reunidos do PNCP, dos Mapas Culturais e dos diários oficiais da Grande BH.</p>
+      <p class="subtitulo">Salões, mostras, residências artísticas, editais de fomento e contratações em artes visuais, reunidos do PNCP, dos Mapas Culturais, dos diários oficiais e de páginas de editais.</p>
       <p class="resumo" id="resumo" aria-live="polite">Carregando dados…</p>
       <p class="atualizado" id="atualizado"></p>
     </div>
   </header>
 
   <main class="conteudo">
+    <div class="abas abas-participacao" id="participacao" role="tablist" aria-label="Como participar">
+      <button type="button" role="tab" data-part="enviar-obra" aria-selected="false" tabindex="-1">Enviar obra <span class="aba-n"></span></button>
+      <button type="button" role="tab" data-part="residencia" aria-selected="false" tabindex="-1">Residência <span class="aba-n"></span></button>
+      <button type="button" role="tab" data-part="inscrever-projeto" aria-selected="false" tabindex="-1">Inscrever projeto <span class="aba-n"></span></button>
+      <button type="button" role="tab" data-part="prestar-servico" aria-selected="false" tabindex="-1">Prestar serviço <span class="aba-n"></span></button>
+      <button type="button" role="tab" data-part="formacao" aria-selected="false" tabindex="-1">Formação <span class="aba-n"></span></button>
+      <button type="button" role="tab" data-part="" aria-selected="true">Todas <span class="aba-n"></span></button>
+    </div>
+
     <div class="visoes" id="visoes" role="tablist" aria-label="Visão">
       <button type="button" role="tab" data-visao="abertas" aria-selected="true">Abertas agora</button>
       <button type="button" role="tab" data-visao="radar" aria-selected="false" tabindex="-1">Radar de mercado</button>
@@ -43,6 +52,7 @@
           <option value="MG">MG</option>
           <option value="todas">Todas</option>
           <option value="nacional">Nacional</option>
+          <option value="brasil" hidden>Brasil inteiro</option>
         </select>
       </label>
       <label class="campo">

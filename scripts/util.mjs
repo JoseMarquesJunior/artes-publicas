@@ -271,6 +271,8 @@ export async function executarEmParalelo(itens, limite, fn) {
 
 export const TIPOS = ['contratacao', 'fomento', 'premio', 'residencia', 'chamamento', 'outro'];
 export const VEREDITOS = ['S', 'N', 'D'];
+/** Eixo "como participar": independente de tipo e de categoriaIA. */
+export const PARTICIPACOES = ['enviar-obra', 'residencia', 'inscrever-projeto', 'prestar-servico', 'formacao', 'outro'];
 
 /** Infere o tipo de um edital de fomento pelo nome/descrição. */
 export function inferirTipoFomento(texto) {
@@ -306,6 +308,7 @@ export function registroUnificado(campos) {
     tags: Array.isArray(campos.tags) ? campos.tags : [],
     ia: VEREDITOS.includes(campos.ia) ? campos.ia : 'pendente',
     categoriaIA: campos.categoriaIA ?? null,
+    participacao: PARTICIPACOES.includes(campos.participacao) ? campos.participacao : null,
     coletadoEm: campos.coletadoEm ?? new Date().toISOString(),
     publicadoEm: campos.publicadoEm ?? null,
     detalhes: campos.detalhes ?? null,

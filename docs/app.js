@@ -14,6 +14,12 @@
   const REPO = 'JoseMarquesJunior/artes-publicas'; // para o link "Classificação errada?"
 
   const TIPO_ROTULO = { contratacao: 'Contratação', fomento: 'Fomento', premio: 'Prêmio', residencia: 'Residência', chamamento: 'Chamamento', outro: 'Outro' };
+  const PART_ROTULO = { 'enviar-obra': 'Enviar obra', residencia: 'Residência', 'inscrever-projeto': 'Inscrever projeto', 'prestar-servico': 'Prestar serviço', formacao: 'Formação', outro: 'Outro' };
+  const PARTES = Object.keys(PART_ROTULO);
+  // Enviar obra e residência aceitam inscrição de qualquer lugar do Brasil: o filtro de UF não se aplica.
+  const PARTES_NACIONAIS = new Set(['enviar-obra', 'residencia']);
+  const ehNacional = (part) => PARTES_NACIONAIS.has(part);
+  const ordemPadrao = (f) => (ehNacional(f.part) ? 'prazo' : ORDEM_PADRAO[f.visao]);
   const GRUPO_FOMENTO = new Set(['fomento', 'premio', 'residencia', 'chamamento']);
   const SITUACOES_ALERTA = /suspens|anulad|revogad/i;
   // Peso da categoria na ordenação por relevância: categorias claramente de artes visuais primeiro,
@@ -30,7 +36,7 @@
   const SIGLAS = new Set(['PNAB', 'PNCP', 'LPG', 'FEC', 'SECULT', 'SMC', 'FMC', 'MG', 'SP', 'RJ', 'BH', 'UF', 'CNPJ', 'CPF', 'MEI', 'OSC', 'PBH', 'UFMG', 'IPHAN', 'IEPHA', 'FCS', 'ONG', 'LTDA', 'EPP', 'SRP', 'ARP', 'PMBH', 'CMBH', 'TV', 'PCD', 'LGBT', 'CRAS', 'CREAS', 'CAPS', 'UBS', 'APAE', 'SESC', 'SENAC', 'SESI', 'IBGE', 'MINC', 'RS', 'PR', 'SC', 'BA', 'CE', 'PE', 'PA', 'GO', 'DF', 'ES', 'MT', 'MS', 'AM', 'TO', 'MA', 'PB', 'RN', 'AL', 'SE', 'PI', 'AC', 'RO', 'RR', 'AP', 'FUNDAC', 'FUNARTE', 'SMCULT', 'CMPC', 'COMPAC', 'FMIC', 'UEMG', 'CEFET', 'IFMG', 'UFOP', 'UFJF', 'UFU', 'UFV', 'ME']);
 
   const el = {};
-  for (const id of ['busca', 'uf', 'regiao', 'modalidade', 'ordem', 'duvida', 'limpar', 'contagem', 'status', 'lista', 'mais', 'atualizado', 'resumo', 'filtros', 'abas', 'visoes', 'intro-radar', 'painel-radar', 'fontes-aviso', 'rodape-base', 'rodape-erros']) {
+  for (const id of ['busca', 'uf', 'regiao', 'modalidade', 'ordem', 'duvida', 'limpar', 'contagem', 'status', 'lista', 'mais', 'atualizado', 'resumo', 'filtros', 'abas', 'visoes', 'participacao', 'intro-radar', 'painel-radar', 'fontes-aviso', 'rodape-base', 'rodape-erros']) {
     el[id.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = document.getElementById(id);
   }
 
@@ -117,29 +123,34 @@
     const tipo = p.get('tipo');
     const visao = p.get('visao') === 'radar' ? 'radar' : p.get('visao') === 'abertas' ? 'abertas' : (lerVisaoLembrada() ?? VISAO_PADRAO);
     const ord = p.get('ord');
-    return {
+    const part = PARTES.includes(p.get('part')) ? p.get('part') : '';
+    const f = {
       visao,
+      part,
       tipo: tipo === 'contratacao' || tipo === 'fomento' ? tipo : '',
       q: p.get('q') ?? '',
       uf: p.get('uf') ?? UF_PADRAO,
       reg: ['Grande BH', 'Inconfidentes', 'Outras'].includes(p.get('regiao')) ? p.get('regiao') : '',
       mod: p.get('mod') ?? '',
       duvida: p.get('duvida') === '1',
-      ord: ['prazo', 'recentes', 'relevancia'].includes(ord) ? ord : ORDEM_PADRAO[visao],
+      ord: 'prazo',
     };
+    f.ord = ['prazo', 'recentes', 'relevancia'].includes(ord) ? ord : ordemPadrao(f);
+    return f;
   }
 
   function gravarFiltrosNaUrl() {
     const f = estado.filtros;
     const p = new URLSearchParams();
     if (f.visao !== VISAO_PADRAO) p.set('visao', f.visao);
+    if (f.part) p.set('part', f.part);
     if (f.tipo) p.set('tipo', f.tipo);
     if (f.q) p.set('q', f.q);
-    if (f.uf !== UF_PADRAO) p.set('uf', f.uf);
+    if (f.uf !== UF_PADRAO && !ehNacional(f.part)) p.set('uf', f.uf);
     if (f.reg) p.set('regiao', f.reg);
     if (f.mod) p.set('mod', f.mod);
     if (f.duvida) p.set('duvida', '1');
-    if (f.ord !== ORDEM_PADRAO[f.visao]) p.set('ord', f.ord);
+    if (f.ord !== ordemPadrao(f)) p.set('ord', f.ord);
     const qs = p.toString();
     history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
     lembrarVisao(f.visao);
@@ -150,7 +161,18 @@
     el.busca.value = f.q;
     garantirOpcao(el.uf, f.uf);
     garantirOpcao(el.modalidade, f.mod);
-    el.uf.value = f.uf;
+    if (ehNacional(f.part)) {
+      // Regra de geografia: salões, mostras e residências aceitam inscrição de qualquer lugar do Brasil.
+      el.uf.value = 'brasil';
+      el.uf.disabled = true;
+      el.uf.title = 'Editais de enviar obra e residências aceitam inscrição de qualquer lugar do Brasil; o filtro de UF não se aplica.';
+      el.uf.parentElement.title = el.uf.title;
+    } else {
+      el.uf.disabled = false;
+      el.uf.title = '';
+      el.uf.parentElement.title = '';
+      el.uf.value = f.uf;
+    }
     el.regiao.value = f.reg;
     el.modalidade.value = f.mod;
     el.duvida.checked = f.duvida;
@@ -162,6 +184,11 @@
     }
     for (const b of el.visoes.querySelectorAll('[data-visao]')) {
       const ativo = b.dataset.visao === f.visao;
+      b.setAttribute('aria-selected', String(ativo));
+      b.tabIndex = ativo ? 0 : -1;
+    }
+    for (const b of el.participacao.querySelectorAll('[data-part]')) {
+      const ativo = b.dataset.part === f.part;
       b.setAttribute('aria-selected', String(ativo));
       b.tabIndex = ativo ? 0 : -1;
     }
@@ -241,20 +268,32 @@
   }
 
   function filtrar() {
-    const { visao, tipo, q, uf, reg, mod, duvida, ord } = estado.filtros;
+    const { visao, part, tipo, q, uf, reg, mod, duvida, ord } = estado.filtros;
     const termos = normalizar(q).split(/\s+/).filter(Boolean);
     const agora = Date.now();
 
-    const semTipo = estado.base.filter((r) => {
+    // Filtros comuns, exceto UF e participação (a UF depende da participação: enviar obra e residência valem para o Brasil inteiro).
+    const comuns = estado.base.filter((r) => {
       const ac = acionavelAtual(r, agora);
       if (visao === 'abertas' ? !(ac === 'aberta' || ac === 'fluxo-continuo') : !(ac === 'radar' || ac === 'encerrada')) return false;
       if (!duvida && veredito(r) === 'D') return false;
-      if (!passaUf(r, uf)) return false;
       if (reg && (r.regiao ?? (r.uf ? 'Outras' : null)) !== reg) return false;
       if (mod && r.detalhes?.modalidade !== mod) return false;
       if (termos.length && !termos.every((t) => r._busca.includes(t))) return false;
       return true;
     });
+    const passaGeo = (r, p) => ehNacional(p) || passaUf(r, uf);
+    const partDe = (r) => r.participacao ?? 'outro';
+
+    // contagem por participação (cada uma com a sua regra geográfica)
+    for (const b of el.participacao.querySelectorAll('[data-part]')) {
+      const p = b.dataset.part;
+      const n = comuns.filter((r) => (p ? partDe(r) === p : true) && passaGeo(r, p ? p : partDe(r))).length;
+      const span = b.querySelector('.aba-n');
+      if (span) span.textContent = n.toLocaleString('pt-BR');
+    }
+
+    const semTipo = comuns.filter((r) => (part ? partDe(r) === part : true) && passaGeo(r, part || partDe(r)));
 
     const contagens = { '': semTipo.length, contratacao: 0, fomento: 0 };
     for (const r of semTipo) if (r._grupo in contagens) contagens[r._grupo]++;
@@ -297,13 +336,14 @@
   function atualizarResumo(contagens) {
     const f = estado.filtros;
     const n = estado.filtrados.length;
-    const ufTexto = f.uf === 'todas' ? 'no Brasil' : f.uf === 'nacional' ? 'de abrangência nacional' : `em ${f.uf}`;
+    const ufTexto = ehNacional(f.part) ? 'no Brasil inteiro' : f.uf === 'todas' ? 'no Brasil' : f.uf === 'nacional' ? 'de abrangência nacional' : `em ${f.uf}`;
+    const rotuloPart = f.part ? ` · ${PART_ROTULO[f.part].toLowerCase()}` : '';
     const partes = f.visao === 'abertas'
-      ? [plural(contagens[''], 'oportunidade aberta', 'oportunidades abertas') + ` ${ufTexto}`, `${contagens.fomento} de fomento`, `${contagens.contratacao} contratações`]
-      : [plural(contagens[''], 'item no radar', 'itens no radar') + ` ${ufTexto}`, `${contagens.contratacao} contratações decididas`, `${contagens.fomento} editais encerrados`];
+      ? [plural(contagens[''], 'oportunidade aberta', 'oportunidades abertas') + ` ${ufTexto}${rotuloPart}`, `${contagens.fomento} de fomento`, `${contagens.contratacao} contratações`]
+      : [plural(contagens[''], 'item no radar', 'itens no radar') + ` ${ufTexto}${rotuloPart}`, `${contagens.contratacao} contratações decididas`, `${contagens.fomento} editais encerrados`];
     el.resumo.textContent = partes.join(' · ');
     el.contagem.textContent = f.tipo ? `${plural(n, 'item', 'itens')} nesta aba` : plural(n, 'item', 'itens');
-    const temFiltro = Boolean(f.tipo || f.q || f.reg || f.mod || f.duvida) || f.uf !== UF_PADRAO || f.ord !== ORDEM_PADRAO[f.visao];
+    const temFiltro = Boolean(f.part || f.tipo || f.q || f.reg || f.mod || f.duvida) || (f.uf !== UF_PADRAO && !ehNacional(f.part)) || f.ord !== ordemPadrao(f);
     el.limpar.hidden = !temFiltro;
   }
 
@@ -404,6 +444,11 @@
     // linha superior: tipo, fonte, modalidade, estado
     const topo = h('div', 'card-topo');
     topo.append(h('span', `pill pill-tipo pill-tipo-${r.tipo}`, TIPO_ROTULO[r.tipo] ?? r.tipo));
+    if (r.participacao && r.participacao !== 'outro') {
+      const selo = h('span', `pill pill-part pill-part-${r.participacao}`, PART_ROTULO[r.participacao]);
+      if (ehNacional(r.participacao)) selo.title = 'Aceita inscrição de qualquer lugar do Brasil';
+      topo.append(selo);
+    }
     topo.append(h('span', 'pill pill-fonte', nomeFonte(r)));
     if (r.detalhes?.modalidade) topo.append(h('span', 'pill', r.detalhes.modalidade));
     if (alerta) topo.append(h('span', 'pill pill-alerta', situacao));
@@ -462,13 +507,20 @@
     if (r.valor) adicionarDado(dl, 'Valor estimado', fmtMoedaCent.format(r.valor));
     adicionarDado(dl, 'Publicado em', r._pub !== null ? fmtData.format(r._pub) : 'Não informado');
     if (fomento && r.abertura) adicionarDado(dl, 'Inscrições de', fmtData.format(paraMs(r.abertura)));
+    const enviarObra = r.participacao === 'enviar-obra' || r.participacao === 'residencia';
     if (!(radar && contratacaoDireta(r))) {
+      let prazoTexto = enc !== null ? (r.encerramento.length === 10 ? fmtData.format(enc) : fmtDataHora.format(enc)) : (ac === 'fluxo-continuo' ? 'Fluxo contínuo' : '⚠ prazo não identificado');
+      if (enviarObra && aberto) prazoTexto += diasRestantes <= 1 ? ' (último dia)' : ` (em ${diasRestantes} dias)`;
       adicionarDado(
         dl,
-        fomento ? 'Inscrições até' : 'Propostas até',
-        enc !== null ? (r.encerramento.length === 10 ? fmtData.format(enc) : fmtDataHora.format(enc)) : (ac === 'fluxo-continuo' ? 'Fluxo contínuo' : '⚠ prazo não identificado'),
+        fomento || enviarObra ? 'Inscrições até' : 'Propostas até',
+        prazoTexto,
         enc !== null && !aberto ? 'encerrado' : urgente ? 'destaque' : (enc === null && ac !== 'fluxo-continuo' ? 'alerta' : ''),
       );
+    }
+    if (r.participacao === 'enviar-obra') {
+      if (r.detalhes?.taxa) adicionarDado(dl, 'Taxa de inscrição', fmtMoedaCent.format(r.detalhes.taxa));
+      if (r.detalhes?.obrasPorArtista) adicionarDado(dl, 'Nº de obras', r.detalhes.obrasPorArtista);
     }
     card.append(dl);
     if (blocoExtra) card.append(blocoExtra);
@@ -561,8 +613,9 @@
       reg: el.regiao.value,
       mod: el.modalidade.value,
       duvida: el.duvida.checked,
-      ord: ['prazo', 'recentes', 'relevancia'].includes(el.ordem.value) ? el.ordem.value : ORDEM_PADRAO[estado.filtros.visao],
+      ord: ['prazo', 'recentes', 'relevancia'].includes(el.ordem.value) ? el.ordem.value : ordemPadrao(estado.filtros),
     };
+    if (ehNacional(estado.filtros.part)) estado.filtros.uf = UF_PADRAO; // o select está travado em "Brasil inteiro"; ao sair, volta a MG
     gravarFiltrosNaUrl();
     filtrar();
   }
@@ -603,13 +656,22 @@
     ligarAbas(el.visoes, 'visao', (visao) => {
       if (visao === estado.filtros.visao) return;
       estado.filtros.visao = visao;
-      estado.filtros.ord = ORDEM_PADRAO[visao];
+      estado.filtros.ord = ordemPadrao(estado.filtros);
+      aplicarFiltrosNosControles();
+      gravarFiltrosNaUrl();
+      filtrar();
+    });
+    ligarAbas(el.participacao, 'part', (part) => {
+      if (part === estado.filtros.part) return;
+      estado.filtros.part = part;
+      estado.filtros.uf = UF_PADRAO; // ao trocar de participação a UF volta ao padrão (nos nacionais ela é ignorada)
+      estado.filtros.ord = ordemPadrao(estado.filtros);
       aplicarFiltrosNosControles();
       gravarFiltrosNaUrl();
       filtrar();
     });
     el.limpar.addEventListener('click', () => {
-      estado.filtros = { visao: estado.filtros.visao, tipo: '', q: '', uf: UF_PADRAO, reg: '', mod: '', duvida: false, ord: ORDEM_PADRAO[estado.filtros.visao] };
+      estado.filtros = { visao: estado.filtros.visao, part: '', tipo: '', q: '', uf: UF_PADRAO, reg: '', mod: '', duvida: false, ord: ORDEM_PADRAO[estado.filtros.visao] };
       aplicarFiltrosNosControles();
       gravarFiltrosNaUrl();
       filtrar();

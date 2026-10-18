@@ -22,7 +22,7 @@ import * as queridoDiario from './fontes/querido-diario.mjs';
 import * as paginas from './fontes/paginas.mjs';
 import * as domBh from './fontes/dom-bh.mjs';
 import * as amm from './fontes/amm.mjs';
-import { classificar, extrair, categorizar, completarPrazos } from './classificar.mjs';
+import { classificar, extrair, categorizar, completarPrazos, completarParticipacao } from './classificar.mjs';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -172,6 +172,7 @@ function mesclar(existentes, coletados, palavras, hoje, duplicadosConhecidos) {
       ...r,
       ia: jaAvaliado ? atual.ia : r.ia,
       categoriaIA: atual.categoriaIA ?? r.categoriaIA ?? null,
+      participacao: atual.participacao ?? r.participacao ?? null,
       linksExtras: [...new Set([...(atual.linksExtras ?? []), ...(r.linksExtras ?? [])])],
       coletadoEm: atual.coletadoEm ?? r.coletadoEm,
     };
@@ -198,6 +199,7 @@ function aplicarRevisados(lista, revisados) {
     if (!rev || typeof rev !== 'object') continue;
     if (rev.ia === 'S' || rev.ia === 'N' || rev.ia === 'D') r.ia = rev.ia;
     if (rev.categoriaIA !== undefined) r.categoriaIA = rev.categoriaIA || null;
+    if (rev.participacao !== undefined) r.participacao = rev.participacao || null;
     r.revisado = true;
     aplicados++;
   }
@@ -398,6 +400,7 @@ async function main() {
   const ia = await classificar(mesclado.lista);
   const extracao = await extrair(mesclado.lista);
   const categorizacao = await categorizar(mesclado.lista);
+  const participacao = await completarParticipacao(mesclado.lista);
   const prazos = await completarPrazos(mesclado.lista);
   const rebaixados = portaoPorCategoria(mesclado.lista, palavras);
   aplicarRevisados(mesclado.lista, revisados); // de novo, por cima de tudo
@@ -413,6 +416,13 @@ async function main() {
   const porAcionavel = { aberta: 0, 'fluxo-continuo': 0, encerrada: 0, radar: 0, prazoDesconhecido: 0 };
   for (const r of lista) { porAcionavel[r.acionavel] = (porAcionavel[r.acionavel] ?? 0) + 1; if (r.prazoDesconhecido) porAcionavel.prazoDesconhecido++; }
   const abertasAprovadas = lista.filter((r) => r.ia === 'S' && (r.acionavel === 'aberta' || r.acionavel === 'fluxo-continuo'));
+  const porParticipacao = { S: {}, D: {}, abertasS: {} };
+  for (const r of lista) {
+    if (r.ia !== 'S' && r.ia !== 'D') continue;
+    const p = r.participacao ?? '(sem)';
+    porParticipacao[r.ia][p] = (porParticipacao[r.ia][p] ?? 0) + 1;
+    if (r.ia === 'S' && (r.acionavel === 'aberta' || r.acionavel === 'fluxo-continuo')) porParticipacao.abertasS[p] = (porParticipacao.abertasS[p] ?? 0) + 1;
+  }
   const porAcionavelAprovados = {
     aberta: abertasAprovadas.filter((r) => r.acionavel === 'aberta').length,
     'fluxo-continuo': abertasAprovadas.filter((r) => r.acionavel === 'fluxo-continuo').length,
@@ -452,9 +462,10 @@ async function main() {
     base: { aprovados: porVeredito.S, reprovados: porVeredito.N, duvidas: porVeredito.D, pendentes: porVeredito.pendente },
     porAcionavel,
     porAcionavelAprovados,
+    porParticipacao,
     porTipo,
     fontes: fontesMeta,
-    ia: { ...ia, candidatosNestaExecucao: coletados.length, extracao, categorizacao, prazos, rebaixadosPortao: rebaixados, revisadosAplicados, reclassificacao: Boolean(args.reclassificar) },
+    ia: { ...ia, candidatosNestaExecucao: coletados.length, extracao, categorizacao, participacao, prazos, rebaixadosPortao: rebaixados, revisadosAplicados, reclassificacao: Boolean(args.reclassificar) },
     queridoDiario: { descartadosNestaExecucao: descartadosAgora.length, descartadosTotal: descartadosQd.length },
     dedup: { fundidosNestaExecucao: dedup.fundidos, duplicadosConhecidos: Object.keys(duplicadosConhecidos).length },
     periodoPncp: statsFontes.find((s) => s.fonte === 'pncp')?.periodo ?? null,
@@ -514,6 +525,11 @@ async function main() {
   console.log(`  Base final: ${lista.length} registros (${porVeredito.S} S · ${porVeredito.N} N · ${porVeredito.D} D · ${porVeredito.pendente} pendentes)`);
   console.log(`  Acionável (toda a base): ${Object.entries(porAcionavel).map(([k, v]) => `${k} ${v}`).join(' · ')}`);
   console.log(`  Acionável (aprovados):   aberta ${porAcionavelAprovados.aberta} · fluxo-contínuo ${porAcionavelAprovados['fluxo-continuo']} · abertas em MG ${porAcionavelAprovados.abertasMG} · encerrada ${porAcionavelAprovados.encerrada} · radar ${porAcionavelAprovados.radar}`);
+  const fmtPart = (o) => Object.entries(o).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(' · ') || '—';
+  console.log(`  Participação (S): ${fmtPart(porParticipacao.S)}`);
+  console.log(`  Participação (D): ${fmtPart(porParticipacao.D)}`);
+  console.log(`  Participação (S abertas): ${fmtPart(porParticipacao.abertasS)}`);
+  if (participacao.preenchidos || participacao.lotesFalhos) console.log(`  IA participação: ${participacao.preenchidos} itens antigos ganharam "como participar" · ${participacao.pendentes} sem · US$ ${participacao.custoUsd.toFixed(4)}`);
   for (const [tipo, t] of Object.entries(porTipo)) console.log(`    ${tipo.padEnd(14)} ${String(t.total).padStart(5)} total · ${t.S} aprovados`);
   if (erros.length) {
     console.log(`  Erros (${erros.length}):`);
