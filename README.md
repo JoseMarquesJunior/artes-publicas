@@ -64,6 +64,10 @@ Levantamento feito em 2026-10-18 (cada site foi aberto; URLs não foram chutadas
 | `html:capacete` | [Capacete — residência de longa duração](https://capacete.org/residencias/residencia-de-longa-duracao/) | nacional/internacional | ativa; página única (o domínio capacete.net morreu; é capacete.org) |
 | `html:mar` | [Museu de Arte do Rio — notícias](https://museudeartedorio.org.br/midia/noticias/) | nacional | ativa; filtro ignora "selecionados", "resultado" |
 | `html:res-artis` | [Res Artis — open calls](https://resartis.org/open-calls/) | internacional | ativa; lista mundial em inglês (título original, resumo em português), 20 chamadas novas por rodada |
+| `mapas:ce`, `mapas:pe` | Mapas Culturais do Ceará e de Pernambuco (API) | CE / PE | ativas (adicionadas em 2026-10-19); entram com a UF da instância, então aparecem com o filtro "todas" ou nos segmentos enviar obra/residência |
+| `html:funceb` | [Funceb — editais](https://www.ba.gov.br/fundacaocultural/editais) | BA (Salões de Artes Visuais da Bahia são nacionais) | ativa; a página lista poucos editais e sem paginação |
+| `html:artvsm` | [ArtVSM — arquivo](https://artvsm.substack.com/archive) | nacional | ativa; boletim pago que agrega editais do país inteiro: a IA lê só a prévia e o card leva ao post, não ao edital |
+| Prosas (central de editais) | produtos.prosas.com.br/editais | — | **não adicionada**: a lista só é montada por JavaScript (o HTML não traz os editais) |
 | Secult-MG (salões e prêmios) | já coberta por `secult-mg` | MG | os prêmios (ex.: Prêmio Coreto) saem na mesma lista de editais FEC; não há página separada de salões |
 | Funarte, Fundação Clóvis Salgado | já cobertas (`funarte`, `fcs`) | nacional / MG | — |
 | Casa Fiat de Cultura | [casafiatdecultura.com.br](https://casafiatdecultura.com.br/) | — | **não adicionada**: o site só tem programação e ateliês abertos, sem editais |
