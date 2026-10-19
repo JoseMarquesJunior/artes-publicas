@@ -586,6 +586,8 @@ a:hover { text-decoration-thickness: 2px; }
 }
 .rodape p { margin: 0 0 8px; }
 .rodape .aviso { color: var(--text); }
+.rodape-contador { margin: 16px 0 0; text-align: center; }
+.rodape-contador img { vertical-align: middle; }
 
 /* ------------------------------------------------------------ telas pequenas */
 

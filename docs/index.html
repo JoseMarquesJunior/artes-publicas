@@ -100,9 +100,15 @@
       <p id="rodape-base"></p>
       <p class="aviso-fraco" id="rodape-erros" hidden></p>
       <p>Os dados são atualizados uma vez por dia, filtrados por palavras-chave e classificados automaticamente; confira sempre o edital original.</p>
+      <p class="rodape-contador" id="rodape-contador"></p>
     </div>
   </footer>
 
   <script src="app.js"></script>
+  <script>
+    // Contador de visitas (badge do hits.sh, como no carroscopio): injetado por JS para não contar cópias locais nem pré-renderizações.
+    document.getElementById('rodape-contador').innerHTML =
+      '<img src="https://hits.sh/josemarquesjunior.github.io/artes-publicas.svg?style=flat-square&label=visitas&color=2563eb" alt="Contador de visitas">';
+  </script>
 </body>
 </html>

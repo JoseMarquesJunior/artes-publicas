@@ -227,6 +227,10 @@ O GitHub Pages só serve arquivos; quem coleta é o GitHub Actions, e é o IP do
 
 **Plano B: tarefa agendada local.** Sem runner, os scripts [`scripts/coleta-local.ps1`](scripts/coleta-local.ps1) (Windows) e [`scripts/coleta-local.sh`](scripts/coleta-local.sh) (Linux/macOS) fazem `git pull`, rodam o coletor só com as fontes bloqueadas e fazem commit + push se houve mudança. Os comentários no topo de cada um mostram como agendar (Agendador de Tarefas / cron). Exigem git e node no PATH e o repositório clonado com credenciais salvas; `ANTHROPIC_API_KEY` é opcional (sem ela os itens entram pendentes e o Action do GitHub classifica no dia seguinte).
 
+### Contador de visitas
+
+O rodapé mostra um badge do [hits.sh](https://hits.sh) para `josemarquesjunior.github.io/artes-publicas`, igual ao do carroscopio: cada carregamento da página soma 1 e a imagem SVG volta com o total. Não usa cookies nem script de terceiros; a tag `<img>` é injetada por JavaScript no fim de `index.html` para cópias locais e pré-renderizações não contarem. Limitações: conta carregamentos (não visitantes únicos), não tem painel e a contagem fica no serviço, não no repositório.
+
 ## Publicar no GitHub
 
 1. *Settings → Pages → Deploy from a branch → `main`, pasta `/docs`*.
