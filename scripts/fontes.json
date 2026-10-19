@@ -607,7 +607,8 @@
       "base": "https://mapacultural.pe.gov.br",
       "uf": "PE",
       "municipio": null,
-      "observacao": "Instância estadual (versão mais nova do Mapas Culturais, mesma API). Mesma regra de UF do Mapa do Ceará."
+      "observacao": "Instância estadual (versão mais nova do Mapas Culturais, mesma API). Do GitHub Actions a conexão expira (firewall para IPs de datacenter; confirmado em 2026-10-19 em dois runs), de IP residencial responde em meio segundo: só no runner próprio ou localmente. Mesma regra de UF do Mapa do Ceará.",
+      "bloqueadoNoCI": true
     },
     {
       "fonte": "html:funceb",
@@ -640,7 +641,8 @@
       "padraoItem": "^https://artvsm\\.substack\\.com/p/[^/?#]+$",
       "detalhe": true,
       "maxLinks": 15,
-      "observacao": "Boletim independente que agrega editais e vagas do setor cultural de todo o país. Os posts são pagos: a IA lê só a prévia (título e primeiro parágrafo) e o link do card leva ao boletim, não ao edital. Serve como radar; confira o edital original."
+      "observacao": "Boletim independente que agrega editais e vagas do setor cultural de todo o país. O Substack devolve 403 a IPs de datacenter (GitHub Actions): só é coletado no runner próprio ou localmente. Os posts são pagos: a IA lê só a prévia e o link do card leva ao boletim, não ao edital.",
+      "bloqueadoNoCI": true
     }
   ],
   "_ajudaPaginas": "tipo \"paginas\" = instituições culturais (mesmo adaptador scripts/fontes/paginas.mjs do tipo \"html\"): User-Agent do projeto, 1 req/s, só links novos, máx. maxLinks (20) por rodada, itens \"N\" vão para _descartados-qd.json. grupo: orgaos-publicos | instituicoes | residencias (rodapé da página). paginaUnica: a própria URL é o edital. Fontes sem página de editais (Casa Fiat, Sesc SP, Itaú Cultural, Iberê Camargo, Bienal SP, IMS) ou bloqueadas (TransArtists, Casa Tomada, Sítio Burle Marx) estão documentadas no README."
