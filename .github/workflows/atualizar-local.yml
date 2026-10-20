@@ -4,9 +4,12 @@ name: Atualizar fontes bloqueadas no CI (runner próprio)
 # as que têm "bloqueadoNoCI": true em scripts/fontes.json. O workflow principal continua nos runners do GitHub.
 # Ver README → "Runner próprio (self-hosted)".
 
+# Sem agendamento: enquanto não houver runner registrado (Settings → Actions → Runners), uma execução agendada
+# ficaria na fila para sempre. A coleta local diária é feita pela tarefa agendada do Windows (scripts/coleta-local.ps1,
+# 11:30 no horário de Brasília). Para voltar a usar este workflow com runner, acrescente em "on":
+#   schedule:
+#     - cron: "30 14 * * *" # 14:30 UTC = 11:30 em Brasília
 on:
-  schedule:
-    - cron: "30 7 * * *" # 07:30 UTC (04:30 em Brasília), depois do principal (06:00 UTC)
   workflow_dispatch:
     inputs:
       dias:
@@ -17,9 +20,10 @@ on:
 permissions:
   contents: write
 
-# Mesmo grupo do workflow principal: nunca rodam ao mesmo tempo (evita conflito de commit em docs/data).
+# Grupo próprio: se compartilhasse o grupo do workflow principal, uma execução deste na fila (sem runner) bloquearia
+# e cancelaria a principal. O passo de commit faz "git pull --rebase" antes do push, então os dois podem rodar juntos.
 concurrency:
-  group: atualizar-dados
+  group: atualizar-dados-local
   cancel-in-progress: false
 
 jobs:
