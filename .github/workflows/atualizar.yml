@@ -62,12 +62,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Se outra execução (ou a coleta local) commitou dados enquanto esta rodava, funde registro a registro
           # (scripts/fundir-dados.mjs) em vez de resolver conflito por linha, que descartava registros.
-          mkdir -p "$RUNNER_TEMP/novo"
+          # "origem" = a base que esta execução leu; permite manter as remoções que ela fez (retenção, deduplicação).
+          mkdir -p "$RUNNER_TEMP/novo" "$RUNNER_TEMP/origem"
+          git show HEAD:docs/data/oportunidades.json > "$RUNNER_TEMP/origem/oportunidades.json"
           for tentativa in 1 2 3; do
             cp docs/data/*.json "$RUNNER_TEMP/novo/"
             git checkout -- docs/data
             git pull --rebase origin main
-            node scripts/fundir-dados.mjs "$RUNNER_TEMP/novo" docs/data
+            node scripts/fundir-dados.mjs "$RUNNER_TEMP/novo" docs/data "$RUNNER_TEMP/origem"
             git add -A docs/data
             git commit -m "dados: atualização automática $(date -u +'%Y-%m-%d %H:%M UTC')" || { echo "Nada a commitar após a fusão."; exit 0; }
             if git push; then exit 0; fi

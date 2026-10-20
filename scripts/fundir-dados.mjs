@@ -11,17 +11,20 @@
  *   oportunidades.json  — união por id. Para o mesmo id, vence o registro já avaliado pela IA (S/N/D) sobre
  *                         o pendente; empate → o da execução nova (coleta mais recente). Ids que constam em
  *                         _duplicados.json (perdedores de deduplicação) ficam de fora.
+ *                         Com a pasta "origem" (a base que a execução leu, antes de rodar): um registro que
+ *                         estava na origem e não está no novo foi removido de propósito (retenção, reprovado
+ *                         antigo, deduplicação) e só volta se a base atual o tiver alterado nesse meio-tempo.
  *   _duplicados.json    — união das chaves.
  *   _descartados-qd.json — união por (fonte, idNaFonte).
  *   meta.json           — o da execução nova, com "total" recalculado e "fundidoCom" apontando a base.
  *
- * Uso: node scripts/fundir-dados.mjs <pasta-novo> <pasta-base>
+ * Uso: node scripts/fundir-dados.mjs <pasta-novo> <pasta-base> [<pasta-origem>]
  */
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const [novoDir, baseDir] = process.argv.slice(2);
-if (!novoDir || !baseDir) { console.error('uso: node scripts/fundir-dados.mjs <pasta-novo> <pasta-base>'); process.exit(2); }
+const [novoDir, baseDir, origemDir] = process.argv.slice(2);
+if (!novoDir || !baseDir) { console.error('uso: node scripts/fundir-dados.mjs <pasta-novo> <pasta-base> [<pasta-origem>]'); process.exit(2); }
 
 async function lerJson(caminho, padrao) {
   try { return JSON.parse(await readFile(caminho, 'utf8')); } catch { return padrao; }
@@ -30,14 +33,25 @@ const serializarLista = (lista) => (lista.length ? `[\n${lista.map((r) => JSON.s
 const avaliado = (r) => ['S', 'N', 'D'].includes(r?.ia);
 
 const [novo, base] = await Promise.all([lerJson(join(novoDir, 'oportunidades.json'), []), lerJson(join(baseDir, 'oportunidades.json'), [])]);
+const origem = origemDir ? await lerJson(join(origemDir, 'oportunidades.json'), null) : null;
 const [dupNovo, dupBase] = await Promise.all([lerJson(join(novoDir, '_duplicados.json'), {}), lerJson(join(baseDir, '_duplicados.json'), {})]);
 const [descNovo, descBase] = await Promise.all([lerJson(join(novoDir, '_descartados-qd.json'), []), lerJson(join(baseDir, '_descartados-qd.json'), [])]);
 const metaNovo = await lerJson(join(novoDir, 'meta.json'), null);
 const metaBase = await lerJson(join(baseDir, 'meta.json'), null);
 
 const duplicados = { ...dupBase, ...dupNovo };
+const idsNovo = new Set(novo.map((r) => r?.id).filter(Boolean));
+const origemPorId = origem ? new Map(origem.filter((r) => r?.id).map((r) => [r.id, JSON.stringify(r)])) : null;
 const mapa = new Map();
-for (const r of base) if (r?.id && !duplicados[r.id]) mapa.set(r.id, r);
+let removidosMantidos = 0;
+for (const r of base) {
+  if (!r?.id || duplicados[r.id]) continue;
+  if (origemPorId && !idsNovo.has(r.id) && origemPorId.has(r.id)) {
+    // A execução leu este registro e o removeu de propósito. Só volta se alguém o alterou na base desde então.
+    if (origemPorId.get(r.id) === JSON.stringify(r)) { removidosMantidos++; continue; }
+  }
+  mapa.set(r.id, r);
+}
 let acrescentados = 0;
 let substituidos = 0;
 for (const r of novo) {
@@ -56,11 +70,11 @@ const descartados = [...new Map([...descBase, ...descNovo].map((d) => [chaveDesc
 const meta = metaNovo ?? metaBase ?? {};
 if (metaNovo) {
   meta.total = lista.length;
-  meta.fundidoCom = { atualizadoEm: metaBase?.atualizadoEm ?? null, registrosDaBase: base.length, acrescentados, substituidos };
+  meta.fundidoCom = { atualizadoEm: metaBase?.atualizadoEm ?? null, registrosDaBase: base.length, acrescentados, substituidos, removidosMantidos, comOrigem: Boolean(origem) };
 }
 
 await writeFile(join(baseDir, 'oportunidades.json'), serializarLista(lista), 'utf8');
 await writeFile(join(baseDir, '_duplicados.json'), `${JSON.stringify(duplicados, null, 0)}\n`, 'utf8');
 await writeFile(join(baseDir, '_descartados-qd.json'), serializarLista(descartados), 'utf8');
 if (metaNovo) await writeFile(join(baseDir, 'meta.json'), `${JSON.stringify(meta, null, 2)}\n`, 'utf8');
-console.log(`fundir-dados: base ${base.length} + novo ${novo.length} → ${lista.length} registros (${acrescentados} acrescentados, ${substituidos} substituídos) · ${Object.keys(duplicados).length} duplicados conhecidos · ${descartados.length} descartados`);
+console.log(`fundir-dados: base ${base.length} + novo ${novo.length} → ${lista.length} registros (${acrescentados} acrescentados, ${substituidos} substituídos, ${removidosMantidos} remoções da execução mantidas${origem ? '' : '; sem pasta de origem'}) · ${Object.keys(duplicados).length} duplicados conhecidos · ${descartados.length} descartados`);

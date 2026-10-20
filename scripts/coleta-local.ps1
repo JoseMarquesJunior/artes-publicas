@@ -48,13 +48,16 @@ cmd /c 'git diff --quiet -- docs/data'
 if ($LASTEXITCODE -eq 0) { Registrar 'Sem mudanças em docs/data.'; exit 0 }
 
 # Guarda o resultado desta execução, volta docs/data ao estado do repositório, traz o que chegou de fora e funde.
+# "origem" = a base que esta execução leu (HEAD antes do pull); permite manter as remoções que ela fez.
 $novo = Join-Path $env:TEMP 'artes-publicas-novo'
-New-Item -ItemType Directory -Force $novo | Out-Null
+$origem = Join-Path $env:TEMP 'artes-publicas-origem'
+New-Item -ItemType Directory -Force $novo, $origem | Out-Null
+cmd /c 'git show HEAD:docs/data/oportunidades.json' | Out-File -Encoding utf8 (Join-Path $origem 'oportunidades.json')
 for ($tentativa = 1; $tentativa -le 3; $tentativa++) {
   Copy-Item (Join-Path $raiz 'docs\data\*.json') $novo -Force
   Rodar 'git checkout -- docs/data' | Out-Null
   if ((Rodar 'git pull --rebase origin main') -ne 0) { Registrar 'git pull falhou antes da fusão; abortando.'; exit 1 }
-  Rodar "node scripts/fundir-dados.mjs ""$novo"" docs/data" | Out-Null
+  Rodar "node scripts/fundir-dados.mjs ""$novo"" docs/data ""$origem""" | Out-Null
   Rodar 'git add -A docs/data' | Out-Null
   if ((Rodar "git commit -m ""dados: coleta local $(Get-Date -Format 'yyyy-MM-dd HH:mm')""") -ne 0) { Registrar 'Nada a commitar após a fusão.'; exit 0 }
   if ((Rodar 'git push origin main') -eq 0) { Registrar 'Enviado.'; exit 0 }
