@@ -36,6 +36,10 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) { Registrar 'git não 
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) { Registrar 'node não encontrado no PATH nem em C:\Program Files\nodejs.'; exit 1 }
 
 if ((Rodar 'git pull --rebase origin main') -ne 0) { Registrar 'git pull falhou; abortando (resolva o repositório local).'; exit 1 }
+# "origem" = a base que esta execução vai ler (cópia byte a byte, antes de coletar); permite manter as remoções que ela fizer.
+$origem = Join-Path $env:TEMP 'artes-publicas-origem'
+New-Item -ItemType Directory -Force $origem | Out-Null
+Copy-Item (Join-Path $raiz 'docs\data\oportunidades.json') (Join-Path $origem 'oportunidades.json') -Force
 
 $fontes = cmd /c 'node -e "const c=require(''./scripts/fontes.json'');console.log(c.fontes.filter(f=>f.ativo!==false&&f.bloqueadoNoCI).map(f=>f.fonte).join('',''))"'
 if (-not $fontes) { Registrar 'Nenhuma fonte bloqueada no CI; nada a fazer.'; exit 0 }
@@ -48,11 +52,8 @@ cmd /c 'git diff --quiet -- docs/data'
 if ($LASTEXITCODE -eq 0) { Registrar 'Sem mudanças em docs/data.'; exit 0 }
 
 # Guarda o resultado desta execução, volta docs/data ao estado do repositório, traz o que chegou de fora e funde.
-# "origem" = a base que esta execução leu (HEAD antes do pull); permite manter as remoções que ela fez.
 $novo = Join-Path $env:TEMP 'artes-publicas-novo'
-$origem = Join-Path $env:TEMP 'artes-publicas-origem'
-New-Item -ItemType Directory -Force $novo, $origem | Out-Null
-cmd /c 'git show HEAD:docs/data/oportunidades.json' | Out-File -Encoding utf8 (Join-Path $origem 'oportunidades.json')
+New-Item -ItemType Directory -Force $novo | Out-Null
 for ($tentativa = 1; $tentativa -le 3; $tentativa++) {
   Copy-Item (Join-Path $raiz 'docs\data\*.json') $novo -Force
   Rodar 'git checkout -- docs/data' | Out-Null
