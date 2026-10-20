@@ -1,41 +1,41 @@
 {
-  "atualizadoEm": "2026-10-20T16:52:30.443Z",
-  "total": 4541,
-  "totalNovos": 42,
-  "totalAtualizados": 22,
+  "atualizadoEm": "2026-10-20T16:53:28.975Z",
+  "total": 4539,
+  "totalNovos": 0,
+  "totalAtualizados": 2,
   "removidos": {
-    "antigos": 16,
+    "antigos": 0,
     "foraDoFiltro": 0,
     "reprovadosAntigos": 3,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
   "base": {
-    "aprovados": 322,
-    "reprovados": 3837,
+    "aprovados": 331,
+    "reprovados": 3862,
     "duvidas": 340,
-    "pendentes": 42
+    "pendentes": 0
   },
   "porAcionavel": {
-    "aberta": 692,
-    "fluxo-continuo": 35,
-    "encerrada": 981,
+    "aberta": 682,
+    "fluxo-continuo": 33,
+    "encerrada": 985,
     "radar": 2833,
-    "prazoDesconhecido": 44
+    "prazoDesconhecido": 31
   },
   "porAcionavelAprovados": {
-    "aberta": 55,
-    "fluxo-continuo": 4,
-    "abertasMG": 35,
-    "encerrada": 61,
+    "aberta": 58,
+    "fluxo-continuo": 5,
+    "abertasMG": 39,
+    "encerrada": 66,
     "radar": 202
   },
   "porParticipacao": {
     "S": {
-      "prestar-servico": 266,
+      "prestar-servico": 268,
+      "enviar-obra": 23,
       "residencia": 26,
-      "inscrever-projeto": 12,
-      "enviar-obra": 17,
+      "inscrever-projeto": 13,
       "formacao": 1
     },
     "D": {
@@ -47,40 +47,40 @@
       "formacao": 2
     },
     "abertasS": {
-      "prestar-servico": 24,
+      "prestar-servico": 25,
       "residencia": 17,
-      "inscrever-projeto": 7,
-      "enviar-obra": 11
+      "enviar-obra": 13,
+      "inscrever-projeto": 8
     }
   },
   "porTipo": {
     "premio": {
-      "total": 14,
-      "S": 2,
-      "N": 5,
-      "D": 3,
-      "pendente": 4
+      "total": 12,
+      "S": 4,
+      "N": 6,
+      "D": 2,
+      "pendente": 0
     },
     "fomento": {
-      "total": 85,
-      "S": 7,
-      "N": 19,
-      "D": 23,
-      "pendente": 36
+      "total": 74,
+      "S": 8,
+      "N": 42,
+      "D": 24,
+      "pendente": 0
     },
     "contratacao": {
-      "total": 4374,
-      "S": 279,
+      "total": 4375,
+      "S": 280,
       "N": 3802,
       "D": 293,
       "pendente": 0
     },
     "chamamento": {
-      "total": 32,
-      "S": 8,
-      "N": 7,
+      "total": 37,
+      "S": 13,
+      "N": 8,
       "D": 16,
-      "pendente": 1
+      "pendente": 0
     },
     "outro": {
       "total": 5,
@@ -90,11 +90,11 @@
       "pendente": 0
     },
     "residencia": {
-      "total": 31,
+      "total": 30,
       "S": 26,
       "N": 0,
       "D": 4,
-      "pendente": 1
+      "pendente": 0
     }
   },
   "fontes": [
@@ -119,13 +119,6 @@
       "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 4,
-      "candidatos": 2,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -138,13 +131,6 @@
       "observacao": "Desafio JavaScript do Cloudflare para IPs de datacenter (GitHub Actions). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 0,
-      "candidatos": 0,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -157,6 +143,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 2,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 2,
       "aprovadosNaBase": 0
     },
@@ -277,7 +270,7 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 3,
+      "naBase": 2,
       "aprovadosNaBase": 0
     },
     {
@@ -301,15 +294,8 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 66,
-      "candidatos": 51,
-      "requisicoes": 2,
-      "erro": null,
-      "fases": 0,
-      "paginas": 2,
-      "novos": 21,
-      "naBase": 38,
-      "aprovadosNaBase": 5
+      "naBase": 36,
+      "aprovadosNaBase": 6
     },
     {
       "fonte": "html:cc-ufmg",
@@ -416,8 +402,8 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 1,
-      "aprovadosNaBase": 1
+      "naBase": 0,
+      "aprovadosNaBase": 0
     },
     {
       "fonte": "html:tomie-ohtake",
@@ -500,14 +486,7 @@
       "observacao": "Instância estadual (versão mais nova do Mapas Culturais, mesma API). Do GitHub Actions a conexão expira (firewall para IPs de datacenter; confirmado em 2026-10-19 em dois runs), de IP residencial responde em meio segundo: só no runner próprio ou localmente. Mesma regra de UF do Mapa do Ceará.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 20,
-      "candidatos": 15,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 9,
-      "naBase": 13,
+      "naBase": 12,
       "aprovadosNaBase": 0
     },
     {
@@ -531,70 +510,71 @@
       "observacao": "Boletim independente que agrega editais e vagas do setor cultural de todo o país. O Substack devolve 403 a IPs de datacenter (GitHub Actions): só é coletado no runner próprio ou localmente. Os posts são pagos: a IA lê só a prévia e o link do card leva ao boletim, não ao edital.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 24,
-      "candidatos": 12,
-      "requisicoes": 13,
-      "erro": null,
-      "paginasLidas": 1,
-      "linksSeguidos": 12,
-      "jaConhecidos": 0,
-      "editaisExtraidos": 12,
-      "limitados": 0,
-      "erros": [],
-      "extraidos": 0,
-      "relevantes": 0,
-      "duvidas": 0,
-      "custoUsd": 0,
-      "novos": 12,
-      "naBase": 12,
-      "aprovadosNaBase": 0
+      "naBase": 9,
+      "aprovadosNaBase": 9
     }
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": false,
-    "classificados": 0,
-    "aprovados": 0,
-    "reprovados": 0,
-    "duvidas": 0,
-    "pendentes": 30,
-    "lotes": 0,
+    "ativo": true,
+    "classificados": 27,
+    "aprovados": 1,
+    "reprovados": 25,
+    "duvidas": 1,
+    "pendentes": 0,
+    "lotes": 1,
     "lotesFalhos": 0,
-    "requisicoes": 0,
-    "tokensEntrada": 0,
-    "tokensSaida": 0,
-    "custoUsd": 0,
-    "porTipo": {},
-    "candidatosNestaExecucao": 80,
+    "requisicoes": 1,
+    "tokensEntrada": 8455,
+    "tokensSaida": 402,
+    "custoUsd": 0.001,
+    "porTipo": {
+      "fomento": {
+        "S": 1,
+        "N": 23,
+        "D": 1
+      },
+      "premio": {
+        "S": 0,
+        "N": 1,
+        "D": 0
+      },
+      "chamamento": {
+        "S": 0,
+        "N": 1,
+        "D": 0
+      }
+    },
+    "candidatosNestaExecucao": 2,
     "extracao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": false,
-      "processados": 0,
-      "relevantes": 0,
-      "descartados": 0,
+      "ativo": true,
+      "processados": 12,
+      "relevantes": 9,
+      "descartados": 3,
       "duvidas": 0,
-      "pendentes": 12,
-      "lotes": 0,
+      "pendentes": 0,
+      "lotes": 2,
       "lotesFalhos": 0,
-      "requisicoes": 0,
-      "tokensEntrada": 0,
-      "tokensSaida": 0,
-      "custoUsd": 0
+      "requisicoes": 2,
+      "tokensEntrada": 17435,
+      "tokensSaida": 2432,
+      "custoUsd": 0.003
     },
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": false,
+      "ativo": true,
       "categorizados": 0,
       "pendentes": 3,
-      "lotes": 0,
+      "lotes": 1,
       "lotesFalhos": 0,
-      "requisicoes": 0,
-      "tokensEntrada": 0,
-      "tokensSaida": 0,
-      "custoUsd": 0
+      "requisicoes": 1,
+      "tokensEntrada": 577,
+      "tokensSaida": 84,
+      "custoUsd": 0.0001
     },
     "participacao": {
-      "ativo": false,
+      "ativo": true,
       "preenchidos": 0,
       "pendentes": 0,
       "lotes": 0,
@@ -605,7 +585,7 @@
       "custoUsd": 0
     },
     "prazos": {
-      "ativo": false,
+      "ativo": true,
       "tentados": 0,
       "encontrados": 0,
       "semTexto": 0,
@@ -620,30 +600,49 @@
     "reclassificacao": false
   },
   "queridoDiario": {
-    "descartadosNestaExecucao": 0,
-    "descartadosTotal": 329
+    "descartadosNestaExecucao": 3,
+    "descartadosTotal": 332
   },
   "dedup": {
-    "fundidosNestaExecucao": 0,
-    "duplicadosConhecidos": 13
+    "fundidosNestaExecucao": 2,
+    "duplicadosConhecidos": 15
   },
   "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 22,
+  "duracaoSegundos": 15,
   "instituicoes": {
     "pendentesNestaExecucao": 12,
     "custoPrevistoUsd": 0.0072,
     "tetoUsd": 0.2,
-    "descartadosNestaExecucao": 0,
-    "descartadosExemplos": []
+    "descartadosNestaExecucao": 3,
+    "descartadosExemplos": [
+      {
+        "fonte": "html:artvsm",
+        "titulo": "Convocatória do Festival de Performances Perfofeminas",
+        "motivo": "Seleção de 3 artistas mulheres para performance ao vivo, videoperformance e arte-educação, prêmio total de R$6.000. Oportunidade de performance, não de artes visuais.",
+        "link": "https://artvsm.substack.com/p/novos-editais-selecao-de-projetos-b99"
+      },
+      {
+        "fonte": "html:artvsm",
+        "titulo": "Prêmio Iara Deodoro para Artistas Negros do Rio Grande do Sul",
+        "motivo": "Prêmio de R$10 mil para personalidade negra da cultura afro-gaúcha, por indicação de instituição com CNPJ; abrange várias áreas, não especificamente artes visuais.",
+        "link": "https://artvsm.substack.com/p/premio-iara-deodoro-para-artistas"
+      },
+      {
+        "fonte": "html:artvsm",
+        "titulo": "Seleção de Exposição sobre Cultura Afro-Brasileira e Protagonismo Negro",
+        "motivo": "Trecho truncado de chamada para exposição de artes visuais sobre cultura afro-brasileira, aberta a artistas de todo o país; prazo e valor não aparecem no trecho.",
+        "link": "https://artvsm.substack.com/p/novos-editais-salao-de-artes-and-342"
+      }
+    ]
   },
   "avisos": [],
   "erros": [],
   "errosPorFonte": {},
   "fundidoCom": {
-    "atualizadoEm": "2026-10-20T16:49:25.973Z",
-    "registrosDaBase": 4502,
-    "acrescentados": 39,
-    "substituidos": 5
+    "atualizadoEm": "2026-10-20T16:52:30.443Z",
+    "registrosDaBase": 4541,
+    "acrescentados": 0,
+    "substituidos": 36
   }
 }
