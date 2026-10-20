@@ -1,10 +1,10 @@
 {
-  "atualizadoEm": "2026-10-20T16:49:25.973Z",
-  "total": 4502,
-  "totalNovos": 0,
-  "totalAtualizados": 2,
+  "atualizadoEm": "2026-10-20T16:52:30.443Z",
+  "total": 4541,
+  "totalNovos": 42,
+  "totalAtualizados": 22,
   "removidos": {
-    "antigos": 0,
+    "antigos": 16,
     "foraDoFiltro": 0,
     "reprovadosAntigos": 3,
     "duplicadosConhecidos": 0
@@ -12,16 +12,16 @@
   "migrados": 0,
   "base": {
     "aprovados": 322,
-    "reprovados": 3840,
+    "reprovados": 3837,
     "duvidas": 340,
-    "pendentes": 0
+    "pendentes": 42
   },
   "porAcionavel": {
-    "aberta": 674,
-    "fluxo-continuo": 15,
-    "encerrada": 980,
+    "aberta": 692,
+    "fluxo-continuo": 35,
+    "encerrada": 981,
     "radar": 2833,
-    "prazoDesconhecido": 32
+    "prazoDesconhecido": 44
   },
   "porAcionavelAprovados": {
     "aberta": 55,
@@ -55,18 +55,18 @@
   },
   "porTipo": {
     "premio": {
-      "total": 11,
+      "total": 14,
       "S": 2,
-      "N": 6,
+      "N": 5,
       "D": 3,
-      "pendente": 0
+      "pendente": 4
     },
     "fomento": {
-      "total": 51,
+      "total": 85,
       "S": 7,
-      "N": 21,
+      "N": 19,
       "D": 23,
-      "pendente": 0
+      "pendente": 36
     },
     "contratacao": {
       "total": 4374,
@@ -76,11 +76,11 @@
       "pendente": 0
     },
     "chamamento": {
-      "total": 31,
+      "total": 32,
       "S": 8,
       "N": 7,
       "D": 16,
-      "pendente": 0
+      "pendente": 1
     },
     "outro": {
       "total": 5,
@@ -90,11 +90,11 @@
       "pendente": 0
     },
     "residencia": {
-      "total": 30,
+      "total": 31,
       "S": 26,
       "N": 0,
       "D": 4,
-      "pendente": 0
+      "pendente": 1
     }
   },
   "fontes": [
@@ -119,6 +119,13 @@
       "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
+      "lidos": 4,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -131,6 +138,13 @@
       "observacao": "Desafio JavaScript do Cloudflare para IPs de datacenter (GitHub Actions). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
+      "lidos": 0,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -143,13 +157,6 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 2,
-      "candidatos": 2,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
       "naBase": 2,
       "aprovadosNaBase": 0
     },
@@ -294,7 +301,14 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "naBase": 19,
+      "lidos": 66,
+      "candidatos": 51,
+      "requisicoes": 2,
+      "erro": null,
+      "fases": 0,
+      "paginas": 2,
+      "novos": 21,
+      "naBase": 38,
       "aprovadosNaBase": 5
     },
     {
@@ -486,7 +500,14 @@
       "observacao": "Instância estadual (versão mais nova do Mapas Culturais, mesma API). Do GitHub Actions a conexão expira (firewall para IPs de datacenter; confirmado em 2026-10-19 em dois runs), de IP residencial responde em meio segundo: só no runner próprio ou localmente. Mesma regra de UF do Mapa do Ceará.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "naBase": 5,
+      "lidos": 20,
+      "candidatos": 15,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 9,
+      "naBase": 13,
       "aprovadosNaBase": 0
     },
     {
@@ -510,50 +531,49 @@
       "observacao": "Boletim independente que agrega editais e vagas do setor cultural de todo o país. O Substack devolve 403 a IPs de datacenter (GitHub Actions): só é coletado no runner próprio ou localmente. Os posts são pagos: a IA lê só a prévia e o link do card leva ao boletim, não ao edital.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "naBase": 0,
+      "lidos": 24,
+      "candidatos": 12,
+      "requisicoes": 13,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 12,
+      "jaConhecidos": 0,
+      "editaisExtraidos": 12,
+      "limitados": 0,
+      "erros": [],
+      "extraidos": 0,
+      "relevantes": 0,
+      "duvidas": 0,
+      "custoUsd": 0,
+      "novos": 12,
+      "naBase": 12,
       "aprovadosNaBase": 0
     }
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": true,
-    "classificados": 42,
+    "ativo": false,
+    "classificados": 0,
     "aprovados": 0,
-    "reprovados": 36,
-    "duvidas": 6,
-    "pendentes": 0,
-    "lotes": 2,
+    "reprovados": 0,
+    "duvidas": 0,
+    "pendentes": 30,
+    "lotes": 0,
     "lotesFalhos": 0,
-    "requisicoes": 2,
-    "tokensEntrada": 11927,
-    "tokensSaida": 613,
-    "custoUsd": 0.0015,
-    "porTipo": {
-      "contratacao": {
-        "S": 0,
-        "N": 28,
-        "D": 2
-      },
-      "fomento": {
-        "S": 0,
-        "N": 6,
-        "D": 4
-      },
-      "premio": {
-        "S": 0,
-        "N": 2,
-        "D": 0
-      }
-    },
-    "candidatosNestaExecucao": 2,
+    "requisicoes": 0,
+    "tokensEntrada": 0,
+    "tokensSaida": 0,
+    "custoUsd": 0,
+    "porTipo": {},
+    "candidatosNestaExecucao": 80,
     "extracao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": true,
+      "ativo": false,
       "processados": 0,
       "relevantes": 0,
       "descartados": 0,
       "duvidas": 0,
-      "pendentes": 0,
+      "pendentes": 12,
       "lotes": 0,
       "lotesFalhos": 0,
       "requisicoes": 0,
@@ -563,18 +583,18 @@
     },
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": true,
+      "ativo": false,
       "categorizados": 0,
       "pendentes": 3,
-      "lotes": 1,
+      "lotes": 0,
       "lotesFalhos": 0,
-      "requisicoes": 1,
-      "tokensEntrada": 577,
-      "tokensSaida": 84,
-      "custoUsd": 0.0001
+      "requisicoes": 0,
+      "tokensEntrada": 0,
+      "tokensSaida": 0,
+      "custoUsd": 0
     },
     "participacao": {
-      "ativo": true,
+      "ativo": false,
       "preenchidos": 0,
       "pendentes": 0,
       "lotes": 0,
@@ -585,7 +605,7 @@
       "custoUsd": 0
     },
     "prazos": {
-      "ativo": true,
+      "ativo": false,
       "tentados": 0,
       "encontrados": 0,
       "semTexto": 0,
@@ -609,15 +629,21 @@
   },
   "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 7,
+  "duracaoSegundos": 22,
   "instituicoes": {
-    "pendentesNestaExecucao": 0,
-    "custoPrevistoUsd": 0,
+    "pendentesNestaExecucao": 12,
+    "custoPrevistoUsd": 0.0072,
     "tetoUsd": 0.2,
     "descartadosNestaExecucao": 0,
     "descartadosExemplos": []
   },
   "avisos": [],
   "erros": [],
-  "errosPorFonte": {}
+  "errosPorFonte": {},
+  "fundidoCom": {
+    "atualizadoEm": "2026-10-20T16:49:25.973Z",
+    "registrosDaBase": 4502,
+    "acrescentados": 39,
+    "substituidos": 5
+  }
 }
