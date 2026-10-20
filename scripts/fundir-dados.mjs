@@ -70,6 +70,10 @@ const descartados = [...new Map([...descBase, ...descNovo].map((d) => [chaveDesc
 const meta = metaNovo ?? metaBase ?? {};
 if (metaNovo) {
   meta.total = lista.length;
+  // Contagens da base refletem a lista fundida, não só a visão da execução.
+  const porVeredito = { S: 0, N: 0, D: 0, pendente: 0 };
+  for (const r of lista) porVeredito[['S', 'N', 'D'].includes(r.ia) ? r.ia : 'pendente']++;
+  meta.base = { aprovados: porVeredito.S, reprovados: porVeredito.N, duvidas: porVeredito.D, pendentes: porVeredito.pendente };
   meta.fundidoCom = { atualizadoEm: metaBase?.atualizadoEm ?? null, registrosDaBase: base.length, acrescentados, substituidos, removidosMantidos, comOrigem: Boolean(origem) };
 }
 
