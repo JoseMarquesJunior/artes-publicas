@@ -12,6 +12,9 @@
 #
 # Atenção (PowerShell 5.1): não use "2>&1" em comandos nativos com $ErrorActionPreference = 'Stop' — o git escreve
 # mensagens normais no stderr e o script morreria em silêncio no "git pull". Aqui a saída passa pelo cmd.exe.
+#
+# Se o Action do GitHub commitou dados enquanto esta coleta rodava, os arquivos são fundidos registro a registro
+# (scripts/fundir-dados.mjs) em vez de resolver conflito por linha, que descartava registros.
 
 $ErrorActionPreference = 'Continue'
 $raiz = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -43,11 +46,20 @@ if ($codigo -ne 0) { Registrar "fetch.mjs saiu com código $codigo (ver acima); 
 
 cmd /c 'git diff --quiet -- docs/data'
 if ($LASTEXITCODE -eq 0) { Registrar 'Sem mudanças em docs/data.'; exit 0 }
-Rodar 'git add -A docs/data' | Out-Null
-Rodar "git commit -m ""dados: coleta local $(Get-Date -Format 'yyyy-MM-dd HH:mm')""" | Out-Null
-if ((Rodar 'git push origin main') -ne 0) {
-  Registrar 'push falhou; tentando de novo após rebase.'
-  Rodar 'git pull --rebase origin main' | Out-Null
-  if ((Rodar 'git push origin main') -ne 0) { Registrar 'push falhou de novo; commit fica local.'; exit 1 }
+
+# Guarda o resultado desta execução, volta docs/data ao estado do repositório, traz o que chegou de fora e funde.
+$novo = Join-Path $env:TEMP 'artes-publicas-novo'
+New-Item -ItemType Directory -Force $novo | Out-Null
+for ($tentativa = 1; $tentativa -le 3; $tentativa++) {
+  Copy-Item (Join-Path $raiz 'docs\data\*.json') $novo -Force
+  Rodar 'git checkout -- docs/data' | Out-Null
+  if ((Rodar 'git pull --rebase origin main') -ne 0) { Registrar 'git pull falhou antes da fusão; abortando.'; exit 1 }
+  Rodar "node scripts/fundir-dados.mjs ""$novo"" docs/data" | Out-Null
+  Rodar 'git add -A docs/data' | Out-Null
+  if ((Rodar "git commit -m ""dados: coleta local $(Get-Date -Format 'yyyy-MM-dd HH:mm')""") -ne 0) { Registrar 'Nada a commitar após a fusão.'; exit 0 }
+  if ((Rodar 'git push origin main') -eq 0) { Registrar 'Enviado.'; exit 0 }
+  Registrar "push rejeitado (tentativa $tentativa); refaz a fusão com a base atual."
+  Rodar 'git reset --soft HEAD~1' | Out-Null
 }
-Registrar 'Enviado.'
+Registrar 'push falhou três vezes; commit fica local.'
+exit 1
