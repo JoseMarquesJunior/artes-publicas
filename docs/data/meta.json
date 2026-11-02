@@ -1,33 +1,33 @@
 {
-  "atualizadoEm": "2026-11-01T14:30:14.575Z",
-  "total": 4566,
-  "totalNovos": 13,
-  "totalAtualizados": 34,
+  "atualizadoEm": "2026-11-02T14:30:15.049Z",
+  "total": 4415,
+  "totalNovos": 12,
+  "totalAtualizados": 33,
   "removidos": {
     "antigos": 16,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 15,
+    "reprovadosAntigos": 163,
     "duplicadosConhecidos": 1
   },
   "migrados": 0,
   "base": {
     "aprovados": 534,
-    "reprovados": 3513,
+    "reprovados": 3362,
     "duvidas": 518,
     "pendentes": 1
   },
   "porAcionavel": {
-    "aberta": 691,
+    "aberta": 683,
     "fluxo-continuo": 37,
-    "encerrada": 1049,
-    "radar": 2789,
+    "encerrada": 990,
+    "radar": 2705,
     "prazoDesconhecido": 68
   },
   "porAcionavelAprovados": {
-    "aberta": 103,
+    "aberta": 101,
     "fluxo-continuo": 10,
-    "abertasMG": 85,
-    "encerrada": 119,
+    "abertasMG": 83,
+    "encerrada": 121,
     "radar": 302
   },
   "porParticipacao": {
@@ -49,8 +49,8 @@
     "abertasS": {
       "inscrever-projeto": 8,
       "prestar-servico": 29,
-      "enviar-obra": 18,
-      "residencia": 55,
+      "enviar-obra": 17,
+      "residencia": 54,
       "formacao": 3
     }
   },
@@ -77,9 +77,9 @@
       "pendente": 0
     },
     "contratacao": {
-      "total": 4314,
+      "total": 4163,
       "S": 407,
-      "N": 3468,
+      "N": 3317,
       "D": 439,
       "pendente": 0
     },
@@ -108,7 +108,7 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 4311,
+      "naBase": 4160,
       "aprovadosNaBase": 406
     },
     {
@@ -120,8 +120,8 @@
       "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 6,
-      "candidatos": 4,
+      "lidos": 5,
+      "candidatos": 3,
       "requisicoes": 1,
       "erro": null,
       "fases": 0,
@@ -302,13 +302,13 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 66,
-      "candidatos": 51,
+      "lidos": 65,
+      "candidatos": 50,
       "requisicoes": 2,
       "erro": null,
       "fases": 0,
       "paginas": 2,
-      "novos": 12,
+      "novos": 11,
       "naBase": 40,
       "aprovadosNaBase": 9
     },
@@ -562,7 +562,7 @@
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 64,
+    "candidatosNestaExecucao": 62,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": false,
@@ -638,11 +638,11 @@
   "erros": [],
   "errosPorFonte": {},
   "fundidoCom": {
-    "atualizadoEm": "2026-11-01T12:53:42.616Z",
-    "registrosDaBase": 4568,
-    "acrescentados": 1,
-    "substituidos": 1,
-    "removidosMantidos": 3,
+    "atualizadoEm": "2026-11-01T14:30:14.575Z",
+    "registrosDaBase": 4566,
+    "acrescentados": 0,
+    "substituidos": 6,
+    "removidosMantidos": 151,
     "comOrigem": true
   }
 }
