@@ -1,33 +1,33 @@
 {
-  "atualizadoEm": "2026-11-08T14:30:19.027Z",
-  "total": 4681,
+  "atualizadoEm": "2026-11-09T14:30:22.494Z",
+  "total": 4479,
   "totalNovos": 9,
-  "totalAtualizados": 38,
+  "totalAtualizados": 36,
   "removidos": {
     "antigos": 17,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 10,
+    "reprovadosAntigos": 211,
     "duplicadosConhecidos": 1
   },
   "migrados": 0,
   "base": {
     "aprovados": 659,
-    "reprovados": 3407,
+    "reprovados": 3205,
     "duvidas": 615,
     "pendentes": 0
   },
   "porAcionavel": {
-    "aberta": 796,
+    "aberta": 791,
     "fluxo-continuo": 38,
-    "encerrada": 1049,
-    "radar": 2798,
+    "encerrada": 986,
+    "radar": 2664,
     "prazoDesconhecido": 104
   },
   "porAcionavelAprovados": {
-    "aberta": 150,
+    "aberta": 147,
     "fluxo-continuo": 10,
-    "abertasMG": 130,
-    "encerrada": 144,
+    "abertasMG": 127,
+    "encerrada": 147,
     "radar": 355
   },
   "porParticipacao": {
@@ -50,9 +50,9 @@
     "abertasS": {
       "inscrever-projeto": 10,
       "prestar-servico": 34,
-      "enviar-obra": 13,
+      "enviar-obra": 11,
       "outro": 1,
-      "residencia": 97,
+      "residencia": 96,
       "formacao": 5
     }
   },
@@ -79,9 +79,9 @@
       "pendente": 0
     },
     "contratacao": {
-      "total": 4366,
+      "total": 4164,
       "S": 479,
-      "N": 3364,
+      "N": 3162,
       "D": 523,
       "pendente": 0
     },
@@ -110,7 +110,7 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 4361,
+      "naBase": 4159,
       "aprovadosNaBase": 476
     },
     {
@@ -304,8 +304,8 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 68,
-      "candidatos": 51,
+      "lidos": 66,
+      "candidatos": 49,
       "requisicoes": 2,
       "erro": null,
       "fases": 0,
@@ -564,7 +564,7 @@
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 65,
+    "candidatosNestaExecucao": 63,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": false,
@@ -628,7 +628,7 @@
   },
   "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 13,
+  "duracaoSegundos": 16,
   "instituicoes": {
     "pendentesNestaExecucao": 0,
     "custoPrevistoUsd": 0,
@@ -640,11 +640,11 @@
   "erros": [],
   "errosPorFonte": {},
   "fundidoCom": {
-    "atualizadoEm": "2026-11-08T13:11:03.456Z",
-    "registrosDaBase": 4682,
+    "atualizadoEm": "2026-11-08T14:30:19.027Z",
+    "registrosDaBase": 4681,
     "acrescentados": 0,
-    "substituidos": 1,
-    "removidosMantidos": 1,
+    "substituidos": 6,
+    "removidosMantidos": 202,
     "comOrigem": true
   }
 }
