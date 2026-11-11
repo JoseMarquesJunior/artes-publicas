@@ -1,89 +1,74 @@
 {
-  "atualizadoEm": "2026-11-10T14:48:28.244Z",
-  "total": 4692,
-  "totalNovos": 136,
-  "totalAtualizados": 140,
+  "atualizadoEm": "2026-11-11T14:15:27.860Z",
+  "total": 4933,
+  "totalNovos": 273,
+  "totalAtualizados": 265,
   "removidos": {
     "antigos": 10,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 4,
+    "reprovadosAntigos": 1,
     "duplicadosConhecidos": 17
   },
   "migrados": 0,
   "base": {
-    "aprovados": 675,
-    "reprovados": 3375,
-    "duvidas": 629,
-    "pendentes": 13
+    "aprovados": 693,
+    "reprovados": 3572,
+    "duvidas": 638,
+    "pendentes": 30
   },
   "porAcionavel": {
-    "aberta": 800,
-    "fluxo-continuo": 32,
-    "encerrada": 1053,
-    "radar": 2794,
-    "prazoDesconhecido": 105
+    "aberta": 809,
+    "fluxo-continuo": 40,
+    "encerrada": 1144,
+    "radar": 2940,
+    "prazoDesconhecido": 107
   },
   "porAcionavelAprovados": {
-    "aberta": 148,
+    "aberta": 149,
     "fluxo-continuo": 10,
-    "abertasMG": 126,
-    "encerrada": 152,
-    "radar": 365
+    "abertasMG": 130,
+    "encerrada": 159,
+    "radar": 375
   },
   "porParticipacao": {
     "S": {
-      "inscrever-projeto": 22,
-      "prestar-servico": 479,
-      "enviar-obra": 37,
+      "inscrever-projeto": 24,
+      "prestar-servico": 491,
+      "residencia": 133,
+      "enviar-obra": 38,
       "outro": 1,
-      "residencia": 130,
       "formacao": 6
     },
     "D": {
-      "prestar-servico": 470,
-      "inscrever-projeto": 102,
-      "outro": 42,
-      "enviar-obra": 9,
+      "inscrever-projeto": 105,
+      "outro": 43,
       "residencia": 3,
+      "prestar-servico": 475,
+      "enviar-obra": 9,
       "formacao": 3
     },
     "abertasS": {
-      "inscrever-projeto": 10,
-      "prestar-servico": 34,
+      "inscrever-projeto": 12,
+      "prestar-servico": 32,
       "enviar-obra": 11,
-      "outro": 1,
-      "residencia": 97,
+      "residencia": 99,
       "formacao": 5
     }
   },
   "porTipo": {
     "fomento": {
-      "total": 85,
-      "S": 21,
-      "N": 16,
-      "D": 48,
-      "pendente": 0
-    },
-    "premio": {
-      "total": 23,
-      "S": 8,
-      "N": 7,
-      "D": 8,
-      "pendente": 0
-    },
-    "chamamento": {
-      "total": 61,
-      "S": 21,
-      "N": 8,
-      "D": 32,
+      "total": 97,
+      "S": 23,
+      "N": 25,
+      "D": 49,
       "pendente": 0
     },
     "contratacao": {
-      "total": 4367,
-      "S": 494,
-      "N": 3339,
-      "D": 534,
-      "pendente": 0
+      "total": 4602,
+      "S": 506,
+      "N": 3525,
+      "D": 541,
+      "pendente": 30
     },
     "outro": {
       "total": 6,
@@ -92,9 +77,23 @@
       "D": 2,
       "pendente": 0
     },
+    "chamamento": {
+      "total": 64,
+      "S": 22,
+      "N": 9,
+      "D": 33,
+      "pendente": 0
+    },
+    "premio": {
+      "total": 24,
+      "S": 8,
+      "N": 8,
+      "D": 8,
+      "pendente": 0
+    },
     "residencia": {
-      "total": 137,
-      "S": 131,
+      "total": 140,
+      "S": 134,
       "N": 1,
       "D": 5,
       "pendente": 0
@@ -110,62 +109,62 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 6269,
-      "candidatos": 206,
-      "requisicoes": 129,
+      "lidos": 12693,
+      "candidatos": 440,
+      "requisicoes": 260,
       "erro": null,
-      "bloqueios429": 1,
+      "bloqueios429": 2,
       "periodo": {
-        "de": "2026-11-08",
-        "ate": "2026-11-10",
+        "de": "2026-11-09",
+        "ate": "2026-11-11",
         "dias": 2
       },
       "modalidades": [
         {
           "codigo": 3,
           "nome": "Concurso",
-          "lidos": 0,
+          "lidos": 1,
           "candidatos": 0,
-          "paginas": 0,
+          "paginas": 1,
           "falhas": 0
         },
         {
           "codigo": 8,
           "nome": "Dispensa de licitação",
-          "lidos": 3081,
-          "candidatos": 89,
-          "paginas": 62,
+          "lidos": 6460,
+          "candidatos": 184,
+          "paginas": 130,
           "falhas": 0
         },
         {
           "codigo": 9,
           "nome": "Inexigibilidade",
-          "lidos": 1215,
-          "candidatos": 70,
-          "paginas": 25,
+          "lidos": 2355,
+          "candidatos": 157,
+          "paginas": 48,
           "falhas": 0
         },
         {
           "codigo": 12,
           "nome": "Credenciamento",
-          "lidos": 100,
-          "candidatos": 6,
-          "paginas": 2,
+          "lidos": 202,
+          "candidatos": 12,
+          "paginas": 5,
           "falhas": 0
         },
         {
           "codigo": 6,
           "nome": "Pregão eletrônico",
-          "lidos": 1873,
-          "candidatos": 41,
-          "paginas": 38,
+          "lidos": 3675,
+          "candidatos": 87,
+          "paginas": 74,
           "falhas": 0
         }
       ],
       "erros": [],
-      "novos": 126,
-      "naBase": 4362,
-      "aprovadosNaBase": 491
+      "novos": 235,
+      "naBase": 4597,
+      "aprovadosNaBase": 503
     },
     {
       "fonte": "mapas:bh",
@@ -219,13 +218,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 8,
+      "lidos": 2,
       "candidatos": 1,
       "requisicoes": 1,
       "erro": null,
-      "fases": 7,
+      "fases": 1,
       "paginas": 1,
-      "novos": 1,
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 0
     },
@@ -257,14 +256,14 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 0,
-      "candidatos": 0,
-      "requisicoes": 23,
+      "lidos": 29,
+      "candidatos": 23,
+      "requisicoes": 29,
       "erro": null,
-      "diarios": 0,
+      "diarios": 4,
       "periodo": {
-        "de": "2026-11-08",
-        "ate": "2026-11-10",
+        "de": "2026-11-09",
+        "ate": "2026-11-11",
         "dias": 2
       },
       "territorios": [
@@ -272,23 +271,23 @@
           "nome": "Contagem",
           "ibge": "3118601",
           "regiao": "Grande BH",
-          "diarios": 0,
-          "trechos": 0,
-          "novos": 0,
+          "diarios": 3,
+          "trechos": 26,
+          "novos": 20,
           "pulados": 0,
-          "semTermos": 0,
+          "semTermos": 6,
           "erros": 0
         },
         {
           "nome": "Betim",
           "ibge": "3106705",
           "regiao": "Grande BH",
-          "diarios": 0,
-          "trechos": 0,
-          "novos": 0,
+          "diarios": 1,
+          "trechos": 3,
+          "novos": 3,
           "pulados": 0,
           "semTermos": 0,
-          "erros": 2
+          "erros": 4
         }
       ],
       "naoCobertos": [
@@ -308,17 +307,33 @@
       ],
       "erros": [
         {
-          "janela": "Betim · \"\"paulo gustavo\"\"",
-          "mensagem": "HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=%22paulo+gustavo%22&published_since=2026-11-08&published_until=2026-11-10&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+          "janela": "Betim · \"\"artes visuais\"\"",
+          "mensagem": "HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=%22artes+visuais%22&published_since=2026-11-09&published_until=2026-11-11&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
         },
         {
-          "janela": "Betim · \"\"fundo municipal de incentivo à cultura\"\"",
+          "janela": "Betim · \"\"edital\" \"artes\"\"",
           "mensagem": "The operation was aborted due to timeout"
+        },
+        {
+          "janela": "Betim · \"\"credenciamento\" \"artistas\"\"",
+          "mensagem": "HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=%22credenciamento%22+%22artistas%22&published_since=2026-11-09&published_until=2026-11-11&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Betim · \"\"prêmio\" cultura\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=%22pr%C3%AAmio%22+cultura&published_since=2026-11-09&published_until=2026-11-11&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "disjuntor",
+          "mensagem": "API fora do ar: 3 consultas seguidas falharam; fonte abandonada nesta execução"
         }
       ],
-      "novos": 0,
-      "naBase": 19,
-      "aprovadosNaBase": 6
+      "extraidos": 23,
+      "relevantes": 3,
+      "duvidas": 2,
+      "custoUsd": 0.0039,
+      "novos": 23,
+      "naBase": 22,
+      "aprovadosNaBase": 8
     },
     {
       "fonte": "dom-bh",
@@ -329,19 +344,19 @@
       "observacao": "API pública da Prodabel (sem token): edições por data → sumário → conteúdo de cada ato. Substitui a cobertura de BH que o Querido Diário perdeu em março de 2026.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 109,
-      "candidatos": 3,
-      "requisicoes": 7,
+      "lidos": 223,
+      "candidatos": 8,
+      "requisicoes": 13,
       "erro": null,
-      "edicoes": 1,
-      "atos": 109,
-      "pulados": 0,
+      "edicoes": 2,
+      "atos": 223,
+      "pulados": 3,
       "erros": [],
-      "extraidos": 3,
+      "extraidos": 8,
       "relevantes": 0,
       "duvidas": 0,
-      "custoUsd": 0.0006,
-      "novos": 3,
+      "custoUsd": 0.0014,
+      "novos": 8,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -354,13 +369,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 2,
+      "lidos": 3,
       "candidatos": 0,
-      "requisicoes": 33,
+      "requisicoes": 34,
       "erro": null,
       "periodo": {
-        "de": "2026-11-08",
-        "ate": "2026-11-10",
+        "de": "2026-11-09",
+        "ate": "2026-11-11",
         "dias": 2
       },
       "entidades": [
@@ -376,10 +391,10 @@
         {
           "nome": "Prefeitura de Vespasiano",
           "municipio": "Vespasiano",
-          "materias": 2,
+          "materias": 3,
           "novas": 0,
           "puladas": 0,
-          "ignoradas": 2,
+          "ignoradas": 3,
           "erros": 0
         },
         {
@@ -438,14 +453,14 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 4,
-      "candidatos": 4,
-      "requisicoes": 5,
+      "lidos": 0,
+      "candidatos": 0,
+      "requisicoes": 1,
       "erro": null,
       "paginasLidas": 1,
-      "linksSeguidos": 4,
+      "linksSeguidos": 0,
       "jaConhecidos": 0,
-      "editaisExtraidos": 4,
+      "editaisExtraidos": 0,
       "limitados": 0,
       "erros": [],
       "novos": 0,
@@ -553,7 +568,7 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": true,
-      "naBase": 30,
+      "naBase": 40,
       "aprovadosNaBase": 9
     },
     {
@@ -680,17 +695,21 @@
       "observacao": "Sem página de editais; as chamadas aparecem como notícia (a maioria das notícias é de outros temas e a IA descarta).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 3,
-      "candidatos": 0,
-      "requisicoes": 1,
+      "lidos": 5,
+      "candidatos": 1,
+      "requisicoes": 2,
       "erro": null,
       "paginasLidas": 1,
-      "linksSeguidos": 0,
+      "linksSeguidos": 1,
       "jaConhecidos": 3,
-      "editaisExtraidos": 0,
+      "editaisExtraidos": 1,
       "limitados": 0,
       "erros": [],
-      "novos": 0,
+      "extraidos": 1,
+      "relevantes": 0,
+      "duvidas": 0,
+      "custoUsd": 0.0002,
+      "novos": 1,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -841,16 +860,10 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 22,
+      "lidos": 0,
       "candidatos": 0,
-      "requisicoes": 1,
-      "erro": null,
-      "paginasLidas": 1,
-      "linksSeguidos": 0,
-      "jaConhecidos": 22,
-      "editaisExtraidos": 0,
-      "limitados": 0,
-      "erros": [],
+      "requisicoes": 0,
+      "erro": "todas as listas falharam (Connect Timeout Error (attempted address: museudeartedorio.org.br:443, timeout: 10000ms))",
       "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
@@ -870,17 +883,17 @@
       "erro": null,
       "paginasLidas": 1,
       "linksSeguidos": 20,
-      "jaConhecidos": 173,
+      "jaConhecidos": 183,
       "editaisExtraidos": 20,
-      "limitados": 107,
+      "limitados": 97,
       "erros": [],
       "extraidos": 3,
-      "relevantes": 0,
+      "relevantes": 2,
       "duvidas": 0,
-      "custoUsd": 0.0006,
+      "custoUsd": 0.0005,
       "novos": 3,
-      "naBase": 129,
-      "aprovadosNaBase": 126
+      "naBase": 131,
+      "aprovadosNaBase": 128
     },
     {
       "fonte": "mapas:ce",
@@ -891,14 +904,14 @@
       "observacao": "Instância estadual (Secult-CE); muitos editais municipais de PNAB. Entram com UF CE: só aparecem na página com o filtro 'todas' ou nos segmentos enviar obra/residência (Brasil inteiro).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 52,
-      "candidatos": 44,
+      "lidos": 55,
+      "candidatos": 47,
       "requisicoes": 2,
       "erro": null,
       "fases": 0,
       "paginas": 2,
       "novos": 3,
-      "naBase": 58,
+      "naBase": 60,
       "aprovadosNaBase": 2
     },
     {
@@ -945,56 +958,61 @@
       "observacao": "Boletim independente que agrega editais e vagas do setor cultural de todo o país. O Substack devolve 403 a IPs de datacenter (GitHub Actions): só é coletado no runner próprio ou localmente. Os posts são pagos: a IA lê só a prévia e o link do card leva ao boletim, não ao edital.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": true,
-      "naBase": 20,
-      "aprovadosNaBase": 19
+      "naBase": 22,
+      "aprovadosNaBase": 21
     }
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
     "ativo": true,
-    "classificados": 130,
-    "aprovados": 9,
-    "reprovados": 113,
+    "classificados": 218,
+    "aprovados": 12,
+    "reprovados": 198,
     "duvidas": 8,
-    "pendentes": 0,
-    "lotes": 5,
+    "pendentes": 30,
+    "lotes": 9,
     "lotesFalhos": 0,
-    "requisicoes": 5,
-    "tokensEntrada": 31272,
-    "tokensSaida": 1343,
-    "custoUsd": 0.0038,
+    "requisicoes": 9,
+    "tokensEntrada": 60524,
+    "tokensSaida": 3006,
+    "custoUsd": 0.0076,
     "porTipo": {
-      "contratacao": {
-        "S": 9,
-        "N": 111,
-        "D": 6
-      },
       "fomento": {
         "S": 0,
-        "N": 1,
+        "N": 10,
         "D": 1
+      },
+      "contratacao": {
+        "S": 12,
+        "N": 186,
+        "D": 7
+      },
+      "premio": {
+        "S": 0,
+        "N": 1,
+        "D": 0
       },
       "chamamento": {
         "S": 0,
         "N": 1,
-        "D": 1
+        "D": 0
       }
     },
-    "candidatosNestaExecucao": 303,
+    "candidatosNestaExecucao": 565,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": true,
-      "processados": 6,
-      "relevantes": 0,
-      "descartados": 6,
-      "duvidas": 0,
+      "processados": 38,
+      "relevantes": 7,
+      "descartados": 29,
+      "duvidas": 2,
       "pendentes": 0,
-      "lotes": 1,
+      "lotes": 5,
       "lotesFalhos": 0,
-      "requisicoes": 1,
-      "tokensEntrada": 8200,
-      "tokensSaida": 1026,
-      "custoUsd": 0.0013
+      "requisicoes": 5,
+      "tokensEntrada": 31968,
+      "tokensSaida": 6685,
+      "custoUsd": 0.0065
     },
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
@@ -1021,57 +1039,57 @@
     },
     "prazos": {
       "ativo": true,
-      "tentados": 0,
+      "tentados": 3,
       "encontrados": 0,
       "semTexto": 0,
       "falhas": 0,
-      "requisicoes": 0,
-      "tokensEntrada": 0,
-      "tokensSaida": 0,
-      "custoUsd": 0
+      "requisicoes": 3,
+      "tokensEntrada": 11565,
+      "tokensSaida": 168,
+      "custoUsd": 0.0012
     },
     "rebaixadosPortao": 0,
     "revisadosAplicados": 0,
     "reclassificacao": false
   },
   "queridoDiario": {
-    "descartadosNestaExecucao": 6,
-    "descartadosTotal": 676
+    "descartadosNestaExecucao": 29,
+    "descartadosTotal": 710
   },
   "dedup": {
-    "fundidosNestaExecucao": 0,
-    "duplicadosConhecidos": 36
+    "fundidosNestaExecucao": 2,
+    "duplicadosConhecidos": 38
   },
   "periodoPncp": {
-    "de": "2026-11-08",
-    "ate": "2026-11-10",
+    "de": "2026-11-09",
+    "ate": "2026-11-11",
     "dias": 2
   },
   "retencaoDias": 365,
-  "duracaoSegundos": 1271,
+  "duracaoSegundos": 2044,
   "instituicoes": {
-    "pendentesNestaExecucao": 3,
-    "custoPrevistoUsd": 0.0018,
+    "pendentesNestaExecucao": 7,
+    "custoPrevistoUsd": 0.0042,
     "tetoUsd": 0.2,
     "descartadosNestaExecucao": 3,
     "descartadosExemplos": [
       {
-        "fonte": "html:res-artis",
-        "titulo": "TERRA residência em Buenos Aires (província)",
-        "motivo": "Residência física para um artista, com taxa de USD 1.100 a 1.700; é pagamento do artista e não há chamada aberta com seleção no trecho.",
-        "link": "https://resartis.org/open-call/terra-a-place-to-create-connect-and-slow-down-rooted-in-nature-place-and-community/"
+        "fonte": "html:artvsm",
+        "titulo": "Oficina Online Gratuita: Nova Nota Fiscal 2026",
+        "motivo": "Oficina gratuita sobre emissão de notas fiscais para profissionais da cultura; não é oportunidade de contratação ou edital.",
+        "link": "https://artvsm.substack.com/p/oficina-online-gratuita-para-profissionais"
+      },
+      {
+        "fonte": "html:sesc-mg",
+        "titulo": "Cadastro de reserva do Núcleo de Neurodiversidade do Sesc",
+        "motivo": "Inscrições para cadastro de reserva de atendimento de saúde a crianças com TEA/TDAH; não é oportunidade para artistas.",
+        "link": "https://sescmg.com.br/noticias/sesc-em-minas-abre-inscricoes-para-cadastro-de-reserva-do-nucleo-de-neurodiversidade/"
       },
       {
         "fonte": "html:res-artis",
-        "titulo": "Alpujarra Art Residency 2027 (Espanha)",
-        "motivo": "Residência paga de 2 semanas a 2 meses na Espanha, com taxa de €175 por semana; o trecho descreve o programa e não há inscrição com seleção a receber.",
-        "link": "https://resartis.org/open-call/call-for-artists-2027-open/"
-      },
-      {
-        "fonte": "html:res-artis",
-        "titulo": "Green Olive Arts residência de verão 2027 (Marrocos)",
-        "motivo": "Residência paga de 3 ou 6 semanas em Tetouan, com taxa de depósito e estúdio pago pelo artista; é programa pago e não bolsa de seleção.",
-        "link": "https://resartis.org/open-call/summer-2027-artist-residency-in-morocco-with-green-olive-art/"
+        "titulo": "Open Call de teatro e performance – Casa Hechale (Cidade do México)",
+        "motivo": "Residência de teatro e performance na Cidade do México; oportunidade exclusiva de teatro/performance, fora da área de artes visuais.",
+        "link": "https://resartis.org/open-call/open-call-theatre-performance-residency-in-mexico-city/"
       }
     ]
   },
@@ -1079,26 +1097,47 @@
   "erros": [
     {
       "fonte": "querido-diario",
-      "mensagem": "Betim · \"\"paulo gustavo\"\": HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=%22paulo+gustavo%22&published_since=2026-11-08&published_until=2026-11-10&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+      "mensagem": "Betim · \"\"artes visuais\"\": HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=%22artes+visuais%22&published_since=2026-11-09&published_until=2026-11-11&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
     },
     {
       "fonte": "querido-diario",
-      "mensagem": "Betim · \"\"fundo municipal de incentivo à cultura\"\": The operation was aborted due to timeout"
+      "mensagem": "Betim · \"\"edital\" \"artes\"\": The operation was aborted due to timeout"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Betim · \"\"credenciamento\" \"artistas\"\": HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=%22credenciamento%22+%22artistas%22&published_since=2026-11-09&published_until=2026-11-11&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Betim · \"\"prêmio\" cultura\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3106705&querystring=%22pr%C3%AAmio%22+cultura&published_since=2026-11-09&published_until=2026-11-11&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "disjuntor: API fora do ar: 3 consultas seguidas falharam; fonte abandonada nesta execução"
+    },
+    {
+      "fonte": "html:mar",
+      "mensagem": "todas as listas falharam (Connect Timeout Error (attempted address: museudeartedorio.org.br:443, timeout: 10000ms))"
     }
   ],
   "errosPorFonte": {
     "querido-diario": {
-      "falhas": 2,
+      "falhas": 5,
       "total": 16,
       "completa": false
+    },
+    "html:mar": {
+      "falhas": 1,
+      "total": null,
+      "completa": true
     }
   },
   "fundidoCom": {
-    "atualizadoEm": "2026-11-10T14:30:24.589Z",
-    "registrosDaBase": 4562,
-    "acrescentados": 130,
-    "substituidos": 19,
-    "removidosMantidos": 0,
+    "atualizadoEm": "2026-11-10T14:48:28.244Z",
+    "registrosDaBase": 4692,
+    "acrescentados": 242,
+    "substituidos": 130,
+    "removidosMantidos": 1,
     "comOrigem": true
   }
 }
