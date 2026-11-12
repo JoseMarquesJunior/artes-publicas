@@ -1,55 +1,55 @@
 {
-  "atualizadoEm": "2026-11-12T14:30:13.742Z",
-  "total": 4933,
-  "totalNovos": 9,
-  "totalAtualizados": 35,
+  "atualizadoEm": "2026-11-12T15:22:51.521Z",
+  "total": 5174,
+  "totalNovos": 253,
+  "totalAtualizados": 305,
   "removidos": {
-    "antigos": 18,
+    "antigos": 11,
     "foraDoFiltro": 0,
     "reprovadosAntigos": 8,
-    "duplicadosConhecidos": 0
+    "duplicadosConhecidos": 17
   },
   "migrados": 0,
   "base": {
-    "aprovados": 693,
-    "reprovados": 3570,
-    "duvidas": 638,
-    "pendentes": 32
+    "aprovados": 700,
+    "reprovados": 3782,
+    "duvidas": 662,
+    "pendentes": 30
   },
   "porAcionavel": {
-    "aberta": 739,
-    "fluxo-continuo": 40,
-    "encerrada": 1214,
-    "radar": 2940,
-    "prazoDesconhecido": 109
+    "aberta": 825,
+    "fluxo-continuo": 33,
+    "encerrada": 1221,
+    "radar": 3095,
+    "prazoDesconhecido": 107
   },
   "porAcionavelAprovados": {
-    "aberta": 144,
+    "aberta": 148,
     "fluxo-continuo": 10,
     "abertasMG": 129,
     "encerrada": 164,
-    "radar": 375
+    "radar": 378
   },
   "porParticipacao": {
     "S": {
-      "inscrever-projeto": 24,
-      "prestar-servico": 491,
+      "inscrever-projeto": 25,
+      "prestar-servico": 497,
       "residencia": 133,
       "enviar-obra": 38,
       "outro": 1,
       "formacao": 6
     },
     "D": {
-      "inscrever-projeto": 105,
-      "outro": 43,
+      "prestar-servico": 497,
+      "inscrever-projeto": 106,
+      "outro": 44,
       "residencia": 3,
-      "prestar-servico": 475,
       "enviar-obra": 9,
       "formacao": 3
     },
     "abertasS": {
-      "inscrever-projeto": 11,
-      "prestar-servico": 28,
+      "inscrever-projeto": 12,
+      "prestar-servico": 31,
       "enviar-obra": 11,
       "residencia": 99,
       "formacao": 5
@@ -57,17 +57,17 @@
   },
   "porTipo": {
     "fomento": {
-      "total": 97,
-      "S": 23,
-      "N": 15,
+      "total": 90,
+      "S": 24,
+      "N": 17,
       "D": 49,
-      "pendente": 10
+      "pendente": 0
     },
     "contratacao": {
-      "total": 4602,
-      "S": 506,
-      "N": 3525,
-      "D": 541,
+      "total": 4849,
+      "S": 512,
+      "N": 3743,
+      "D": 564,
       "pendente": 30
     },
     "outro": {
@@ -78,10 +78,10 @@
       "pendente": 0
     },
     "chamamento": {
-      "total": 64,
+      "total": 65,
       "S": 22,
       "N": 9,
-      "D": 33,
+      "D": 34,
       "pendente": 0
     },
     "premio": {
@@ -109,8 +109,62 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 4597,
-      "aprovadosNaBase": 503
+      "lidos": 13891,
+      "candidatos": 491,
+      "requisicoes": 281,
+      "erro": null,
+      "bloqueios429": 1,
+      "periodo": {
+        "de": "2026-11-10",
+        "ate": "2026-11-12",
+        "dias": 2
+      },
+      "modalidades": [
+        {
+          "codigo": 3,
+          "nome": "Concurso",
+          "lidos": 2,
+          "candidatos": 0,
+          "paginas": 1,
+          "falhas": 0
+        },
+        {
+          "codigo": 8,
+          "nome": "Dispensa de licitação",
+          "lidos": 7200,
+          "candidatos": 189,
+          "paginas": 144,
+          "falhas": 0
+        },
+        {
+          "codigo": 9,
+          "nome": "Inexigibilidade",
+          "lidos": 2351,
+          "candidatos": 186,
+          "paginas": 48,
+          "falhas": 0
+        },
+        {
+          "codigo": 12,
+          "nome": "Credenciamento",
+          "lidos": 198,
+          "candidatos": 12,
+          "paginas": 4,
+          "falhas": 0
+        },
+        {
+          "codigo": 6,
+          "nome": "Pregão eletrônico",
+          "lidos": 4140,
+          "candidatos": 104,
+          "paginas": 83,
+          "falhas": 0
+        }
+      ],
+      "erros": [],
+      "novos": 247,
+      "naBase": 4844,
+      "aprovadosNaBase": 509
     },
     {
       "fonte": "mapas:bh",
@@ -120,14 +174,7 @@
       "ativo": true,
       "observacao": "O WAF (GoCache) responde 403 a IPs de datacenter, inclusive os do GitHub Actions (testado em 2026-10-17 com vários cabeçalhos). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
-      "puladaNestaExecucao": false,
-      "lidos": 4,
-      "candidatos": 2,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
+      "puladaNestaExecucao": true,
       "naBase": 3,
       "aprovadosNaBase": 2
     },
@@ -139,14 +186,7 @@
       "ativo": true,
       "observacao": "Desafio JavaScript do Cloudflare para IPs de datacenter (GitHub Actions). Só é coletada quando o fetch.mjs roda numa máquina comum.",
       "bloqueadoNoCI": true,
-      "puladaNestaExecucao": false,
-      "lidos": 1,
-      "candidatos": 1,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
+      "puladaNestaExecucao": true,
       "naBase": 1,
       "aprovadosNaBase": 0
     },
@@ -159,6 +199,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 2,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 3,
       "aprovadosNaBase": 0
     },
@@ -171,7 +218,14 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 1,
+      "lidos": 3,
+      "candidatos": 2,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 1,
+      "paginas": 1,
+      "novos": 1,
+      "naBase": 2,
       "aprovadosNaBase": 0
     },
     {
@@ -183,6 +237,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 0,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "fases": 0,
+      "paginas": 1,
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 0
     },
@@ -195,6 +256,78 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 3,
+      "candidatos": 0,
+      "requisicoes": 13,
+      "erro": null,
+      "diarios": 1,
+      "periodo": {
+        "de": "2026-11-10",
+        "ate": "2026-11-12",
+        "dias": 2
+      },
+      "territorios": [
+        {
+          "nome": "Contagem",
+          "ibge": "3118601",
+          "regiao": "Grande BH",
+          "diarios": 1,
+          "trechos": 3,
+          "novos": 0,
+          "pulados": 3,
+          "semTermos": 0,
+          "erros": 4
+        },
+        {
+          "nome": "Betim",
+          "ibge": "3106705",
+          "regiao": "Grande BH",
+          "diarios": 0,
+          "trechos": 0,
+          "novos": 0,
+          "pulados": 0,
+          "semTermos": 0,
+          "erros": 0
+        }
+      ],
+      "naoCobertos": [
+        "Belo Horizonte",
+        "Nova Lima",
+        "Sabará",
+        "Santa Luzia",
+        "Ribeirão das Neves",
+        "Ibirité",
+        "Vespasiano",
+        "Lagoa Santa",
+        "Brumadinho",
+        "Ouro Preto",
+        "Mariana",
+        "Itabirito",
+        "Congonhas"
+      ],
+      "erros": [
+        {
+          "janela": "Contagem · \"\"artes visuais\"\"",
+          "mensagem": "HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Contagem · \"\"paulo gustavo\"\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Contagem · \"\"chamamento público\" cultura\"",
+          "mensagem": "HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22chamamento+p%C3%BAblico%22+cultura&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "Contagem · \"\"fundo municipal de incentivo à cultura\"\"",
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22fundo+municipal+de+incentivo+%C3%A0+cultura%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+        },
+        {
+          "janela": "disjuntor",
+          "mensagem": "API fora do ar: 3 consultas seguidas falharam; fonte abandonada nesta execução"
+        }
+      ],
+      "novos": 0,
       "naBase": 22,
       "aprovadosNaBase": 8
     },
@@ -207,6 +340,19 @@
       "observacao": "API pública da Prodabel (sem token): edições por data → sumário → conteúdo de cada ato. Substitui a cobertura de BH que o Querido Diário perdeu em março de 2026.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 302,
+      "candidatos": 1,
+      "requisicoes": 8,
+      "erro": null,
+      "edicoes": 4,
+      "atos": 302,
+      "pulados": 11,
+      "erros": [],
+      "extraidos": 1,
+      "relevantes": 0,
+      "duvidas": 0,
+      "custoUsd": 0.0003,
+      "novos": 1,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -219,6 +365,55 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 5,
+      "candidatos": 0,
+      "requisicoes": 34,
+      "erro": null,
+      "periodo": {
+        "de": "2026-11-10",
+        "ate": "2026-11-12",
+        "dias": 2
+      },
+      "entidades": [
+        {
+          "nome": "Prefeitura de Ribeirão das Neves",
+          "municipio": "Ribeirão das Neves",
+          "materias": 0,
+          "novas": 0,
+          "puladas": 0,
+          "ignoradas": 0,
+          "erros": 0
+        },
+        {
+          "nome": "Prefeitura de Vespasiano",
+          "municipio": "Vespasiano",
+          "materias": 5,
+          "novas": 0,
+          "puladas": 0,
+          "ignoradas": 5,
+          "erros": 0
+        },
+        {
+          "nome": "Prefeitura de Santa Luzia",
+          "municipio": "Santa Luzia",
+          "materias": 0,
+          "novas": 0,
+          "puladas": 0,
+          "ignoradas": 0,
+          "erros": 0
+        },
+        {
+          "nome": "Prefeitura de Lagoa Santa",
+          "municipio": "Lagoa Santa",
+          "materias": 0,
+          "novas": 0,
+          "puladas": 0,
+          "ignoradas": 0,
+          "erros": 0
+        }
+      ],
+      "erros": [],
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -231,6 +426,17 @@
       "observacao": "Editais federais do MinC, inclusive os ligados à Lei Rouanet (a Rouanet em si é um mecanismo de incentivo, não um canal de editais).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 4,
+      "candidatos": 4,
+      "requisicoes": 6,
+      "erro": null,
+      "paginasLidas": 2,
+      "linksSeguidos": 4,
+      "jaConhecidos": 0,
+      "editaisExtraidos": 4,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 4,
       "aprovadosNaBase": 1
     },
@@ -243,6 +449,17 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 0,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 0,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 5,
       "aprovadosNaBase": 2
     },
@@ -255,6 +472,17 @@
       "observacao": "Os editais são PDFs sem página própria; o registro usa o título do link (que costuma trazer 'prazo prorrogado até'). Retificações do mesmo edital viram links extras.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 159,
+      "candidatos": 14,
+      "requisicoes": 2,
+      "erro": null,
+      "paginasLidas": 2,
+      "linksSeguidos": 0,
+      "jaConhecidos": 0,
+      "editaisExtraidos": 14,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 12,
       "aprovadosNaBase": 2
     },
@@ -267,6 +495,17 @@
       "observacao": "A página só tem editais até 2018; mantida para captar o que a FMC voltar a publicar ali. Os atos atuais da FMC entram pela fonte dom-bh.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 33,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 0,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -279,6 +518,17 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 25,
+      "candidatos": 3,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 0,
+      "editaisExtraidos": 3,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 2,
       "aprovadosNaBase": 0
     },
@@ -291,6 +541,17 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 2,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 0,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -302,15 +563,8 @@
       "ativo": true,
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
-      "puladaNestaExecucao": false,
-      "lidos": 65,
-      "candidatos": 48,
-      "requisicoes": 2,
-      "erro": null,
-      "fases": 0,
-      "paginas": 2,
-      "novos": 8,
-      "naBase": 39,
+      "puladaNestaExecucao": true,
+      "naBase": 31,
       "aprovadosNaBase": 9
     },
     {
@@ -322,6 +576,17 @@
       "observacao": "Chamadas anuais para exposições nas galerias, residência artística e eventos (inscrições em setembro–novembro). A página fixa https://www.ufmg.br/centrocultural/editais/ só tem PDFs.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 1,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 1,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 2,
       "aprovadosNaBase": 2
     },
@@ -334,6 +599,17 @@
       "observacao": "Não há página de editais; as seleções para as Galerias de Arte SESI (BH, Uberaba, Ouro Preto) saem como notícia.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 5,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 5,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 3,
       "aprovadosNaBase": 2
     },
@@ -346,6 +622,17 @@
       "observacao": "Programa de residência do MAP; página fixa com o edital vigente em PDF. O registro é refeito quando o texto da página muda.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 1,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 1,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -358,6 +645,17 @@
       "observacao": "Sem página de editais; só notícias. Os editais internos (eleições, bolsas) ficam em 'comunicados' e não entram.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 3,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 3,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -370,6 +668,17 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 3,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 3,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -382,6 +691,17 @@
       "observacao": "Sem página de editais; as chamadas aparecem como notícia (a maioria das notícias é de outros temas e a IA descarta).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 5,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 5,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -394,6 +714,17 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 4,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 4,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 2,
       "aprovadosNaBase": 1
     },
@@ -406,6 +737,17 @@
       "observacao": "Convocatórias do MIS (Nova Fotografia, MIS em Cena...). A página 'seleção de projetos' nem sempre lista todas; a home também é lida, com filtro por título. Abrangência nacional, a IA marca o estado quando o edital restringe.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 2,
+      "candidatos": 0,
+      "requisicoes": 2,
+      "erro": null,
+      "paginasLidas": 2,
+      "linksSeguidos": 0,
+      "jaConhecidos": 2,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -418,6 +760,17 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 1,
+      "candidatos": 1,
+      "requisicoes": 2,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 1,
+      "jaConhecidos": 0,
+      "editaisExtraidos": 1,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -430,6 +783,17 @@
       "observacao": "Página fixa do programa de residência; não há seção de editais no site.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 1,
+      "candidatos": 1,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 0,
+      "editaisExtraidos": 1,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 2,
       "aprovadosNaBase": 2
     },
@@ -442,6 +806,17 @@
       "observacao": "Página fixa do programa; a convocatória anual aparece ali quando aberta.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 1,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 1,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 0
     },
@@ -454,6 +829,17 @@
       "observacao": "O domínio antigo capacete.net não resolve mais; o site é capacete.org.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 1,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 1,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -466,6 +852,17 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 22,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 22,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -478,6 +875,21 @@
       "observacao": "Lista mundial de chamadas de residências, em inglês; a IA mantém o título original e resume em português. Só 20 chamadas novas por rodada.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 300,
+      "candidatos": 20,
+      "requisicoes": 21,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 20,
+      "jaConhecidos": 188,
+      "editaisExtraidos": 20,
+      "limitados": 92,
+      "erros": [],
+      "extraidos": 1,
+      "relevantes": 0,
+      "duvidas": 0,
+      "custoUsd": 0.0003,
+      "novos": 1,
       "naBase": 131,
       "aprovadosNaBase": 128
     },
@@ -490,8 +902,15 @@
       "observacao": "Instância estadual (Secult-CE); muitos editais municipais de PNAB. Entram com UF CE: só aparecem na página com o filtro 'todas' ou nos segmentos enviar obra/residência (Brasil inteiro).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 59,
-      "aprovadosNaBase": 2
+      "lidos": 55,
+      "candidatos": 47,
+      "requisicoes": 2,
+      "erro": null,
+      "fases": 0,
+      "paginas": 2,
+      "novos": 3,
+      "naBase": 62,
+      "aprovadosNaBase": 3
     },
     {
       "fonte": "mapas:pe",
@@ -501,14 +920,7 @@
       "ativo": true,
       "observacao": "Instância estadual (versão mais nova do Mapas Culturais, mesma API). Do GitHub Actions a conexão expira (firewall para IPs de datacenter; confirmado em 2026-10-19 em dois runs), de IP residencial responde em meio segundo: só no runner próprio ou localmente. Mesma regra de UF do Mapa do Ceará.",
       "bloqueadoNoCI": true,
-      "puladaNestaExecucao": false,
-      "lidos": 14,
-      "candidatos": 10,
-      "requisicoes": 1,
-      "erro": null,
-      "fases": 0,
-      "paginas": 1,
-      "novos": 0,
+      "puladaNestaExecucao": true,
       "naBase": 13,
       "aprovadosNaBase": 2
     },
@@ -521,6 +933,17 @@
       "observacao": "Salões de Artes Visuais da Bahia (abrangência nacional) e demais editais da Funceb. UF BA: os de enviar obra aparecem no segmento 'Brasil inteiro'.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
+      "lidos": 10,
+      "candidatos": 0,
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 10,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
+      "novos": 0,
       "naBase": 0,
       "aprovadosNaBase": 0
     },
@@ -532,60 +955,61 @@
       "ativo": true,
       "observacao": "Boletim independente que agrega editais e vagas do setor cultural de todo o país. O Substack devolve 403 a IPs de datacenter (GitHub Actions): só é coletado no runner próprio ou localmente. Os posts são pagos: a IA lê só a prévia e o link do card leva ao boletim, não ao edital.",
       "bloqueadoNoCI": true,
-      "puladaNestaExecucao": false,
-      "lidos": 24,
-      "candidatos": 1,
-      "requisicoes": 2,
-      "erro": null,
-      "paginasLidas": 1,
-      "linksSeguidos": 1,
-      "jaConhecidos": 22,
-      "editaisExtraidos": 1,
-      "limitados": 0,
-      "erros": [],
-      "extraidos": 0,
-      "relevantes": 0,
-      "duvidas": 0,
-      "custoUsd": 0,
-      "novos": 1,
-      "naBase": 24,
+      "puladaNestaExecucao": true,
+      "naBase": 22,
       "aprovadosNaBase": 21
     }
   ],
   "ia": {
     "modelo": "claude-haiku-5-5",
-    "ativo": false,
-    "classificados": 0,
-    "aprovados": 0,
-    "reprovados": 0,
-    "duvidas": 0,
-    "pendentes": 38,
-    "lotes": 0,
+    "ativo": true,
+    "classificados": 251,
+    "aprovados": 7,
+    "reprovados": 220,
+    "duvidas": 24,
+    "pendentes": 30,
+    "lotes": 10,
     "lotesFalhos": 0,
-    "requisicoes": 0,
-    "tokensEntrada": 0,
-    "tokensSaida": 0,
-    "custoUsd": 0,
-    "porTipo": {},
-    "candidatosNestaExecucao": 62,
+    "requisicoes": 10,
+    "tokensEntrada": 66156,
+    "tokensSaida": 3057,
+    "custoUsd": 0.0081,
+    "porTipo": {
+      "contratacao": {
+        "S": 6,
+        "N": 218,
+        "D": 23
+      },
+      "fomento": {
+        "S": 1,
+        "N": 2,
+        "D": 0
+      },
+      "chamamento": {
+        "S": 0,
+        "N": 0,
+        "D": 1
+      }
+    },
+    "candidatosNestaExecucao": 586,
     "extracao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": false,
-      "processados": 0,
+      "ativo": true,
+      "processados": 4,
       "relevantes": 0,
-      "descartados": 0,
+      "descartados": 4,
       "duvidas": 0,
-      "pendentes": 2,
-      "lotes": 0,
+      "pendentes": 0,
+      "lotes": 1,
       "lotesFalhos": 0,
-      "requisicoes": 0,
-      "tokensEntrada": 0,
-      "tokensSaida": 0,
-      "custoUsd": 0
+      "requisicoes": 1,
+      "tokensEntrada": 5937,
+      "tokensSaida": 754,
+      "custoUsd": 0.001
     },
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
-      "ativo": false,
+      "ativo": true,
       "categorizados": 0,
       "pendentes": 0,
       "lotes": 0,
@@ -596,7 +1020,7 @@
       "custoUsd": 0
     },
     "participacao": {
-      "ativo": false,
+      "ativo": true,
       "preenchidos": 0,
       "pendentes": 0,
       "lotes": 0,
@@ -607,7 +1031,7 @@
       "custoUsd": 0
     },
     "prazos": {
-      "ativo": false,
+      "ativo": true,
       "tentados": 0,
       "encontrados": 0,
       "semTexto": 0,
@@ -622,32 +1046,82 @@
     "reclassificacao": false
   },
   "queridoDiario": {
-    "descartadosNestaExecucao": 0,
-    "descartadosTotal": 710
+    "descartadosNestaExecucao": 4,
+    "descartadosTotal": 721
   },
   "dedup": {
     "fundidosNestaExecucao": 0,
     "duplicadosConhecidos": 38
   },
-  "periodoPncp": null,
+  "periodoPncp": {
+    "de": "2026-11-10",
+    "ate": "2026-11-12",
+    "dias": 2
+  },
   "retencaoDias": 365,
-  "duracaoSegundos": 10,
+  "duracaoSegundos": 2300,
   "instituicoes": {
-    "pendentesNestaExecucao": 2,
-    "custoPrevistoUsd": 0.0012,
+    "pendentesNestaExecucao": 3,
+    "custoPrevistoUsd": 0.0018,
     "tetoUsd": 0.2,
-    "descartadosNestaExecucao": 0,
-    "descartadosExemplos": []
+    "descartadosNestaExecucao": 3,
+    "descartadosExemplos": [
+      {
+        "fonte": "html:artvsm",
+        "titulo": "Podcast Exclusivo para Assinantes: Salão de Artes Plásticas de Praia Grande",
+        "motivo": "Áudio de apoio sobre salão de artes plásticas com inscrições até 16/11/2026 e R$ 32.000 em prêmios; conteúdo de assinatura, não o edital em si.",
+        "link": "https://artvsm.substack.com/p/podcast-exclusivo-para-assinantes-6ab"
+      },
+      {
+        "fonte": "html:artvsm",
+        "titulo": "Concurso de Intervenção Artística Arquitetura em Construção",
+        "motivo": "Concurso para estudantes de Arquitetura da grande São Paulo criarem intervenção artística no tapume do CAU/SP; voltado a estudantes de arquitetura, não a artistas visuais.",
+        "link": "https://artvsm.substack.com/p/concurso-de-intervencao-artistica"
+      },
+      {
+        "fonte": "html:res-artis",
+        "titulo": "Boathouse Writers' Retreat 2027",
+        "motivo": "Residência de quatro semanas para escritores e poetas na Índia, com taxa de 1000 euros; exclusiva de literatura.",
+        "link": "https://resartis.org/open-call/boathouse-writers-retreat-2027/"
+      }
+    ]
   },
   "avisos": [],
-  "erros": [],
-  "errosPorFonte": {},
+  "erros": [
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"\"artes visuais\"\": HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"\"paulo gustavo\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"\"chamamento público\" cultura\": HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22chamamento+p%C3%BAblico%22+cultura&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "Contagem · \"\"fundo municipal de incentivo à cultura\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22fundo+municipal+de+incentivo+%C3%A0+cultura%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+    },
+    {
+      "fonte": "querido-diario",
+      "mensagem": "disjuntor: API fora do ar: 3 consultas seguidas falharam; fonte abandonada nesta execução"
+    }
+  ],
+  "errosPorFonte": {
+    "querido-diario": {
+      "falhas": 5,
+      "total": 16,
+      "completa": false
+    }
+  },
   "fundidoCom": {
-    "atualizadoEm": "2026-11-11T21:31:09.222Z",
-    "registrosDaBase": 4932,
-    "acrescentados": 1,
-    "substituidos": 73,
-    "removidosMantidos": 0,
+    "atualizadoEm": "2026-11-12T14:30:13.742Z",
+    "registrosDaBase": 4933,
+    "acrescentados": 251,
+    "substituidos": 59,
+    "removidosMantidos": 10,
     "comOrigem": true
   }
 }
