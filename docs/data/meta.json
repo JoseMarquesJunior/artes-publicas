@@ -1,12 +1,12 @@
 {
-  "atualizadoEm": "2026-11-11T21:31:09.222Z",
-  "total": 4932,
+  "atualizadoEm": "2026-11-12T14:30:13.742Z",
+  "total": 4933,
   "totalNovos": 9,
   "totalAtualizados": 35,
   "removidos": {
     "antigos": 18,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 10,
+    "reprovadosAntigos": 8,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
@@ -14,20 +14,20 @@
     "aprovados": 693,
     "reprovados": 3570,
     "duvidas": 638,
-    "pendentes": 31
+    "pendentes": 32
   },
   "porAcionavel": {
-    "aberta": 811,
+    "aberta": 739,
     "fluxo-continuo": 40,
-    "encerrada": 1141,
+    "encerrada": 1214,
     "radar": 2940,
-    "prazoDesconhecido": 108
+    "prazoDesconhecido": 109
   },
   "porAcionavelAprovados": {
-    "aberta": 149,
+    "aberta": 144,
     "fluxo-continuo": 10,
-    "abertasMG": 130,
-    "encerrada": 159,
+    "abertasMG": 129,
+    "encerrada": 164,
     "radar": 375
   },
   "porParticipacao": {
@@ -48,8 +48,8 @@
       "formacao": 3
     },
     "abertasS": {
-      "inscrever-projeto": 12,
-      "prestar-servico": 32,
+      "inscrever-projeto": 11,
+      "prestar-servico": 28,
       "enviar-obra": 11,
       "residencia": 99,
       "formacao": 5
@@ -57,11 +57,11 @@
   },
   "porTipo": {
     "fomento": {
-      "total": 96,
+      "total": 97,
       "S": 23,
       "N": 15,
       "D": 49,
-      "pendente": 9
+      "pendente": 10
     },
     "contratacao": {
       "total": 4602,
@@ -548,7 +548,7 @@
       "duvidas": 0,
       "custoUsd": 0,
       "novos": 1,
-      "naBase": 23,
+      "naBase": 24,
       "aprovadosNaBase": 21
     }
   ],
@@ -575,7 +575,7 @@
       "relevantes": 0,
       "descartados": 0,
       "duvidas": 0,
-      "pendentes": 1,
+      "pendentes": 2,
       "lotes": 0,
       "lotesFalhos": 0,
       "requisicoes": 0,
@@ -631,10 +631,10 @@
   },
   "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 11,
+  "duracaoSegundos": 10,
   "instituicoes": {
-    "pendentesNestaExecucao": 1,
-    "custoPrevistoUsd": 0.0006,
+    "pendentesNestaExecucao": 2,
+    "custoPrevistoUsd": 0.0012,
     "tetoUsd": 0.2,
     "descartadosNestaExecucao": 0,
     "descartadosExemplos": []
@@ -643,11 +643,11 @@
   "erros": [],
   "errosPorFonte": {},
   "fundidoCom": {
-    "atualizadoEm": "2026-11-11T14:15:27.860Z",
-    "registrosDaBase": 4933,
+    "atualizadoEm": "2026-11-11T21:31:09.222Z",
+    "registrosDaBase": 4932,
     "acrescentados": 1,
-    "substituidos": 4,
-    "removidosMantidos": 2,
+    "substituidos": 73,
+    "removidosMantidos": 0,
     "comOrigem": true
   }
 }
