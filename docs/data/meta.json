@@ -1,74 +1,74 @@
 {
-  "atualizadoEm": "2026-11-12T15:22:51.521Z",
-  "total": 5174,
-  "totalNovos": 253,
-  "totalAtualizados": 305,
+  "atualizadoEm": "2026-11-13T14:25:32.749Z",
+  "total": 5071,
+  "totalNovos": 108,
+  "totalAtualizados": 300,
   "removidos": {
-    "antigos": 11,
+    "antigos": 5,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 8,
+    "reprovadosAntigos": 203,
     "duplicadosConhecidos": 17
   },
   "migrados": 0,
   "base": {
-    "aprovados": 700,
-    "reprovados": 3782,
-    "duvidas": 662,
-    "pendentes": 30
+    "aprovados": 704,
+    "reprovados": 3695,
+    "duvidas": 672,
+    "pendentes": 0
   },
   "porAcionavel": {
-    "aberta": 825,
+    "aberta": 822,
     "fluxo-continuo": 33,
-    "encerrada": 1221,
-    "radar": 3095,
-    "prazoDesconhecido": 107
+    "encerrada": 1209,
+    "radar": 3007,
+    "prazoDesconhecido": 108
   },
   "porAcionavelAprovados": {
-    "aberta": 148,
+    "aberta": 147,
     "fluxo-continuo": 10,
-    "abertasMG": 129,
-    "encerrada": 164,
-    "radar": 378
+    "abertasMG": 128,
+    "encerrada": 167,
+    "radar": 380
   },
   "porParticipacao": {
     "S": {
       "inscrever-projeto": 25,
-      "prestar-servico": 497,
-      "residencia": 133,
+      "residencia": 134,
+      "prestar-servico": 500,
       "enviar-obra": 38,
       "outro": 1,
       "formacao": 6
     },
     "D": {
-      "prestar-servico": 497,
-      "inscrever-projeto": 106,
-      "outro": 44,
+      "prestar-servico": 502,
+      "outro": 47,
+      "inscrever-projeto": 108,
       "residencia": 3,
       "enviar-obra": 9,
       "formacao": 3
     },
     "abertasS": {
+      "residencia": 100,
       "inscrever-projeto": 12,
-      "prestar-servico": 31,
+      "prestar-servico": 29,
       "enviar-obra": 11,
-      "residencia": 99,
       "formacao": 5
     }
   },
   "porTipo": {
     "fomento": {
-      "total": 90,
+      "total": 89,
       "S": 24,
-      "N": 17,
-      "D": 49,
+      "N": 15,
+      "D": 50,
       "pendente": 0
     },
     "contratacao": {
-      "total": 4849,
-      "S": 512,
-      "N": 3743,
-      "D": 564,
-      "pendente": 30
+      "total": 4745,
+      "S": 515,
+      "N": 3658,
+      "D": 572,
+      "pendente": 0
     },
     "outro": {
       "total": 6,
@@ -78,10 +78,17 @@
       "pendente": 0
     },
     "chamamento": {
-      "total": 65,
+      "total": 66,
       "S": 22,
       "N": 9,
-      "D": 34,
+      "D": 35,
+      "pendente": 0
+    },
+    "residencia": {
+      "total": 141,
+      "S": 135,
+      "N": 1,
+      "D": 5,
       "pendente": 0
     },
     "premio": {
@@ -89,13 +96,6 @@
       "S": 8,
       "N": 8,
       "D": 8,
-      "pendente": 0
-    },
-    "residencia": {
-      "total": 140,
-      "S": 134,
-      "N": 1,
-      "D": 5,
       "pendente": 0
     }
   },
@@ -109,21 +109,21 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 13891,
-      "candidatos": 491,
-      "requisicoes": 281,
+      "lidos": 10922,
+      "candidatos": 333,
+      "requisicoes": 245,
       "erro": null,
       "bloqueios429": 1,
       "periodo": {
-        "de": "2026-11-10",
-        "ate": "2026-11-12",
+        "de": "2026-11-11",
+        "ate": "2026-11-13",
         "dias": 2
       },
       "modalidades": [
         {
           "codigo": 3,
           "nome": "Concurso",
-          "lidos": 2,
+          "lidos": 1,
           "candidatos": 0,
           "paginas": 1,
           "falhas": 0
@@ -131,40 +131,45 @@
         {
           "codigo": 8,
           "nome": "Dispensa de licitação",
-          "lidos": 7200,
-          "candidatos": 189,
-          "paginas": 144,
+          "lidos": 6598,
+          "candidatos": 161,
+          "paginas": 132,
           "falhas": 0
         },
         {
           "codigo": 9,
           "nome": "Inexigibilidade",
-          "lidos": 2351,
-          "candidatos": 186,
-          "paginas": 48,
-          "falhas": 0
+          "lidos": 0,
+          "candidatos": 0,
+          "paginas": 0,
+          "falhas": 1
         },
         {
           "codigo": 12,
           "nome": "Credenciamento",
-          "lidos": 198,
-          "candidatos": 12,
+          "lidos": 177,
+          "candidatos": 9,
           "paginas": 4,
           "falhas": 0
         },
         {
           "codigo": 6,
           "nome": "Pregão eletrônico",
-          "lidos": 4140,
-          "candidatos": 104,
+          "lidos": 4146,
+          "candidatos": 89,
           "paginas": 83,
           "falhas": 0
         }
       ],
-      "erros": [],
-      "novos": 247,
-      "naBase": 4844,
-      "aprovadosNaBase": 509
+      "erros": [
+        {
+          "janela": "Inexigibilidade 2026-11-11..2026-11-13",
+          "mensagem": "HTTP 503 (503 Service Unavailable No server is available to handle this request.)"
+        }
+      ],
+      "novos": 97,
+      "naBase": 4740,
+      "aprovadosNaBase": 512
     },
     {
       "fonte": "mapas:bh",
@@ -218,13 +223,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 3,
+      "lidos": 2,
       "candidatos": 2,
       "requisicoes": 1,
       "erro": null,
-      "fases": 1,
+      "fases": 0,
       "paginas": 1,
-      "novos": 1,
+      "novos": 0,
       "naBase": 2,
       "aprovadosNaBase": 0
     },
@@ -256,14 +261,14 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 3,
+      "lidos": 0,
       "candidatos": 0,
-      "requisicoes": 13,
+      "requisicoes": 16,
       "erro": null,
-      "diarios": 1,
+      "diarios": 0,
       "periodo": {
-        "de": "2026-11-10",
-        "ate": "2026-11-12",
+        "de": "2026-11-11",
+        "ate": "2026-11-13",
         "dias": 2
       },
       "territorios": [
@@ -271,12 +276,12 @@
           "nome": "Contagem",
           "ibge": "3118601",
           "regiao": "Grande BH",
-          "diarios": 1,
-          "trechos": 3,
+          "diarios": 0,
+          "trechos": 0,
           "novos": 0,
-          "pulados": 3,
+          "pulados": 0,
           "semTermos": 0,
-          "erros": 4
+          "erros": 0
         },
         {
           "nome": "Betim",
@@ -305,28 +310,7 @@
         "Itabirito",
         "Congonhas"
       ],
-      "erros": [
-        {
-          "janela": "Contagem · \"\"artes visuais\"\"",
-          "mensagem": "HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-        },
-        {
-          "janela": "Contagem · \"\"paulo gustavo\"\"",
-          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-        },
-        {
-          "janela": "Contagem · \"\"chamamento público\" cultura\"",
-          "mensagem": "HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22chamamento+p%C3%BAblico%22+cultura&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-        },
-        {
-          "janela": "Contagem · \"\"fundo municipal de incentivo à cultura\"\"",
-          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22fundo+municipal+de+incentivo+%C3%A0+cultura%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-        },
-        {
-          "janela": "disjuntor",
-          "mensagem": "API fora do ar: 3 consultas seguidas falharam; fonte abandonada nesta execução"
-        }
-      ],
+      "erros": [],
       "novos": 0,
       "naBase": 22,
       "aprovadosNaBase": 8
@@ -340,19 +324,19 @@
       "observacao": "API pública da Prodabel (sem token): edições por data → sumário → conteúdo de cada ato. Substitui a cobertura de BH que o Querido Diário perdeu em março de 2026.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 302,
-      "candidatos": 1,
-      "requisicoes": 8,
+      "lidos": 284,
+      "candidatos": 3,
+      "requisicoes": 10,
       "erro": null,
       "edicoes": 4,
-      "atos": 302,
-      "pulados": 11,
+      "atos": 284,
+      "pulados": 9,
       "erros": [],
-      "extraidos": 1,
+      "extraidos": 3,
       "relevantes": 0,
       "duvidas": 0,
-      "custoUsd": 0.0003,
-      "novos": 1,
+      "custoUsd": 0.0006,
+      "novos": 3,
       "naBase": 1,
       "aprovadosNaBase": 1
     },
@@ -365,13 +349,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 5,
+      "lidos": 0,
       "candidatos": 0,
-      "requisicoes": 34,
+      "requisicoes": 32,
       "erro": null,
       "periodo": {
-        "de": "2026-11-10",
-        "ate": "2026-11-12",
+        "de": "2026-11-11",
+        "ate": "2026-11-13",
         "dias": 2
       },
       "entidades": [
@@ -387,10 +371,10 @@
         {
           "nome": "Prefeitura de Vespasiano",
           "municipio": "Vespasiano",
-          "materias": 5,
+          "materias": 0,
           "novas": 0,
           "puladas": 0,
-          "ignoradas": 5,
+          "ignoradas": 0,
           "erros": 0
         },
         {
@@ -881,17 +865,17 @@
       "erro": null,
       "paginasLidas": 1,
       "linksSeguidos": 20,
-      "jaConhecidos": 188,
+      "jaConhecidos": 196,
       "editaisExtraidos": 20,
-      "limitados": 92,
+      "limitados": 84,
       "erros": [],
-      "extraidos": 1,
-      "relevantes": 0,
+      "extraidos": 6,
+      "relevantes": 1,
       "duvidas": 0,
-      "custoUsd": 0.0003,
-      "novos": 1,
-      "naBase": 131,
-      "aprovadosNaBase": 128
+      "custoUsd": 0.0013,
+      "novos": 6,
+      "naBase": 132,
+      "aprovadosNaBase": 129
     },
     {
       "fonte": "mapas:ce",
@@ -902,13 +886,13 @@
       "observacao": "Instância estadual (Secult-CE); muitos editais municipais de PNAB. Entram com UF CE: só aparecem na página com o filtro 'todas' ou nos segmentos enviar obra/residência (Brasil inteiro).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 55,
+      "lidos": 54,
       "candidatos": 47,
       "requisicoes": 2,
       "erro": null,
       "fases": 0,
       "paginas": 2,
-      "novos": 3,
+      "novos": 2,
       "naBase": 62,
       "aprovadosNaBase": 3
     },
@@ -963,49 +947,49 @@
   "ia": {
     "modelo": "claude-haiku-5-5",
     "ativo": true,
-    "classificados": 251,
-    "aprovados": 7,
-    "reprovados": 220,
-    "duvidas": 24,
-    "pendentes": 30,
-    "lotes": 10,
+    "classificados": 129,
+    "aprovados": 4,
+    "reprovados": 116,
+    "duvidas": 9,
+    "pendentes": 0,
+    "lotes": 5,
     "lotesFalhos": 0,
-    "requisicoes": 10,
-    "tokensEntrada": 66156,
-    "tokensSaida": 3057,
-    "custoUsd": 0.0081,
+    "requisicoes": 5,
+    "tokensEntrada": 31625,
+    "tokensSaida": 1287,
+    "custoUsd": 0.0038,
     "porTipo": {
       "contratacao": {
-        "S": 6,
-        "N": 218,
-        "D": 23
-      },
-      "fomento": {
-        "S": 1,
-        "N": 2,
-        "D": 0
+        "S": 4,
+        "N": 116,
+        "D": 7
       },
       "chamamento": {
         "S": 0,
         "N": 0,
         "D": 1
+      },
+      "fomento": {
+        "S": 0,
+        "N": 0,
+        "D": 1
       }
     },
-    "candidatosNestaExecucao": 586,
+    "candidatosNestaExecucao": 430,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": true,
-      "processados": 4,
-      "relevantes": 0,
-      "descartados": 4,
+      "processados": 9,
+      "relevantes": 1,
+      "descartados": 8,
       "duvidas": 0,
       "pendentes": 0,
-      "lotes": 1,
+      "lotes": 2,
       "lotesFalhos": 0,
-      "requisicoes": 1,
-      "tokensEntrada": 5937,
-      "tokensSaida": 754,
-      "custoUsd": 0.001
+      "requisicoes": 2,
+      "tokensEntrada": 11975,
+      "tokensSaida": 1487,
+      "custoUsd": 0.0019
     },
     "categorizacao": {
       "modelo": "claude-haiku-5-5",
@@ -1032,96 +1016,92 @@
     },
     "prazos": {
       "ativo": true,
-      "tentados": 0,
+      "tentados": 1,
       "encontrados": 0,
       "semTexto": 0,
       "falhas": 0,
-      "requisicoes": 0,
-      "tokensEntrada": 0,
-      "tokensSaida": 0,
-      "custoUsd": 0
+      "requisicoes": 1,
+      "tokensEntrada": 2648,
+      "tokensSaida": 24,
+      "custoUsd": 0.0003
     },
-    "rebaixadosPortao": 0,
+    "rebaixadosPortao": 1,
     "revisadosAplicados": 0,
     "reclassificacao": false
   },
   "queridoDiario": {
-    "descartadosNestaExecucao": 4,
-    "descartadosTotal": 721
+    "descartadosNestaExecucao": 8,
+    "descartadosTotal": 731
   },
   "dedup": {
     "fundidosNestaExecucao": 0,
     "duplicadosConhecidos": 38
   },
   "periodoPncp": {
-    "de": "2026-11-10",
-    "ate": "2026-11-12",
+    "de": "2026-11-11",
+    "ate": "2026-11-13",
     "dias": 2
   },
   "retencaoDias": 365,
-  "duracaoSegundos": 2300,
+  "duracaoSegundos": 1398,
   "instituicoes": {
-    "pendentesNestaExecucao": 3,
-    "custoPrevistoUsd": 0.0018,
+    "pendentesNestaExecucao": 6,
+    "custoPrevistoUsd": 0.0036,
     "tetoUsd": 0.2,
-    "descartadosNestaExecucao": 3,
+    "descartadosNestaExecucao": 5,
     "descartadosExemplos": [
       {
-        "fonte": "html:artvsm",
-        "titulo": "Podcast Exclusivo para Assinantes: Salão de Artes Plásticas de Praia Grande",
-        "motivo": "Áudio de apoio sobre salão de artes plásticas com inscrições até 16/11/2026 e R$ 32.000 em prêmios; conteúdo de assinatura, não o edital em si.",
-        "link": "https://artvsm.substack.com/p/podcast-exclusivo-para-assinantes-6ab"
-      },
-      {
-        "fonte": "html:artvsm",
-        "titulo": "Concurso de Intervenção Artística Arquitetura em Construção",
-        "motivo": "Concurso para estudantes de Arquitetura da grande São Paulo criarem intervenção artística no tapume do CAU/SP; voltado a estudantes de arquitetura, não a artistas visuais.",
-        "link": "https://artvsm.substack.com/p/concurso-de-intervencao-artistica"
+        "fonte": "html:res-artis",
+        "titulo": "Music Residency Arraiolos 2027",
+        "motivo": "Residência para músicos e compositores em Arraiolos, Portugal; não aceita artistas visuais.",
+        "link": "https://resartis.org/open-call/music-residency-arraiolos-portugal-march-2027/"
       },
       {
         "fonte": "html:res-artis",
-        "titulo": "Boathouse Writers' Retreat 2027",
-        "motivo": "Residência de quatro semanas para escritores e poetas na Índia, com taxa de 1000 euros; exclusiva de literatura.",
-        "link": "https://resartis.org/open-call/boathouse-writers-retreat-2027/"
+        "titulo": "LONG DURATION - residência para performance",
+        "motivo": "Residência para artistas da performance e de duração; voltada a performers, dançarinos e artistas sonoros.",
+        "link": "https://resartis.org/open-call/long-duration/"
+      },
+      {
+        "fonte": "html:res-artis",
+        "titulo": "KAMP: residência queer em Lesbos",
+        "motivo": "Residência queer e trans em Lesbos voltada a performance, dança, som e prática corporal, não a artes visuais.",
+        "link": "https://resartis.org/open-call/kamp-queer-life-art-residency-in-lesbos-greece/"
+      },
+      {
+        "fonte": "html:res-artis",
+        "titulo": "Residências RedSapata 2027 - dança",
+        "motivo": "Residências em Linz para dança, coreografia e artes performativas, com pacotes pagos pelo próprio artista.",
+        "link": "https://resartis.org/open-call/open-call-redsapata-artist-residencies-2027/"
+      },
+      {
+        "fonte": "html:res-artis",
+        "titulo": "SÍM Guesthouse (hospedagem em Reykjavík)",
+        "motivo": "Casa de hospedagem da associação de artistas visuais islandeses SÍM, para estadias curtas de artistas e profissionais, paga pelo próprio hóspede; não é residência de produção nem há seleção.",
+        "link": "https://resartis.org/open-call/sim-guesthouse-2/"
       }
     ]
   },
   "avisos": [],
   "erros": [
     {
-      "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"artes visuais\"\": HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-    },
-    {
-      "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"paulo gustavo\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-    },
-    {
-      "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"chamamento público\" cultura\": HTTP 520 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22chamamento+p%C3%BAblico%22+cultura&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-    },
-    {
-      "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"fundo municipal de incentivo à cultura\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22fundo+municipal+de+incentivo+%C3%A0+cultura%22&published_since=2026-11-10&published_until=2026-11-12&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
-    },
-    {
-      "fonte": "querido-diario",
-      "mensagem": "disjuntor: API fora do ar: 3 consultas seguidas falharam; fonte abandonada nesta execução"
+      "fonte": "pncp",
+      "mensagem": "Inexigibilidade 2026-11-11..2026-11-13: HTTP 503 (503 Service Unavailable No server is available to handle this request.)"
     }
   ],
   "errosPorFonte": {
-    "querido-diario": {
-      "falhas": 5,
-      "total": 16,
+    "pncp": {
+      "falhas": 1,
+      "total": 5,
       "completa": false
     }
   },
   "fundidoCom": {
-    "atualizadoEm": "2026-11-12T14:30:13.742Z",
-    "registrosDaBase": 4933,
-    "acrescentados": 251,
-    "substituidos": 59,
-    "removidosMantidos": 10,
+    "atualizadoEm": "2026-11-12T15:22:51.521Z",
+    "registrosDaBase": 5174,
+    "acrescentados": 100,
+    "substituidos": 111,
+    "removidosMantidos": 203,
     "comOrigem": true
   }
 }
