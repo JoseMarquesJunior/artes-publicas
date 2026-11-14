@@ -729,5 +729,8 @@
 {"fonte":"html:res-artis","idNaFonte":"5395acd9e6e1","data":"2026-10-30"},
 {"fonte":"html:res-artis","idNaFonte":"6a2a4d32d009","data":"2026-01-29"},
 {"fonte":"html:res-artis","idNaFonte":"3da9d948ca1d","data":"2026-11-13","antigo":true},
-{"fonte":"html:res-artis","idNaFonte":"a7314efffd90","data":"2026-11-13","antigo":true}
+{"fonte":"html:res-artis","idNaFonte":"a7314efffd90","data":"2026-11-13","antigo":true},
+{"fonte":"html:artvsm","idNaFonte":"faeefda701ec","data":"2026-11-13"},
+{"fonte":"dom-bh","idNaFonte":"494299","data":"2026-11-14"},
+{"fonte":"dom-bh","idNaFonte":"494300","data":"2026-11-14"}
 ]
