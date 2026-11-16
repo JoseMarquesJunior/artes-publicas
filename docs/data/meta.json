@@ -1,33 +1,33 @@
 {
-  "atualizadoEm": "2026-11-15T14:30:17.789Z",
-  "total": 4921,
-  "totalNovos": 9,
-  "totalAtualizados": 34,
+  "atualizadoEm": "2026-11-16T14:30:11.655Z",
+  "total": 4731,
+  "totalNovos": 0,
+  "totalAtualizados": 41,
   "removidos": {
     "antigos": 18,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 1,
+    "reprovadosAntigos": 190,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
   "base": {
     "aprovados": 736,
-    "reprovados": 3487,
+    "reprovados": 3297,
     "duvidas": 689,
     "pendentes": 9
   },
   "porAcionavel": {
-    "aberta": 794,
+    "aberta": 785,
     "fluxo-continuo": 40,
-    "encerrada": 1160,
-    "radar": 2927,
+    "encerrada": 1099,
+    "radar": 2807,
     "prazoDesconhecido": 113
   },
   "porAcionavelAprovados": {
-    "aberta": 154,
+    "aberta": 148,
     "fluxo-continuo": 10,
-    "abertasMG": 138,
-    "encerrada": 171,
+    "abertasMG": 132,
+    "encerrada": 177,
     "radar": 401
   },
   "porParticipacao": {
@@ -49,17 +49,17 @@
     },
     "abertasS": {
       "inscrever-projeto": 13,
-      "enviar-obra": 12,
-      "residencia": 108,
+      "enviar-obra": 9,
+      "residencia": 105,
       "prestar-servico": 26,
       "formacao": 5
     }
   },
   "porTipo": {
     "fomento": {
-      "total": 98,
+      "total": 97,
       "S": 24,
-      "N": 14,
+      "N": 13,
       "D": 51,
       "pendente": 9
     },
@@ -71,9 +71,9 @@
       "pendente": 0
     },
     "contratacao": {
-      "total": 4577,
+      "total": 4388,
       "S": 536,
-      "N": 3453,
+      "N": 3264,
       "D": 588,
       "pendente": 0
     },
@@ -109,7 +109,7 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 4572,
+      "naBase": 4383,
       "aprovadosNaBase": 533
     },
     {
@@ -303,14 +303,14 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 64,
-      "candidatos": 47,
+      "lidos": 63,
+      "candidatos": 46,
       "requisicoes": 2,
       "erro": null,
       "fases": 1,
       "paginas": 2,
-      "novos": 8,
-      "naBase": 40,
+      "novos": 0,
+      "naBase": 39,
       "aprovadosNaBase": 9
     },
     {
@@ -534,20 +534,20 @@
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
       "lidos": 24,
-      "candidatos": 1,
-      "requisicoes": 2,
+      "candidatos": 0,
+      "requisicoes": 1,
       "erro": null,
       "paginasLidas": 1,
-      "linksSeguidos": 1,
-      "jaConhecidos": 22,
-      "editaisExtraidos": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 24,
+      "editaisExtraidos": 0,
       "limitados": 0,
       "erros": [],
       "extraidos": 0,
       "relevantes": 0,
       "duvidas": 0,
       "custoUsd": 0,
-      "novos": 1,
+      "novos": 0,
       "naBase": 26,
       "aprovadosNaBase": 24
     }
@@ -567,7 +567,7 @@
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 61,
+    "candidatosNestaExecucao": 59,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": false,
@@ -631,7 +631,7 @@
   },
   "periodoPncp": null,
   "retencaoDias": 365,
-  "duracaoSegundos": 13,
+  "duracaoSegundos": 7,
   "instituicoes": {
     "pendentesNestaExecucao": 1,
     "custoPrevistoUsd": 0.0006,
@@ -643,11 +643,11 @@
   "erros": [],
   "errosPorFonte": {},
   "fundidoCom": {
-    "atualizadoEm": "2026-11-15T13:48:07.473Z",
-    "registrosDaBase": 4913,
-    "acrescentados": 9,
-    "substituidos": 0,
-    "removidosMantidos": 1,
+    "atualizadoEm": "2026-11-15T14:30:17.789Z",
+    "registrosDaBase": 4921,
+    "acrescentados": 0,
+    "substituidos": 10,
+    "removidosMantidos": 190,
     "comOrigem": true
   }
 }
