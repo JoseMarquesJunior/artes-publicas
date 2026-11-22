@@ -1,27 +1,27 @@
 {
-  "atualizadoEm": "2026-11-21T14:32:32.453Z",
-  "total": 5159,
-  "totalNovos": 7,
-  "totalAtualizados": 372,
+  "atualizadoEm": "2026-11-22T14:17:53.553Z",
+  "total": 4998,
+  "totalNovos": 3,
+  "totalAtualizados": 63,
   "removidos": {
-    "antigos": 7,
+    "antigos": 5,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 167,
-    "duplicadosConhecidos": 20
+    "reprovadosAntigos": 164,
+    "duplicadosConhecidos": 23
   },
   "migrados": 0,
   "base": {
     "aprovados": 736,
-    "reprovados": 2723,
+    "reprovados": 2559,
     "duvidas": 689,
-    "pendentes": 1011
+    "pendentes": 1014
   },
   "porAcionavel": {
-    "aberta": 810,
-    "fluxo-continuo": 43,
-    "encerrada": 1243,
-    "radar": 3060,
-    "prazoDesconhecido": 152
+    "aberta": 811,
+    "fluxo-continuo": 44,
+    "encerrada": 1179,
+    "radar": 2964,
+    "prazoDesconhecido": 156
   },
   "porAcionavelAprovados": {
     "aberta": 131,
@@ -56,13 +56,6 @@
     }
   },
   "porTipo": {
-    "contratacao": {
-      "total": 4762,
-      "S": 536,
-      "N": 2702,
-      "D": 588,
-      "pendente": 936
-    },
     "outro": {
       "total": 7,
       "S": 0,
@@ -70,12 +63,19 @@
       "D": 2,
       "pendente": 1
     },
+    "contratacao": {
+      "total": 4599,
+      "S": 536,
+      "N": 2538,
+      "D": 588,
+      "pendente": 937
+    },
     "fomento": {
-      "total": 134,
+      "total": 137,
       "S": 24,
       "N": 9,
       "D": 51,
-      "pendente": 50
+      "pendente": 53
     },
     "chamamento": {
       "total": 75,
@@ -85,18 +85,18 @@
       "pendente": 13
     },
     "premio": {
-      "total": 25,
+      "total": 26,
       "S": 8,
       "N": 4,
       "D": 8,
-      "pendente": 5
+      "pendente": 6
     },
     "residencia": {
-      "total": 153,
+      "total": 154,
       "S": 144,
       "N": 1,
       "D": 5,
-      "pendente": 3
+      "pendente": 4
     }
   },
   "fontes": [
@@ -109,61 +109,61 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 6961,
-      "candidatos": 318,
-      "requisicoes": 143,
+      "lidos": 315,
+      "candidatos": 7,
+      "requisicoes": 11,
       "erro": null,
       "bloqueios429": 1,
       "periodo": {
-        "de": "2026-11-19",
-        "ate": "2026-11-21",
+        "de": "2026-11-20",
+        "ate": "2026-11-22",
         "dias": 2
       },
       "modalidades": [
         {
           "codigo": 3,
           "nome": "Concurso",
-          "lidos": 2,
-          "candidatos": 2,
-          "paginas": 1,
+          "lidos": 0,
+          "candidatos": 0,
+          "paginas": 0,
           "falhas": 0
         },
         {
           "codigo": 8,
           "nome": "Dispensa de licitação",
-          "lidos": 3749,
-          "candidatos": 96,
-          "paginas": 75,
+          "lidos": 206,
+          "candidatos": 5,
+          "paginas": 5,
           "falhas": 0
         },
         {
           "codigo": 9,
           "nome": "Inexigibilidade",
-          "lidos": 1257,
-          "candidatos": 144,
-          "paginas": 26,
+          "lidos": 55,
+          "candidatos": 1,
+          "paginas": 2,
           "falhas": 0
         },
         {
           "codigo": 12,
           "nome": "Credenciamento",
-          "lidos": 121,
-          "candidatos": 10,
-          "paginas": 3,
+          "lidos": 5,
+          "candidatos": 1,
+          "paginas": 1,
           "falhas": 0
         },
         {
           "codigo": 6,
           "nome": "Pregão eletrônico",
-          "lidos": 1832,
-          "candidatos": 66,
-          "paginas": 37,
+          "lidos": 49,
+          "candidatos": 0,
+          "paginas": 1,
           "falhas": 0
         }
       ],
       "erros": [],
-      "novos": 3,
-      "naBase": 4757,
+      "novos": 1,
+      "naBase": 4594,
       "aprovadosNaBase": 533
     },
     {
@@ -262,8 +262,8 @@
       "erro": null,
       "diarios": 0,
       "periodo": {
-        "de": "2026-11-19",
-        "ate": "2026-11-21",
+        "de": "2026-11-20",
+        "ate": "2026-11-22",
         "dias": 2
       },
       "territorios": [
@@ -308,15 +308,15 @@
       "erros": [
         {
           "janela": "Contagem · \"\"artes visuais\"\"",
-          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-11-19&published_until=2026-11-21&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-11-20&published_until=2026-11-22&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
         },
         {
           "janela": "Contagem · \"\"aldir blanc\"\"",
-          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22aldir+blanc%22&published_since=2026-11-19&published_until=2026-11-21&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22aldir+blanc%22&published_since=2026-11-20&published_until=2026-11-22&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
         },
         {
           "janela": "Contagem · \"\"paulo gustavo\"\"",
-          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-11-19&published_until=2026-11-21&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+          "mensagem": "HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-11-20&published_until=2026-11-22&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
         },
         {
           "janela": "disjuntor",
@@ -340,13 +340,13 @@
       "observacao": "API pública da Prodabel (sem token): edições por data → sumário → conteúdo de cada ato. Substitui a cobertura de BH que o Querido Diário perdeu em março de 2026.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 222,
-      "candidatos": 2,
-      "requisicoes": 7,
+      "lidos": 109,
+      "candidatos": 1,
+      "requisicoes": 5,
       "erro": null,
-      "edicoes": 2,
-      "atos": 222,
-      "pulados": 9,
+      "edicoes": 1,
+      "atos": 109,
+      "pulados": 5,
       "erros": [],
       "extraidos": 0,
       "relevantes": 0,
@@ -365,23 +365,23 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 1,
+      "lidos": 0,
       "candidatos": 0,
-      "requisicoes": 33,
+      "requisicoes": 32,
       "erro": null,
       "periodo": {
-        "de": "2026-11-19",
-        "ate": "2026-11-21",
+        "de": "2026-11-20",
+        "ate": "2026-11-22",
         "dias": 2
       },
       "entidades": [
         {
           "nome": "Prefeitura de Ribeirão das Neves",
           "municipio": "Ribeirão das Neves",
-          "materias": 1,
+          "materias": 0,
           "novas": 0,
           "puladas": 0,
-          "ignoradas": 1,
+          "ignoradas": 0,
           "erros": 0
         },
         {
@@ -726,10 +726,16 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 0,
+      "lidos": 1,
       "candidatos": 0,
-      "requisicoes": 0,
-      "erro": "todas as listas falharam (Connect Timeout Error (attempted address: www.jaca.center:443, timeout: 10000ms))",
+      "requisicoes": 1,
+      "erro": null,
+      "paginasLidas": 1,
+      "linksSeguidos": 0,
+      "jaConhecidos": 1,
+      "editaisExtraidos": 0,
+      "limitados": 0,
+      "erros": [],
       "extraidos": 0,
       "relevantes": 0,
       "duvidas": 0,
@@ -899,8 +905,8 @@
       "relevantes": 0,
       "duvidas": 0,
       "custoUsd": 0,
-      "novos": 4,
-      "naBase": 157,
+      "novos": 2,
+      "naBase": 159,
       "aprovadosNaBase": 138
     },
     {
@@ -931,7 +937,7 @@
       "observacao": "Instância estadual (versão mais nova do Mapas Culturais, mesma API). Do GitHub Actions a conexão expira (firewall para IPs de datacenter; confirmado em 2026-10-19 em dois runs), de IP residencial responde em meio segundo: só no runner próprio ou localmente. Mesma regra de UF do Mapa do Ceará.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": true,
-      "naBase": 11,
+      "naBase": 12,
       "aprovadosNaBase": 2
     },
     {
@@ -966,7 +972,7 @@
       "observacao": "Boletim independente que agrega editais e vagas do setor cultural de todo o país. O Substack devolve 403 a IPs de datacenter (GitHub Actions): só é coletado no runner próprio ou localmente. Os posts são pagos: a IA lê só a prévia e o link do card leva ao boletim, não ao edital.",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": true,
-      "naBase": 32,
+      "naBase": 34,
       "aprovadosNaBase": 24
     }
   ],
@@ -977,7 +983,7 @@
     "aprovados": 0,
     "reprovados": 0,
     "duvidas": 0,
-    "pendentes": 966,
+    "pendentes": 968,
     "lotes": 33,
     "lotesFalhos": 33,
     "requisicoes": 33,
@@ -985,7 +991,7 @@
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 406,
+    "candidatosNestaExecucao": 94,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": true,
@@ -993,7 +999,7 @@
       "relevantes": 0,
       "descartados": 0,
       "duvidas": 0,
-      "pendentes": 42,
+      "pendentes": 46,
       "lotes": 6,
       "lotesFalhos": 6,
       "requisicoes": 6,
@@ -1041,22 +1047,22 @@
   },
   "queridoDiario": {
     "descartadosNestaExecucao": 0,
-    "descartadosTotal": 742
+    "descartadosTotal": 743
   },
   "dedup": {
     "fundidosNestaExecucao": 0,
     "duplicadosConhecidos": 56
   },
   "periodoPncp": {
-    "de": "2026-11-19",
-    "ate": "2026-11-21",
+    "de": "2026-11-20",
+    "ate": "2026-11-22",
     "dias": 2
   },
   "retencaoDias": 365,
-  "duracaoSegundos": 747,
+  "duracaoSegundos": 405,
   "instituicoes": {
-    "pendentesNestaExecucao": 25,
-    "custoPrevistoUsd": 0.015,
+    "pendentesNestaExecucao": 29,
+    "custoPrevistoUsd": 0.0174,
     "tetoUsd": 0.2,
     "descartadosNestaExecucao": 0,
     "descartadosExemplos": []
@@ -1065,23 +1071,19 @@
   "erros": [
     {
       "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"artes visuais\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-11-19&published_until=2026-11-21&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+      "mensagem": "Contagem · \"\"artes visuais\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22artes+visuais%22&published_since=2026-11-20&published_until=2026-11-22&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
     },
     {
       "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"aldir blanc\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22aldir+blanc%22&published_since=2026-11-19&published_until=2026-11-21&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+      "mensagem": "Contagem · \"\"aldir blanc\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22aldir+blanc%22&published_since=2026-11-20&published_until=2026-11-22&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
     },
     {
       "fonte": "querido-diario",
-      "mensagem": "Contagem · \"\"paulo gustavo\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-11-19&published_until=2026-11-21&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
+      "mensagem": "Contagem · \"\"paulo gustavo\"\": HTTP 503 em https://api.queridodiario.org.br/gazettes?territory_ids=3118601&querystring=%22paulo+gustavo%22&published_since=2026-11-20&published_until=2026-11-22&size=50&offset=0&excerpt_size=500&number_of_excerpts=3&sort_by=descending_date"
     },
     {
       "fonte": "querido-diario",
       "mensagem": "disjuntor: API fora do ar: 3 consultas seguidas falharam; fonte abandonada nesta execução"
-    },
-    {
-      "fonte": "html:jaca",
-      "mensagem": "todas as listas falharam (Connect Timeout Error (attempted address: www.jaca.center:443, timeout: 10000ms))"
     }
   ],
   "errosPorFonte": {
@@ -1089,19 +1091,14 @@
       "falhas": 4,
       "total": 16,
       "completa": false
-    },
-    "html:jaca": {
-      "falhas": 1,
-      "total": null,
-      "completa": true
     }
   },
   "fundidoCom": {
-    "atualizadoEm": "2026-11-21T14:30:15.340Z",
-    "registrosDaBase": 5152,
-    "acrescentados": 7,
-    "substituidos": 14,
-    "removidosMantidos": 0,
+    "atualizadoEm": "2026-11-21T14:32:32.453Z",
+    "registrosDaBase": 5159,
+    "acrescentados": 3,
+    "substituidos": 16,
+    "removidosMantidos": 164,
     "comOrigem": true
   }
 }
