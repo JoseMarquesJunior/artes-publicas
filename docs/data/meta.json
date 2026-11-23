@@ -1,33 +1,33 @@
 {
-  "atualizadoEm": "2026-11-22T14:30:14.570Z",
-  "total": 5000,
+  "atualizadoEm": "2026-11-23T14:30:14.127Z",
+  "total": 4845,
   "totalNovos": 2,
-  "totalAtualizados": 40,
+  "totalAtualizados": 38,
   "removidos": {
     "antigos": 19,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 0,
+    "reprovadosAntigos": 157,
     "duplicadosConhecidos": 0
   },
   "migrados": 0,
   "base": {
     "aprovados": 736,
-    "reprovados": 2559,
+    "reprovados": 2403,
     "duvidas": 689,
-    "pendentes": 1016
+    "pendentes": 1017
   },
   "porAcionavel": {
-    "aberta": 813,
+    "aberta": 804,
     "fluxo-continuo": 44,
-    "encerrada": 1179,
-    "radar": 2964,
-    "prazoDesconhecido": 158
+    "encerrada": 1125,
+    "radar": 2872,
+    "prazoDesconhecido": 159
   },
   "porAcionavelAprovados": {
-    "aberta": 131,
+    "aberta": 130,
     "fluxo-continuo": 10,
     "abertasMG": 127,
-    "encerrada": 194,
+    "encerrada": 195,
     "radar": 401
   },
   "porParticipacao": {
@@ -48,7 +48,7 @@
       "formacao": 3
     },
     "abertasS": {
-      "inscrever-projeto": 12,
+      "inscrever-projeto": 11,
       "residencia": 105,
       "prestar-servico": 12,
       "enviar-obra": 7,
@@ -56,6 +56,13 @@
     }
   },
   "porTipo": {
+    "fomento": {
+      "total": 140,
+      "S": 24,
+      "N": 8,
+      "D": 51,
+      "pendente": 57
+    },
     "outro": {
       "total": 7,
       "S": 0,
@@ -64,18 +71,11 @@
       "pendente": 1
     },
     "contratacao": {
-      "total": 4599,
+      "total": 4444,
       "S": 536,
-      "N": 2538,
+      "N": 2383,
       "D": 588,
       "pendente": 937
-    },
-    "fomento": {
-      "total": 139,
-      "S": 24,
-      "N": 9,
-      "D": 51,
-      "pendente": 55
     },
     "chamamento": {
       "total": 75,
@@ -92,9 +92,9 @@
       "pendente": 6
     },
     "residencia": {
-      "total": 154,
+      "total": 153,
       "S": 144,
-      "N": 1,
+      "N": 0,
       "D": 5,
       "pendente": 4
     }
@@ -109,7 +109,7 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 4594,
+      "naBase": 4439,
       "aprovadosNaBase": 533
     },
     {
@@ -303,13 +303,13 @@
       "observacao": "Desafio JavaScript do Cloudflare: bloqueia IPs de datacenter (GitHub Actions) e o fetch do Node mesmo de IP residencial; de IP residencial o curl passa, por isso viaCurl + bloqueadoNoCI (só no runner próprio). Mantém só editais de MG ou sem estado informado (abrangência nacional).",
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
-      "lidos": 64,
-      "candidatos": 47,
+      "lidos": 63,
+      "candidatos": 46,
       "requisicoes": 2,
       "erro": null,
       "fases": 1,
       "paginas": 2,
-      "novos": 0,
+      "novos": 1,
       "naBase": 41,
       "aprovadosNaBase": 9
     },
@@ -490,7 +490,7 @@
       "observacao": "Instância estadual (Secult-CE); muitos editais municipais de PNAB. Entram com UF CE: só aparecem na página com o filtro 'todas' ou nos segmentos enviar obra/residência (Brasil inteiro).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "naBase": 69,
+      "naBase": 68,
       "aprovadosNaBase": 3
     },
     {
@@ -534,21 +534,21 @@
       "bloqueadoNoCI": true,
       "puladaNestaExecucao": false,
       "lidos": 24,
-      "candidatos": 2,
-      "requisicoes": 3,
+      "candidatos": 1,
+      "requisicoes": 2,
       "erro": null,
       "paginasLidas": 1,
-      "linksSeguidos": 2,
-      "jaConhecidos": 20,
-      "editaisExtraidos": 2,
+      "linksSeguidos": 1,
+      "jaConhecidos": 22,
+      "editaisExtraidos": 1,
       "limitados": 0,
       "erros": [],
       "extraidos": 0,
       "relevantes": 0,
       "duvidas": 0,
       "custoUsd": 0,
-      "novos": 2,
-      "naBase": 36,
+      "novos": 1,
+      "naBase": 37,
       "aprovadosNaBase": 24
     }
   ],
@@ -559,7 +559,7 @@
     "aprovados": 0,
     "reprovados": 0,
     "duvidas": 0,
-    "pendentes": 968,
+    "pendentes": 969,
     "lotes": 0,
     "lotesFalhos": 0,
     "requisicoes": 0,
@@ -567,7 +567,7 @@
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 61,
+    "candidatosNestaExecucao": 59,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": false,
@@ -575,7 +575,7 @@
       "relevantes": 0,
       "descartados": 0,
       "duvidas": 0,
-      "pendentes": 48,
+      "pendentes": 49,
       "lotes": 0,
       "lotesFalhos": 0,
       "requisicoes": 0,
@@ -633,8 +633,8 @@
   "retencaoDias": 365,
   "duracaoSegundos": 10,
   "instituicoes": {
-    "pendentesNestaExecucao": 31,
-    "custoPrevistoUsd": 0.0186,
+    "pendentesNestaExecucao": 32,
+    "custoPrevistoUsd": 0.0192,
     "tetoUsd": 0.2,
     "descartadosNestaExecucao": 0,
     "descartadosExemplos": []
@@ -643,11 +643,11 @@
   "erros": [],
   "errosPorFonte": {},
   "fundidoCom": {
-    "atualizadoEm": "2026-11-22T14:17:53.553Z",
-    "registrosDaBase": 4998,
-    "acrescentados": 2,
-    "substituidos": 0,
-    "removidosMantidos": 0,
+    "atualizadoEm": "2026-11-22T14:30:14.570Z",
+    "registrosDaBase": 5000,
+    "acrescentados": 1,
+    "substituidos": 5,
+    "removidosMantidos": 156,
     "comOrigem": true
   }
 }
