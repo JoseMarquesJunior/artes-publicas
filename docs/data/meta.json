@@ -1,33 +1,33 @@
 {
-  "atualizadoEm": "2026-11-27T17:04:10.247Z",
-  "total": 5621,
-  "totalNovos": 233,
-  "totalAtualizados": 408,
+  "atualizadoEm": "2026-11-28T15:27:21.747Z",
+  "total": 5631,
+  "totalNovos": 203,
+  "totalAtualizados": 340,
   "removidos": {
-    "antigos": 4,
+    "antigos": 7,
     "foraDoFiltro": 0,
-    "reprovadosAntigos": 0,
-    "duplicadosConhecidos": 39
+    "reprovadosAntigos": 189,
+    "duplicadosConhecidos": 34
   },
   "migrados": 0,
   "base": {
-    "aprovados": 736,
-    "reprovados": 2056,
+    "aprovados": 735,
+    "reprovados": 1868,
     "duvidas": 689,
-    "pendentes": 2140
+    "pendentes": 2339
   },
   "porAcionavel": {
-    "aberta": 823,
+    "aberta": 814,
     "fluxo-continuo": 49,
-    "encerrada": 1327,
-    "radar": 3422,
-    "prazoDesconhecido": 179
+    "encerrada": 1335,
+    "radar": 3433,
+    "prazoDesconhecido": 182
   },
   "porAcionavelAprovados": {
-    "aberta": 122,
+    "aberta": 119,
     "fluxo-continuo": 10,
-    "abertasMG": 125,
-    "encerrada": 203,
+    "abertasMG": 123,
+    "encerrada": 205,
     "radar": 401
   },
   "porParticipacao": {
@@ -36,7 +36,7 @@
       "enviar-obra": 39,
       "prestar-servico": 520,
       "formacao": 7,
-      "residencia": 143,
+      "residencia": 142,
       "outro": 1
     },
     "D": {
@@ -48,20 +48,20 @@
       "formacao": 3
     },
     "abertasS": {
-      "inscrever-projeto": 10,
-      "residencia": 104,
-      "prestar-servico": 7,
+      "inscrever-projeto": 9,
+      "residencia": 103,
       "enviar-obra": 6,
-      "formacao": 5
+      "formacao": 5,
+      "prestar-servico": 6
     }
   },
   "porTipo": {
     "contratacao": {
-      "total": 5182,
+      "total": 5188,
       "S": 536,
-      "N": 2038,
+      "N": 1850,
       "D": 588,
-      "pendente": 2020
+      "pendente": 2214
     },
     "outro": {
       "total": 8,
@@ -71,25 +71,18 @@
       "pendente": 2
     },
     "fomento": {
-      "total": 169,
+      "total": 173,
       "S": 24,
       "N": 8,
       "D": 51,
-      "pendente": 86
+      "pendente": 90
     },
     "chamamento": {
-      "total": 78,
+      "total": 79,
       "S": 24,
-      "N": 3,
+      "N": 2,
       "D": 35,
-      "pendente": 16
-    },
-    "residencia": {
-      "total": 156,
-      "S": 144,
-      "N": 0,
-      "D": 5,
-      "pendente": 7
+      "pendente": 18
     },
     "premio": {
       "total": 28,
@@ -97,6 +90,13 @@
       "N": 3,
       "D": 8,
       "pendente": 9
+    },
+    "residencia": {
+      "total": 155,
+      "S": 143,
+      "N": 0,
+      "D": 5,
+      "pendente": 7
     }
   },
   "fontes": [
@@ -109,14 +109,14 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 12690,
-      "candidatos": 567,
-      "requisicoes": 257,
+      "lidos": 11582,
+      "candidatos": 481,
+      "requisicoes": 235,
       "erro": null,
-      "bloqueios429": 0,
+      "bloqueios429": 1,
       "periodo": {
-        "de": "2026-11-25",
-        "ate": "2026-11-27",
+        "de": "2026-11-26",
+        "ate": "2026-11-28",
         "dias": 2
       },
       "modalidades": [
@@ -131,39 +131,39 @@
         {
           "codigo": 8,
           "nome": "Dispensa de licitação",
-          "lidos": 6389,
-          "candidatos": 185,
-          "paginas": 128,
+          "lidos": 5898,
+          "candidatos": 169,
+          "paginas": 118,
           "falhas": 0
         },
         {
           "codigo": 9,
           "nome": "Inexigibilidade",
-          "lidos": 2351,
-          "candidatos": 288,
-          "paginas": 48,
+          "lidos": 2190,
+          "candidatos": 226,
+          "paginas": 44,
           "falhas": 0
         },
         {
           "codigo": 12,
           "nome": "Credenciamento",
-          "lidos": 180,
-          "candidatos": 12,
+          "lidos": 165,
+          "candidatos": 19,
           "paginas": 4,
           "falhas": 0
         },
         {
           "codigo": 6,
           "nome": "Pregão eletrônico",
-          "lidos": 3770,
-          "candidatos": 82,
-          "paginas": 76,
+          "lidos": 3329,
+          "candidatos": 67,
+          "paginas": 67,
           "falhas": 0
         }
       ],
       "erros": [],
-      "novos": 216,
-      "naBase": 5177,
+      "novos": 194,
+      "naBase": 5183,
       "aprovadosNaBase": 533
     },
     {
@@ -256,14 +256,14 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 20,
-      "candidatos": 16,
-      "requisicoes": 17,
+      "lidos": 5,
+      "candidatos": 2,
+      "requisicoes": 16,
       "erro": null,
-      "diarios": 3,
+      "diarios": 1,
       "periodo": {
-        "de": "2026-11-25",
-        "ate": "2026-11-27",
+        "de": "2026-11-26",
+        "ate": "2026-11-28",
         "dias": 2
       },
       "territorios": [
@@ -271,9 +271,9 @@
           "nome": "Contagem",
           "ibge": "3118601",
           "regiao": "Grande BH",
-          "diarios": 1,
-          "trechos": 14,
-          "novos": 14,
+          "diarios": 0,
+          "trechos": 0,
+          "novos": 0,
           "pulados": 0,
           "semTermos": 0,
           "erros": 0
@@ -282,11 +282,11 @@
           "nome": "Betim",
           "ibge": "3106705",
           "regiao": "Grande BH",
-          "diarios": 2,
-          "trechos": 6,
+          "diarios": 1,
+          "trechos": 5,
           "novos": 2,
           "pulados": 0,
-          "semTermos": 4,
+          "semTermos": 3,
           "erros": 0
         }
       ],
@@ -310,7 +310,7 @@
       "relevantes": 0,
       "duvidas": 0,
       "custoUsd": 0,
-      "novos": 2,
+      "novos": 0,
       "naBase": 24,
       "aprovadosNaBase": 8
     },
@@ -323,20 +323,20 @@
       "observacao": "API pública da Prodabel (sem token): edições por data → sumário → conteúdo de cada ato. Substitui a cobertura de BH que o Querido Diário perdeu em março de 2026.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 303,
+      "lidos": 319,
       "candidatos": 15,
       "requisicoes": 22,
       "erro": null,
       "edicoes": 4,
-      "atos": 303,
-      "pulados": 3,
+      "atos": 319,
+      "pulados": 2,
       "erros": [],
       "extraidos": 0,
       "relevantes": 0,
       "duvidas": 0,
       "custoUsd": 0,
-      "novos": 12,
-      "naBase": 20,
+      "novos": 2,
+      "naBase": 21,
       "aprovadosNaBase": 1
     },
     {
@@ -348,23 +348,23 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 3,
+      "lidos": 1,
       "candidatos": 0,
-      "requisicoes": 34,
+      "requisicoes": 33,
       "erro": null,
       "periodo": {
-        "de": "2026-11-25",
-        "ate": "2026-11-27",
+        "de": "2026-11-26",
+        "ate": "2026-11-28",
         "dias": 2
       },
       "entidades": [
         {
           "nome": "Prefeitura de Ribeirão das Neves",
           "municipio": "Ribeirão das Neves",
-          "materias": 2,
+          "materias": 0,
           "novas": 0,
           "puladas": 0,
-          "ignoradas": 2,
+          "ignoradas": 0,
           "erros": 0
         },
         {
@@ -659,13 +659,13 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 0,
+      "lidos": 3,
       "candidatos": 0,
       "requisicoes": 1,
       "erro": null,
       "paginasLidas": 1,
       "linksSeguidos": 0,
-      "jaConhecidos": 0,
+      "jaConhecidos": 3,
       "editaisExtraidos": 0,
       "limitados": 0,
       "erros": [],
@@ -759,14 +759,14 @@
       "observacao": null,
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 0,
-      "candidatos": 0,
-      "requisicoes": 1,
+      "lidos": 1,
+      "candidatos": 1,
+      "requisicoes": 2,
       "erro": null,
       "paginasLidas": 1,
-      "linksSeguidos": 0,
+      "linksSeguidos": 1,
       "jaConhecidos": 0,
-      "editaisExtraidos": 0,
+      "editaisExtraidos": 1,
       "limitados": 0,
       "erros": [],
       "novos": 0,
@@ -880,17 +880,17 @@
       "erro": null,
       "paginasLidas": 1,
       "linksSeguidos": 20,
-      "jaConhecidos": 217,
+      "jaConhecidos": 214,
       "editaisExtraidos": 20,
-      "limitados": 63,
+      "limitados": 66,
       "erros": [],
       "extraidos": 0,
       "relevantes": 0,
       "duvidas": 0,
       "custoUsd": 0,
-      "novos": 3,
-      "naBase": 169,
-      "aprovadosNaBase": 138
+      "novos": 5,
+      "naBase": 171,
+      "aprovadosNaBase": 137
     },
     {
       "fonte": "mapas:ce",
@@ -901,14 +901,14 @@
       "observacao": "Instância estadual (Secult-CE); muitos editais municipais de PNAB. Entram com UF CE: só aparecem na página com o filtro 'todas' ou nos segmentos enviar obra/residência (Brasil inteiro).",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 52,
-      "candidatos": 43,
-      "requisicoes": 2,
+      "lidos": 50,
+      "candidatos": 41,
+      "requisicoes": 1,
       "erro": null,
       "fases": 0,
-      "paginas": 2,
-      "novos": 0,
-      "naBase": 80,
+      "paginas": 1,
+      "novos": 2,
+      "naBase": 81,
       "aprovadosNaBase": 3
     },
     {
@@ -932,13 +932,13 @@
       "observacao": "Salões de Artes Visuais da Bahia (abrangência nacional) e demais editais da Funceb. UF BA: os de enviar obra aparecem no segmento 'Brasil inteiro'.",
       "bloqueadoNoCI": false,
       "puladaNestaExecucao": false,
-      "lidos": 10,
+      "lidos": 0,
       "candidatos": 0,
       "requisicoes": 1,
       "erro": null,
       "paginasLidas": 1,
       "linksSeguidos": 0,
-      "jaConhecidos": 10,
+      "jaConhecidos": 0,
       "editaisExtraidos": 0,
       "limitados": 0,
       "erros": [],
@@ -966,15 +966,15 @@
     "aprovados": 0,
     "reprovados": 0,
     "duvidas": 0,
-    "pendentes": 2070,
-    "lotes": 69,
-    "lotesFalhos": 69,
-    "requisicoes": 69,
+    "pendentes": 2266,
+    "lotes": 76,
+    "lotesFalhos": 76,
+    "requisicoes": 76,
     "tokensEntrada": 0,
     "tokensSaida": 0,
     "custoUsd": 0,
     "porTipo": {},
-    "candidatosNestaExecucao": 684,
+    "candidatosNestaExecucao": 583,
     "extracao": {
       "modelo": "claude-haiku-5-5",
       "ativo": true,
@@ -982,10 +982,10 @@
       "relevantes": 0,
       "descartados": 0,
       "duvidas": 0,
-      "pendentes": 82,
-      "lotes": 11,
-      "lotesFalhos": 11,
-      "requisicoes": 11,
+      "pendentes": 77,
+      "lotes": 10,
+      "lotesFalhos": 10,
+      "requisicoes": 10,
       "tokensEntrada": 0,
       "tokensSaida": 0,
       "custoUsd": 0
@@ -1030,22 +1030,22 @@
   },
   "queridoDiario": {
     "descartadosNestaExecucao": 0,
-    "descartadosTotal": 746
+    "descartadosTotal": 748
   },
   "dedup": {
-    "fundidosNestaExecucao": 12,
-    "duplicadosConhecidos": 124
+    "fundidosNestaExecucao": 3,
+    "duplicadosConhecidos": 127
   },
   "periodoPncp": {
-    "de": "2026-11-25",
-    "ate": "2026-11-27",
+    "de": "2026-11-26",
+    "ate": "2026-11-28",
     "dias": 2
   },
   "retencaoDias": 365,
-  "duracaoSegundos": 2841,
+  "duracaoSegundos": 1058,
   "instituicoes": {
-    "pendentesNestaExecucao": 46,
-    "custoPrevistoUsd": 0.0276,
+    "pendentesNestaExecucao": 51,
+    "custoPrevistoUsd": 0.0306,
     "tetoUsd": 0.2,
     "descartadosNestaExecucao": 0,
     "descartadosExemplos": []
@@ -1054,11 +1054,11 @@
   "erros": [],
   "errosPorFonte": {},
   "fundidoCom": {
-    "atualizadoEm": "2026-11-27T14:30:19.798Z",
-    "registrosDaBase": 5400,
-    "acrescentados": 221,
-    "substituidos": 39,
-    "removidosMantidos": 0,
+    "atualizadoEm": "2026-11-27T17:04:10.247Z",
+    "registrosDaBase": 5621,
+    "acrescentados": 199,
+    "substituidos": 85,
+    "removidosMantidos": 189,
     "comOrigem": true
   }
 }
